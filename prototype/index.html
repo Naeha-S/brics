@@ -135,7 +135,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--fg);overflo
           <div class="tabs"><button class="active" onclick="setLayer('all',this)">All</button><button onclick="setLayer('citizen',this)">Citizen</button><button onclick="setLayer('satellite',this)">S5P</button><button onclick="setLayer('trajectory',this)">Wind</button></div>
         </div>
         <div id="map"></div>
-        <div class="legend"><b>Legend</b> • sync 2 min<br><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--accent)"></span> Verified &nbsp; <span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#D97706"></span> Queued &nbsp; <span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#0A7A3E"></span> S5P ≥2.5e15</div>
+        <div class="legend"><b>Legend</b> • sync 2 min • OWM tiles top-right<br><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--accent)"></span> Verified &nbsp; <span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#D97706"></span> Queued &nbsp; <span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#0A7A3E"></span> S5P ≥2.5e15<br><span style="font-family:JetBrains Mono,monospace;font-size:10px;color:var(--muted)">OWM: ☁️ clouds • 🌧️ precip • 💨 wind • 🌡️ temp • pressure</span></div>
         <div class="map-bar">
           <div style="display:flex;gap:6px;flex-wrap:wrap;overflow-x:auto;scrollbar-width:none" id="corridorChips">
             <button class="chip active" data-c="tamilnadu" onclick="flyTo('tamilnadu')">🇮🇳 Tamil Nadu</button>
@@ -581,7 +581,7 @@ let ALERTS=REPORTS.filter(r=>r.verified && r.pm25>95).slice(0,44).map(r=>({id:'A
 let DISPUTES=[];
 
 // ========== OPENWEATHERMAP LIVE (user key 3f04af8f0d7e79fc646d1f325cc077ac) ==========
-const OWM_KEY = '3f04af8f0d7e79fc646d1f325cc077ac';
+// OWM_KEY defined above at map init — reuse
 let owmCache = {};
 async function fetchOWM(lat, lon, label){
   const key = `${lat.toFixed(2)},${lon.toFixed(2)}`;
@@ -856,7 +856,25 @@ function updateDashboard(){
 // MAP
 const map=L.map('map',{zoomControl:false}).setView([11.1271,78.6569],7);
 L.control.zoom({position:'bottomright'}).addTo(map);
-L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',{attribution:'© CARTO'}).addTo(map);
+L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',{attribution:'© CARTO • © OSM'}).addTo(map);
+// — OWM Tile Overlays (api.openweathermap.org/map) —
+const OWM_KEY = '3f04af8f0d7e79fc646d1f325cc077ac'; // demo key — rotate after hackathon
+const owmClouds = L.tileLayer(`https://tile.openweathermap.org/map/clouds_new/{z}/{x}/{y}.png?appid=${OWM_KEY}`, {opacity:0.42, attribution:'© OWM', maxZoom:19});
+const owmPrecip = L.tileLayer(`https://tile.openweathermap.org/map/precipitation_new/{z}/{x}/{y}.png?appid=${OWM_KEY}`, {opacity:0.45, attribution:'© OWM', maxZoom:19});
+const owmWind = L.tileLayer(`https://tile.openweathermap.org/map/wind_new/{z}/{x}/{y}.png?appid=${OWM_KEY}`, {opacity:0.42, attribution:'© OWM', maxZoom:19});
+const owmTemp = L.tileLayer(`https://tile.openweathermap.org/map/temp_new/{z}/{x}/{y}.png?appid=${OWM_KEY}`, {opacity:0.38, attribution:'© OWM', maxZoom:19});
+const owmPressure = L.tileLayer(`https://tile.openweathermap.org/map/pressure_new/{z}/{x}/{y}.png?appid=${OWM_KEY}`, {opacity:0.35, attribution:'© OWM', maxZoom:19});
+const owmLayerCtrl = L.control.layers(null, {
+  "☁️ Clouds (OWM)": owmClouds,
+  "🌧️ Precipitation": owmPrecip,
+  "💨 Wind": owmWind,
+  "🌡️ Temperature": owmTemp,
+  "🔵 Pressure": owmPressure
+}, {collapsed:true, position:'topright'}).addTo(map);
+// subtle UX: add a tiny OWM badge
+const owmBadge = L.control({position:'bottomright'});
+owmBadge.onAdd = function(){ const d=L.DomUtil.create('div'); d.style.cssText='background:rgba(255,255,255,.92);border:1px solid #E2E8F0;border-radius:999px;padding:4px 8px;font-family:JetBrains Mono,monospace;font-size:10px;box-shadow:0 2px 8px rgba(0,0,0,.06)'; d.innerHTML='OWM tiles • <span style="color:#0052FF">toggle ↗ top-right</span>'; return d; };
+owmBadge.addTo(map);
 let corridorLine=L.polyline(CORRIDOR_BOUNDS.tamilnadu,{color:'#0F172A',weight:3,opacity:.9,dashArray:'6 6'}).addTo(map);
 let markerLayer=L.layerGroup().addTo(map);
 function renderMap(reports){
