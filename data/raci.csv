@@ -1,0 +1,15 @@
+nation,state,district,geofence_wkt,office,officer_email,phone,sla_minutes,collector_email,language
+IN,Punjab,Patiala,"POLYGON((75.8 30.2,76.9 30.2,76.9 30.9,75.8 30.9,75.8 30.2))",SDM Patiala,sdm.patiala@punjab.gov.in,+91-175-2211001,30,dc.patiala@punjab.gov.in,pa-IN
+IN,Punjab,Ludhiana,"POLYGON((75.4 30.7,76.2 30.7,76.2 31.1,75.4 31.1,75.4 30.7))",PPCB Ludhiana,seo.ludhiana@ppcb.gov.in,+91-161-2402500,45,dc.ludhiana@punjab.gov.in,pa-IN
+IN,Gujarat,Bharuch,"POLYGON((72.5 21.4,73.4 21.4,73.4 22.2,72.5 22.2,72.5 21.4))",GPCB Bharuch,ro.bharuch@gpcb.gujarat.gov.in,+91-2642-240385,30,collector.bharuch@gujarat.gov.in,gu-IN
+IN,Maharashtra,Mumbai City,"POLYGON((72.7 18.9,73.0 18.9,73.0 19.3,72.7 19.3,72.7 18.9))",MPCB Mumbai,ro.mumbai@mpcb.gov.in,+91-22-24010437,60,mc.mumbai@maharashtra.gov.in,mr-IN
+IN,Delhi,Central Delhi,"POLYGON((77.0 28.5,77.3 28.5,77.3 28.8,77.0 28.8,77.0 28.5))",CPCB Delhi,cpcb.delhi@nic.in,+91-11-43102030,30,lg.delhi@nic.in,hi-IN
+IN,Rajasthan,Jaipur,"POLYGON((75.5 26.7,76.0 26.7,76.0 27.1,75.5 27.1,75.5 26.7))",RSPCB Jaipur,ro.jaipur@rspcb.nic.in,+91-141-2716800,45,dc.jaipur@rajasthan.gov.in,hi-IN
+BR,São Paulo,São Paulo Capital,"POLYGON((-46.9 -23.8,-46.3 -23.8,-46.3 -23.3,-46.9 -23.3,-46.9 -23.8))",CETESB São Paulo,atendimento@cetesb.sp.gov.br,+55-11-31333000,60,gabinete@prefeitura.sp.gov.br,pt-BR
+BR,Rio de Janeiro,Rio Capital,"POLYGON((-43.7 -23.1,-43.0 -23.1,-43.0 -22.7,-43.7 -22.7,-43.7 -23.1))",INEA Rio,ouvidoria@inea.rj.gov.br,+55-21-23324700,60,prefeito@rio.rj.gov.br,pt-BR
+CN,Hebei,Tangshan,"POLYGON((117.8 39.3,118.8 39.3,118.8 39.9,117.8 39.9,117.8 39.3))",MEE Hebei Bureau,mee.hebei@mee.gov.cn,+86-311-87908506,45,mayor.tangshan@hebei.gov.cn,zh-CN
+CN,Guangdong,Guangzhou,"POLYGON((113.1 22.9,113.6 22.9,113.6 23.4,113.1 23.4,113.1 22.9))",MEE Guangdong,mee.gd@mee.gov.cn,+86-20-83652234,60,mayor.guangzhou@gd.gov.cn,zh-CN
+RU,Moscow Oblast,Moscow,"POLYGON((37.3 55.5,37.9 55.5,37.9 55.9,37.3 55.9,37.3 55.5))",Roshydromet Moscow,info@mosecom.ru,+7-495-6912414,60,mayor@mos.ru,ru-RU
+RU,Leningrad Oblast,St Petersburg,"POLYGON((30.0 59.7,30.6 59.7,30.6 60.1,30.0 60.1,30.0 59.7))",Roshydromet NW,info@spb-meteo.ru,+7-812-3280127,60,gov@spb.ru,ru-RU
+ZA,Gauteng,Johannesburg,"POLYGON((27.8 -26.4,28.3 -26.4,28.3 -25.9,27.8 -25.9,27.8 -26.4))",DEFF Gauteng,callcentre@dffe.gov.za,+27-12-3999000,60,mayor@joburg.org.za,en-ZA
+ZA,Western Cape,Cape Town,"POLYGON((18.2 -34.1,18.7 -34.1,18.7 -33.7,18.2 -33.7,18.2 -34.1))",SAWS Cape Town,info@weathersa.co.za,+27-21-9355700,60,mayor@capetown.gov.za,en-ZA

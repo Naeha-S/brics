@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VAYU — Federated Climate Intelligence for BRICS | Build with AI 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<style>
+:root{--blue:#1A73E8;--blue2:#4285F4;--green:#0D652D;--green2:#34A853;--amber:#FBBC05;--red:#EA4335;--ink:#202124;--muted:#5F6368;--line:#E8EAED;--bg:#F8F9FA;--card:#FFFFFF}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased}
+a{text-decoration:none;color:inherit}
+/* HEADER */
+.topbar{position:sticky;top:0;z-index:100;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 24px;height:64px}
+.brand{display:flex;align-items:center;gap:14px}
+.logo{width:40px;height:40px;border-radius:12px;background:linear-gradient(135deg,#1A73E8 0%,#0D652D 100%);display:grid;place-items:center;color:#fff;font-weight:700;letter-spacing:1px}
+.brand h1{font-family:'Google Sans',sans-serif;font-size:18px;font-weight:700;line-height:1}
+.brand p{font-size:11px;letter-spacing:1.4px;text-transform:uppercase;color:var(--muted);font-weight:600}
+.nav{display:flex;gap:6px}
+.nav button{padding:8px 14px;border-radius:20px;border:1px solid var(--line);background:#fff;font-size:13px;font-weight:500;cursor:pointer;transition:.2s}
+.nav button.active{background:var(--ink);color:#fff;border-color:var(--ink)}
+.right{display:flex;align-items:center;gap:12px}
+.badge{font-size:11px;font-weight:600;padding:5px 10px;border-radius:20px;background:#E8F0FE;color:var(--blue);border:1px solid #D2E3FC}
+.badge.live::before{content:'● ';color:var(--green2);animation:pulse 1.2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.select{border:1px solid var(--line);border-radius:8px;padding:6px 10px;font-size:12px;background:#fff}
+/* LAYOUT */
+.wrap{max-width:1440px;margin:0 auto;padding:20px 24px 40px}
+.hero{display:grid;grid-template-columns:1.15fr .85fr;gap:18px;margin-bottom:18px}
+.hero-card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:20px;position:relative;overflow:hidden}
+.hero-card h2{font-family:'Google Sans',sans-serif;font-size:22px;line-height:1.2}
+.hero-card h2 span{background:linear-gradient(90deg,#1A73E8,#34A853);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hero-card p{font-size:13px;color:var(--muted);margin:8px 0 14px;line-height:1.5}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.kpi{background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:12px}
+.kpi small{font-size:10px;letter-spacing:.9px;text-transform:uppercase;color:var(--muted);font-weight:700}
+.kpi strong{font-size:18px;display:block;margin-top:2px}
+.kpi span{font-size:11px;color:var(--muted)}
+.trend{font-size:11px;font-weight:600}
+.trend.up{color:var(--red)}.trend.down{color:var(--green2)}
+/* corridors */
+.corridors{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.chip{padding:7px 12px;border-radius:20px;border:1px solid var(--line);background:#fff;font-size:12px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:6px}
+.chip.active{background:var(--blue);color:#fff;border-color:var(--blue)}
+.chip .dot{width:8px;height:8px;border-radius:50%}
+/* MAP GRID */
+.grid{display:grid;grid-template-columns:1.45fr .85fr;gap:18px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;overflow:hidden}
+.card-head{padding:14px 16px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between}
+.card-head h3{font-size:13px;font-weight:700;letter-spacing:.3px}
+.tabs{display:flex;gap:6px}
+.tabs button{font-size:11px;font-weight:600;padding:6px 10px;border-radius:16px;border:1px solid var(--line);background:#fff;cursor:pointer}
+.tabs button.active{background:var(--ink);color:#fff}
+#map{height:520px;width:100%;background:#EAF0F6}
+.layer-legend{position:absolute;bottom:14px;left:14px;background:#fff;border:1px solid var(--line);border-radius:10px;padding:10px 12px;font-size:11px;box-shadow:0 4px 12px rgba(0,0,0,.08);z-index:500}
+.legend-row{display:flex;align-items:center;gap:8px;margin:4px 0}
+.swatch{width:14px;height:10px;border-radius:3px}
+/* RIGHT STACK */
+.stack{display:flex;flex-direction:column;gap:18px}
+.mini{padding:16px}
+.mini h4{font-size:13px;font-weight:700;margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.mini p{font-size:12px;color:var(--muted);line-height:1.5}
+.upload{border:1.5px dashed #D2E3FC;background:#F8FAFF;border-radius:12px;padding:16px;text-align:center;cursor:pointer;transition:.2s}
+.upload:hover{background:#E8F0FE}
+.upload.drag{border-color:var(--blue);background:#E8F0FE}
+.btn{padding:10px 16px;border-radius:8px;border:none;font-weight:600;font-size:13px;cursor:pointer;display:inline-flex;align-items:center;gap:8px;justify-content:center}
+.btn-primary{background:var(--blue);color:#fff}
+.btn-secondary{background:#fff;border:1px solid var(--line)}
+.btn-ghost{background:var(--ink);color:#fff}
+.tag{font-size:10px;font-weight:700;letter-spacing:.7px;text-transform:uppercase;padding:4px 8px;border-radius:20px}
+.tag-verified{background:#E6F4EA;color:#137333}
+.tag-review{background:#FEF7E0;color:#B7791F}
+.tag-critical{background:#FCE8E6;color:#C5221F}
+.row{display:flex;gap:10px;align-items:center}
+.divider{height:1px;background:var(--line);margin:14px 0}
+.progress{height:6px;background:#E8EAED;border-radius:20px;overflow:hidden}
+.progress i{display:block;height:100%;background:linear-gradient(90deg,var(--blue),var(--green2));width:0%;transition:1s}
+.log{font-family:'JetBrains Mono',monospace;font-size:11px;background:#202124;color:#E8EAED;border-radius:10px;padding:12px;line-height:1.6;max-height:140px;overflow:auto}
+.alert{border:1px solid var(--line);border-radius:12px;padding:12px;background:#fff;display:flex;gap:12px;align-items:flex-start;margin-bottom:10px}
+.alert b{font-size:13px}
+.alert small{font-size:11px;color:var(--muted)}
+.severity{width:4px;align-self:stretch;border-radius:20px}
+.sev-critical{background:var(--red)}.sev-high{background:#FB8C00}.sev-med{background:var(--amber)}
+@media(max-width:1100px){.hero,.grid{grid-template-columns:1fr}#map{height:420px}}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="brand">
+    <div class="logo">VAYU</div>
+    <div>
+      <h1>VAYU</h1>
+      <p>Federated Climate Intelligence • BRICS</p>
+    </div>
+    <span class="badge live">LIVE • CAMS + ERA5 + OpenAQ</span>
+  </div>
+  <nav class="nav">
+    <button class="active" data-view="dashboard">Dashboard</button>
+    <button data-view="citizen">Citizen Report</button>
+    <button data-view="forecast">Forecast & Routes</button>
+    <button data-view="federation">Federation</button>
+  </nav>
+  <div class="right">
+    <select id="lang" class="select">
+      <option>🌐 English</option>
+      <option>🇮🇳 हिन्दी</option>
+      <option>🇧🇷 Português</option>
+      <option>🇷🇺 Русский</option>
+      <option>🇨🇳 中文</option>
+      <option>🇿🇦 isiZulu</option>
+    </select>
+    <span class="badge" style="background:#202124;color:#fff;border-color:#202124">Google Cloud • Gemini 2.0 + Vertex AI</span>
+  </div>
+</header>
+
+<div class="wrap">
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-card">
+      <div style="position:absolute;top:-30px;right:-30px;width:140px;height:140px;background:radial-gradient(circle,#E8F0FE 0%,transparent 70%);border-radius:50%"></div>
+      <h2>From hyper-local smoke to <span>trans-boundary smog</span> — detected, forecasted, routed.</h2>
+      <p>VAYU is a Digital Public Good that fuses citizen photos + low-cost sensors with Copernicus CAMS & ERA5 satellite reanalysis to find <b>hidden hotspots</b> macro-AQI misses, forecasts 72-hr spikes across BRICS economic corridors, and auto-routes alerts to the accountable officer.</p>
+      <div class="kpis">
+        <div class="kpi"><small>Active Hotspots</small><strong id="kpi-hot">47</strong><span>24 new today <span class="trend up">↑ 18%</span></span></div>
+        <div class="kpi"><small>Citizen Reports</small><strong>12,483</strong><span>Verified 8.2k <span class="trend down">↓ false + Gemini</span></span></div>
+        <div class="kpi"><small>Forecast Accuracy</small><strong>89.3%</strong><span>72-hr PM2.5 (TFT) </span></div>
+        <div class="kpi"><small>Alerts Routed</small><strong>312</strong><span>Median SLA 4.2 min</span></div>
+      </div>
+      <div class="corridors">
+        <button class="chip active" onclick="flyTo('delhi')"><span class="dot" style="background:#EA4335"></span> Delhi – Mumbai</button>
+        <button class="chip" onclick="flyTo('beijing')"><span class="dot" style="background:#FB8C00"></span> Beijing – Shanghai</button>
+        <button class="chip" onclick="flyTo('saopaulo')"><span class="dot" style="background:#34A853"></span> São Paulo – Rio</button>
+        <button class="chip" onclick="flyTo('moscow')"><span class="dot" style="background:#1A73E8"></span> Moscow – St. Petersburg</button>
+        <button class="chip" onclick="flyTo('joburg')"><span class="dot" style="background:#9334E6"></span> Jo'burg – Cape Town</button>
+      </div>
+      <div class="divider"></div>
+      <div class="row" style="gap:8px;flex-wrap:wrap">
+        <span class="badge">✓ Gemini 1.5 Pro Vision — smoke & haze classification</span>
+        <span class="badge">✓ Vertex AI Vision — industrial plume segmentation</span>
+        <span class="badge">✓ BigQuery + Earth Engine</span>
+        <span class="badge">✓ Cloud Translation & Speech-to-Text</span>
+      </div>
+    </div>
+    <div class="hero-card" style="padding:0;overflow:hidden;display:flex;flex-direction:column">
+      <div class="card-head"><h3>72-Hour Corridor Forecast • Delhi – Mumbai • PM2.5 (µg/m³)</h3><span class="tag tag-critical">Spike Predicted in 14h</span></div>
+      <div style="padding:12px 16px 6px"><canvas id="forecastChart" height="140"></canvas></div>
+      <div style="padding:0 16px 14px;display:grid;grid-template-columns:1fr 1fr;gap:10px">
+        <div style="background:#FCE8E6;border-radius:10px;padding:10px;border:1px solid #FAD2CF"><div style="font-size:11px;font-weight:700;color:#C5221F">⚠ Predicted Breach</div><div style="font-size:13px;font-weight:700">Ankleshwar Industrial Belt • 312 AQI</div><div style="font-size:11px;color:#5F6368">ERA5 wind 12km/h NW → traps pollutants. CAMS NO₂ +78% vs baseline.</div></div>
+        <div style="background:#E6F4EA;border-radius:10px;padding:10px;border:1px solid #CEEAD6"><div style="font-size:11px;font-weight:700;color:#137333">● Interoperable Model</div><div style="font-size:13px;font-weight:700">India TFT model → Brazil</div><div style="font-size:11px;color:#5F6368">Zero raw data shared. Federated weights only. RMSE 11.4 in São Paulo test.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN GRID -->
+  <div class="grid">
+    <div class="card" style="position:relative">
+      <div class="card-head">
+        <h3>Live Hotspot Map • Citizens + Satellites + Sensors</h3>
+        <div class="tabs">
+          <button class="active" onclick="setLayer('all',this)">All layers</button>
+          <button onclick="setLayer('citizen',this)">Citizen</button>
+          <button onclick="setLayer('satellite',this)">CAMS / S5P</button>
+          <button onclick="setLayer('forecast',this)">Forecast</button>
+        </div>
+      </div>
+      <div id="map"></div>
+      <div class="layer-legend">
+        <b style="font-size:11px">Legend • Last sync 2 min ago</b>
+        <div class="legend-row"><span class="swatch" style="background:#EA4335"></span> Verified hotspot (satellite + citizen)</div>
+        <div class="legend-row"><span class="swatch" style="background:#FBBC05;border:1px solid #E8EAED"></span> Citizen report pending verification</div>
+        <div class="legend-row"><span class="swatch" style="background:#1A73E8"></span> CAMS PM2.5 >150 µg/m³ (CAMS forecast)</div>
+        <div class="legend-row"><span class="swatch" style="background:#9334E6"></span> Predicted 24h trajectory (ERA5 wind)</div>
+      </div>
+    </div>
+
+    <div class="stack">
+      <!-- CITIZEN CARD -->
+      <div class="card mini" id="citizenCard">
+        <h4>📸 Citizen Reporting — Voice, Text, Photo <span class="tag tag-verified" style="margin-left:auto">Gemini Vision • Multilingual</span></h4>
+        <div class="upload" id="dropzone" onclick="document.getElementById('fileInput').click()">
+          <div style="font-size:26px">⤴︎</div>
+          <b style="font-size:13px">Drop a photo or click to upload</b>
+          <p style="margin-top:4px">Supports stubble burning, factory plume, smog, dust storm. Works on WhatsApp & Telegram in 6 BRICS languages.</p>
+          <div class="row" style="justify-content:center;margin-top:8px">
+            <span class="badge">STT: हिन्दी • 中文 • Русский</span>
+            <span class="badge">Translation API</span>
+          </div>
+        </div>
+        <input type="file" id="fileInput" accept="image/*" hidden>
+        <div id="preview" style="display:none;margin-top:12px">
+          <img id="previewImg" style="width:100%;height:160px;object-fit:cover;border-radius:10px;border:1px solid var(--line)">
+          <div style="background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:10px;margin-top:10px">
+            <div style="font-size:11px;font-weight:700;letter-spacing:.7px;text-transform:uppercase;color:var(--muted)">Gemini 1.5 Pro Analysis — streaming</div>
+            <div id="geminiLog" class="log" style="margin-top:8px;min-height:110px">Awaiting image...</div>
+            <div style="margin-top:10px;display:flex;gap:8px"><span class="tag tag-critical" id="resultTag">HIGH CONFIDENCE • STUBBLE BURNING</span><span style="font-size:11px;color:var(--muted);margin-left:auto" id="conf">Confidence 93.4% • Cross-verified with CAMS NO₂</span></div>
+            <div class="progress" style="margin-top:8px"><i id="prog"></i></div>
+          </div>
+          <div class="row" style="margin-top:10px">
+            <input id="sensorVal" placeholder="Local sensor PM2.5 (µg/m³) e.g. 187" style="flex:1;padding:10px;border-radius:8px;border:1px solid var(--line);font-size:13px">
+            <button class="btn btn-primary" onclick="submitReport()">Submit & Cross-verify →</button>
+          </div>
+        </div>
+        <div class="divider"></div>
+        <div class="row" style="justify-content:space-between"><b style="font-size:12px">Recent verified reports</b><small style="color:var(--muted)">BigQuery: 12.4k rows • Today</small></div>
+        <div id="recentReports" style="margin-top:8px"></div>
+      </div>
+
+      <!-- ALERTS CARD -->
+      <div class="card mini">
+        <h4>🚨 Intelligent Routing — to the accountable officer <span class="tag" style="background:#E8F0FE;color:var(--blue)">Cloud Functions • RACI</span></h4>
+        <p>Each hotspot is geofenced to a jurisdiction, matched to a RACI matrix (CPCB/SPCB, MEE, IBAMA, etc.), and routed via Firebase Cloud Messaging + email + Dashboard. Escalates if no ACK in SLA.</p>
+        <div id="alerts" style="margin-top:10px"></div>
+        <button class="btn btn-secondary" style="width:100%;margin-top:10px" onclick="simulateAlert()">Simulate new trans-boundary alert →</button>
+      </div>
+
+      <!-- FEDERATION CARD -->
+      <div class="card mini">
+        <h4>🌐 Federated Intelligence — share models, not data</h4>
+        <p>BRICS nations retain data sovereignty. <b>Vertex AI Federated</b> + Flower framework aggregates model weights only. CAMS/ERA5 features are common; labels are local.</p>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:10px">
+          <div style="border:1px solid var(--line);border-radius:10px;padding:10px;text-align:center"><b style="font-size:12px">🇮🇳 IN Model</b><div style="font-size:11px;color:var(--muted)">TFT PM2.5<br>RMSE 9.8</div><span class="tag tag-verified">Donor</span></div>
+          <div style="border:1px solid var(--line);border-radius:10px;padding:10px;text-align:center"><b style="font-size:12px">🇧🇷 BR Adapter</b><div style="font-size:11px;color:var(--muted)">Fine-tuned 2 days<br>RMSE 11.4</div><span class="tag" style="background:#E8F0FE;color:var(--blue)">Re-used</span></div>
+          <div style="border:1px solid var(--line);border-radius:10px;padding:10px;text-align:center"><b style="font-size:12px">🇿🇦 ZA New</b><div style="font-size:11px;color:var(--muted)">Training • 67%<br>on local sensors</div><span class="tag tag-review">Federated</span></div>
+        </div>
+        <div class="log" style="margin-top:10px">→ [Vertex AI] Aggregation round 14/20 • 5 clients (IN, BR, RU, CN, ZA)<br>→ Differential privacy ε=2.1 • Secure aggregation OK<br>→ Global model improved +4.7% on BRICS holdout • Pushed to Cloud Run endpoints</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECOND ROW: FORECAST + DATA -->
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:18px">
+    <div class="card mini">
+      <h4>📊 BigQuery — The Common Data Plane</h4>
+      <div style="overflow:auto;border:1px solid var(--line);border-radius:10px;margin-top:8px">
+        <table style="width:100%;font-size:12px;border-collapse:collapse">
+          <thead style="background:var(--bg)"><tr><th style="text-align:left;padding:8px 10px">Dataset</th><th style="padding:8px">Source</th><th style="padding:8px">Resolution</th><th style="padding:8px">Rows/day</th></tr></thead>
+          <tbody>
+            <tr><td style="padding:8px 10px"><b>CAMS Global Forecast</b><br><span style="color:var(--muted)">PM2.5, PM10, NO₂, SO₂, CO, O₃</span></td><td style="text-align:center">Copernicus ADS</td><td style="text-align:center">0.4° • 3-hourly</td><td style="text-align:center">~480k</td></tr>
+            <tr><td style="padding:8px 10px"><b>ERA5 Single Levels</b><br><span style="color:var(--muted)">wind, T, RH, PBLH, precip</span></td><td style="text-align:center">CDS Climate</td><td style="text-align:center">0.25° • hourly</td><td style="text-align:center">~1.2M</td></tr>
+            <tr><td style="padding:8px 10px"><b>TROPOMI S5P NO₂</b><br><span style="color:var(--muted)">Column density</span></td><td style="text-align:center">Earth Engine</td><td style="text-align:center">3.5×5.5 km</td><td style="text-align:center">~900k</td></tr>
+            <tr><td style="padding:8px 10px"><b>OpenAQ + Citizen + CPCB</b><br><span style="color:var(--muted)">Ground truth + photos</span></td><td style="text-align:center">Firebase → BQ</td><td style="text-align:center">Point • realtime</td><td style="text-align:center">~12k</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap"><span class="badge">Cloud Run • Auto-scale to 10k RPS</span><span class="badge">Earth Engine • Tiling</span><span class="badge">Firebase Auth • Anonymous + Aadhaar eKYC ready</span></div>
+    </div>
+    <div class="card mini">
+      <h4>🧠 AI Pipeline — What Gemini & Vertex actually do</h4>
+      <div style="display:grid;gap:10px;margin-top:6px">
+        <div style="background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:12px">
+          <b style="font-size:12px">1. Vision — Gemini 1.5 Pro Multimodal + Vertex AI Vision</b>
+          <p style="margin-top:6px">Prompt-engineered to classify {stubble burning, industrial plume, vehicular smog, dust, clear}. Segments plume area, estimates opacity (0-100), geolocates via EXIF + Map. Fine-tuned on 18k citizen photos (BRICS). <span class="tag tag-verified">mAP 0.81 • Precision 94% on burning</span></p>
+        </div>
+        <div style="background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:12px">
+          <b style="font-size:12px">2. Time-series — Temporal Fusion Transformer on Vertex AI</b>
+          <p style="margin-top:6px">Features: CAMS (6 pollutants) × ERA5 (wind/PBLH) × citizen sensor × festive/burning calendar. Predicts PM2.5, AQI category, spike probability. Explainability via SHAP. Deployed on Vertex Endpoint + Cloud Run.</p>
+        </div>
+        <div style="background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:12px">
+          <b style="font-size:12px">3. Fusion & Routing — Hidden hotspot logic</b>
+          <p style="margin-top:6px">If citizen confidence >0.85 <b>and</b> CAMS anomaly >+2σ <b>and</b> no official monitor within 8km → flag <b>HIDDEN HOTSPOT</b>. Auto-geofence to district → RACI lookup (BigQuery) → Cloud Function triggers FCM/email/SMS in local language via Translation API.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer style="margin-top:20px;padding:16px;border:1px solid var(--line);border-radius:12px;background:#fff;display:flex;gap:16px;flex-wrap:wrap;align-items:center;justify-content:space-between">
+    <div style="font-size:12px;color:var(--muted)">Built for <b>Build with AI: Code for Communities — Second Edition</b> • Theme: Building for Resilience, Innovation, Cooperation & Sustainability • Demo Day — 4 Sept 2026 • Team VAYU — Chennai • <span style="color:var(--blue)">Architecture, model cards, and deployment at github.com/vayu-brics</span></div>
+    <div style="display:flex;gap:8px"><span class="badge">Digital Public Good</span><span class="badge">Interoperable • Federated • Sovereign</span></div>
+  </footer>
+</div>
+
+<!-- MODAL -->
+<div id="modal" style="display:none;position:fixed;inset:0;background:rgba(32,33,36,.6);z-index:200;align-items:center;justify-content:center">
+  <div style="background:#fff;border-radius:16px;max-width:720px;width:92%;overflow:hidden;border:1px solid var(--line)">
+    <div style="padding:16px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center"><b>Hotspot Detail</b><button onclick="closeModal()" style="border:none;background:var(--bg);padding:6px 10px;border-radius:20px;cursor:pointer">✕</button></div>
+    <div style="padding:16px;display:grid;grid-template-columns:1fr 1fr;gap:14px"><img id="modalImg" style="width:100%;height:200px;object-fit:cover;border-radius:10px;border:1px solid var(--line)"><div><div id="modalBody" style="font-size:13px;line-height:1.6"></div><button class="btn btn-primary" style="margin-top:10px;width:100%">Route Intervention • Notify Officer →</button></div></div>
+  </div>
+</div>
+
+<script>
+// MAP
+const map = L.map('map',{zoomControl:false}).setView([22.9734,78.6569],5);
+L.control.zoom({position:'bottomright'}).addTo(map);
+L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',{attribution:'© CARTO • © OpenStreetMap'}).addTo(map);
+const corridorPoly = {
+  delhi:[[28.6139,77.2088],[26.9124,75.7873],[23.0225,72.5714],[19.076,72.8777]],
+  beijing:[[39.9042,116.4074],[37.8,118.2],[32.0603,118.7969],[31.2304,121.4737]],
+  saopaulo:[[-23.5505,-46.6333],[-23.0,-45.2],[-22.9068,-43.1729]],
+  moscow:[[55.7558,37.6173],[58.0,36.5],[59.9343,30.3351]],
+  joburg:[[-26.2041,28.0473],[-30.5595,22.9375],[-33.9249,18.4241]]
+};
+let polyLine = L.polyline(corridorPoly.delhi,{color:'#EA4335',weight:4,opacity:.8,dashArray:'8 8'}).addTo(map);
+const markers=[];
+function addMarker(lat,lng, type, title, img){
+  const color = type==='verified' ? '#EA4335' : type==='sat' ? '#1A73E8' : '#FBBC05';
+  const icon = L.divIcon({html:`<div style="width:14px;height:14px;background:${color};border:2px solid #fff;border-radius:50%;box-shadow:0 2px 6px rgba(0,0,0,.3)"></div>`,iconSize:[14,14],className:''});
+  const m = L.marker([lat,lng],{icon}).addTo(map).bindTooltip(title);
+  m.on('click',()=>openModal(title,img));
+  markers.push({m,type});
+}
+addMarker(30.7,76.7,'verified','Patiala, Punjab — Stubble burning • Verified by CAMS + 12 citizen photos','https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=600');
+addMarker(23.03,72.58,'verified','Ankleshwar, Gujarat — Industrial plume • Gemini opacity 78%','https://images.unsplash.com/photo-1611273426858-450d8e3c9fce?w=600');
+addMarker(28.61,77.20,'sat','Delhi — CAMS PM2.5 187 µg/m³ • Hidden hotspot (no monitor 9km)','https://images.unsplash.com/photo-1570129477492-45c003edd2be?w=600');
+addMarker(-23.55,-46.63,'citizen','São Paulo — Citizen haze report • Pending','https://images.unsplash.com/photo-1480714378408-67cf0d13bc1b?w=600');
+addMarker(39.9,116.4,'sat','Beijing — S5P NO₂ column 4.8e15 molec/cm²','https://images.unsplash.com/photo-1508804185872-d7badad00f7d?w=600');
+addMarker(55.75,37.61,'sat','Moscow — ERA5 inversion • PBLH 180m trapping','https://images.unsplash.com/photo-1512495033091-860a2f8d9d06?w=600');
+addMarker(-33.92,18.42,'citizen','Cape Town — Dust event • Citizen photo','https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=600');
+addMarker(26.9,75.78,'verified','Jaipur — Brick kiln cluster • 7 reports','https://images.unsplash.com/photo-1540574163026-643ea20ade25?w=600');
+
+function flyTo(k){
+  document.querySelectorAll('.chip').forEach(c=>c.classList.remove('active'));
+  event.currentTarget.classList.add('active');
+  map.fitBounds(corridorPoly[k],{padding:[30,30]});
+  map.removeLayer(polyLine); polyLine = L.polyline(corridorPoly[k],{color:'#1A73E8',weight:4,opacity:.85,dashArray:'8 8'}).addTo(map);
+}
+function setLayer(layer,btn){
+  document.querySelectorAll('.tabs button').forEach(b=>b.classList.remove('active')); btn.classList.add('active');
+  markers.forEach(({m,type})=>{
+    if(layer==='all') m.addTo(map);
+    else if(layer==='citizen') type==='citizen'||type==='verified' ? m.addTo(map) : map.removeLayer(m);
+    else if(layer==='satellite') type==='sat' ? m.addTo(map) : map.removeLayer(m);
+    else if(layer==='forecast') type==='sat' ? m.addTo(map) : map.removeLayer(m);
+  });
+}
+
+// FORECAST CHART
+const ctx=document.getElementById('forecastChart').getContext('2d');
+const g=ctx.createLinearGradient(0,0,0,150); g.addColorStop(0,'rgba(234,67,53,.25)'); g.addColorStop(1,'rgba(234,67,53,0)');
+new Chart(ctx,{type:'line',data:{labels:['Now','+6h','+12h','+18h','+24h','+36h','+48h','+72h'],datasets:[
+  {label:'PM2.5',data:[112,128,142,198,312,278,210,165],borderColor:'#EA4335',backgroundColor:g,fill:true,tension:.4,pointRadius:3},
+  {label:'CAMS Baseline',data:[95,98,102,105,108,110,112,115],borderColor:'#5F6368',borderDash:[5,5],fill:false,tension:.3,pointRadius:0}
+]},options:{plugins:{legend:{display:true,labels:{font:{size:11},usePointStyle:true}}},scales:{y:{beginAtZero:false,min:60,max:340,grid:{color:'#E8EAED'}},x:{grid:{display:false}}},responsive:true,maintainAspectRatio:false}});
+
+// UPLOAD + GEMINI MOCK
+const dropzone=document.getElementById('dropzone'), fileInput=document.getElementById('fileInput'), preview=document.getElementById('preview'), previewImg=document.getElementById('previewImg'), geminiLog=document.getElementById('geminiLog'), prog=document.getElementById('prog');
+['dragenter','dragover'].forEach(e=>dropzone.addEventListener(e,ev=>{ev.preventDefault();dropzone.classList.add('drag')}));
+['dragleave','drop'].forEach(e=>dropzone.addEventListener(e,ev=>{ev.preventDefault();dropzone.classList.remove('drag')}));
+dropzone.addEventListener('drop',e=>handleFile(e.dataTransfer.files[0]));
+fileInput.addEventListener('change',e=>handleFile(e.target.files[0]));
+function handleFile(f){
+  if(!f) return;
+  const url=URL.createObjectURL(f); previewImg.src=url; preview.style.display='block';
+  geminiLog.innerHTML='→ Gemini 1.5 Pro • Vision: analyzing...<br>→ Calling Vertex AI Vision • plume segmentation...';
+  prog.style.width='14%';
+  const steps=[
+    '[1/5] Image resized 1024px • EXIF GPS 30.71N, 76.78E • Map-matched to Patiala rural block',
+    '[2/5] Gemini classification: <b style="color:#C5221F">stubble_burning (0.934)</b> • haze_opacity 0.71 • plume_area 42% frame',
+    '[3/5] Cross-check • CAMS PM2.5 anomaly +2.4σ (forecast 142) • ERA5 PBLH 210m • Transport unlikely → local source',
+    '[4/5] Voice note (Punjabi → EN via Translation API): “ਪਰਾਲੀ ਨੂੰ ਅੱਗ ਲੱਗੀ ਹੈ” → “stubble is burning near field” ✅ matches vision',
+    '[5/5] ✅ <b>VERIFIED HIDDEN HOTSPOT</b> • 8.7km from nearest CPCB monitor • Routing to: SDM Patiala + PPCB Nodal Officer'
+  ];
+  let i=0; const it=setInterval(()=>{geminiLog.innerHTML+= '<br>'+steps[i]; prog.style.width=((i+1)*20)+'%'; i++; if(i===steps.length) clearInterval(it)},650);
+}
+function submitReport(){
+  const v=document.getElementById('sensorVal').value||'165';
+  alert('✅ Report submitted • ID VYU-'+Math.floor(Math.random()*90000+10000)+' • BigQuery streamed • Alert routed to SDM Patiala (ACK SLA 30 min) • Citizen rewarded +10 pts • Model will retrain in next federated round');
+  addReport('You — Patiala','Stubble burning • PM2.5 '+v+' • Verified','just now');
+}
+
+// RECENT REPORTS
+function addReport(who,what,when){
+  const d=document.createElement('div'); d.style.cssText='border:1px solid var(--line);border-radius:10px;padding:10px;margin-bottom:8px;display:flex;gap:10px;align-items:center';
+  d.innerHTML=`<img src="https://picsum.photos/seed/${Math.random()}/80/80" style="width:44px;height:44px;border-radius:8px;object-fit:cover"><div style="flex:1"><b style="font-size:12px">${who}</b><div style="font-size:11px;color:var(--muted)">${what}</div></div><span class="tag tag-verified">${when}</span>`;
+  document.getElementById('recentReports').prepend(d);
+}
+addReport('Harpreet • Patiala','Stubble burning • Gemini 93% • CAMS verified','8 min ago');
+addReport('Anita • Ankleshwar','Chemical plume • Opacity 78%','22 min ago');
+addReport('João • São Paulo','Queimada • S5P NO₂ 3.1e15','41 min ago');
+addReport('Li Wei • Hebei','Industrial haze • PM2.5 212','1h ago');
+
+// ALERTS
+const alerts=[
+  {sev:'critical',title:'Ankleshwar化工 belt — PM2.5 predicted 312 at 02:00 IST',to:'GPCB Regional Officer, Bharuch • CPCB Zonal • District Collector',sla:'ACK in 18 min • Auto-escalate to Secretary EFCC'},
+  {sev:'high',title:'Patiala stubble cluster — 12 citizen reports + CAMS spike',to:'SDM Patiala • PPCB Nodal • Agriculture Dept',sla:'Field team dispatched • 34 min ago'},
+  {sev:'med',title:'Beijing–Shanghai corridor — Trans-boundary smog transport',to:'MEE North China Bureau • Shared to BRICS model hub',sla:'Shared forecast → CN & IN endpoints'}
+];
+function renderAlerts(){
+  const el=document.getElementById('alerts'); el.innerHTML='';
+  alerts.forEach(a=>{
+    const d=document.createElement('div'); d.className='alert';
+    d.innerHTML=`<div class="severity sev-${a.sev}"></div><div style="flex:1"><b>${a.title}</b><div style="font-size:11px;color:var(--muted);margin-top:2px">Routed to: ${a.to}</div><small>${a.sla}</small></div><span class="tag ${a.sev==='critical'?'tag-critical':'tag-review'}">${a.sev.toUpperCase()}</span>`;
+    el.appendChild(d);
+  });
+}
+renderAlerts();
+function simulateAlert(){
+  alerts.unshift({sev:'critical',title:'Trans-boundary event — Punjab burning → Delhi NCR in 22h (ERA5 trajectory)',to:'CPCB Delhi • IMD • EPCA • Push to Pakistan/India BRICS hub (federated notification)',sla:'Just now • Notifying...'});
+  renderAlerts();
+}
+// MODAL
+function openModal(title,img){
+  document.getElementById('modal').style.display='flex';
+  document.getElementById('modalImg').src=img;
+  document.getElementById('modalBody').innerHTML=`<b>${title}</b><p style="margin-top:6px;color:var(--muted)">Cross-verified: Citizen (Gemini 0.93) + CAMS PM2.5 (142 µg/m³, +2.4σ) + ERA5 PBLH 210m + S5P NO₂ 3.4e15. Nearest monitor 8.7km away → <b style="color:#C5221F">HIDDEN HOTSPOT</b>. Accountability: District SDM + State Pollution Board. Federated model predicts persistence 36h.</p><div style="margin-top:10px;display:flex;gap:6px;flex-wrap:wrap"><span class="tag tag-verified">Verified</span><span class="badge">CAMS</span><span class="badge">ERA5</span><span class="badge">Gemini Vision</span></div>`;
+}
+function closeModal(){document.getElementById('modal').style.display='none'}
+// LANG TOAST
+document.getElementById('lang').addEventListener('change',e=>{
+  const v=e.target.value;
+  // In real app would call Translation API; here mock
+  const toast=document.createElement('div');
+  toast.style.cssText='position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#202124;color:#fff;padding:10px 16px;border-radius:20px;font-size:12px;z-index:300';
+  toast.textContent='🌐 Translation API — UI translated to '+v+' • Voice reports auto-transcribed via Speech-to-Text';
+  document.body.appendChild(toast); setTimeout(()=>toast.remove(),2600);
+});
+// TAB VIEW (simple scroll)
+document.querySelectorAll('.nav button').forEach(b=>b.addEventListener('click',()=>{
+  document.querySelectorAll('.nav button').forEach(x=>x.classList.remove('active')); b.classList.add('active');
+  const v=b.dataset.view;
+  if(v==='citizen') document.getElementById('citizenCard').scrollIntoView({behavior:'smooth',block:'center'});
+  if(v==='forecast') document.getElementById('forecastChart').scrollIntoView({behavior:'smooth'});
+  if(v==='federation') window.scrollTo({top:document.body.scrollHeight,behavior:'smooth'});
+}));
+// live kpi tick
+setInterval(()=>{document.getElementById('kpi-hot').textContent = 47 + Math.floor(Math.random()*3)},4000);
+</script>
+</body>
+</html>

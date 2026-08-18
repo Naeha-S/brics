@@ -1,0 +1,28 @@
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+.cache/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Secrets - NEVER commit real keys
+.env
+.env.local
+.cdsapirc
+*.key.json
+service-account.json
+
+# Large data (keep samples only)
+data/cams.nc
+data/era5.nc
+data/*.parquet
+!data/cams_sample.json
+!data/raci.csv
+
+# Build outputs
+dist/
+out/
