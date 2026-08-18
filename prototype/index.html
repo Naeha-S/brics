@@ -21,8 +21,8 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--fg);overflo
 .mark{width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,var(--accent),var(--accent2));display:grid;place-items:center;color:#fff;font-weight:700;font-size:12px}
 .brand h1{font-size:13px;font-weight:700}
 .brand p{font-size:11px;color:var(--muted)}
-.flags{display:flex;gap:4px;margin-left:6px}
-.flags span{width:18px;height:18px;border-radius:50%;display:grid;place-items:center;font-size:10px;background:#fff;border:1px solid var(--border)}
+.flags{display:flex;gap:3px;margin-left:6px;flex-wrap:wrap;max-width:220px}
+.flags span{width:16px;height:16px;border-radius:50%;display:grid;place-items:center;font-size:10px;background:#fff;border:1px solid var(--border)}
 .pill{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;padding:5px 9px;border-radius:999px;border:1px solid rgba(0,82,255,.2);background:rgba(0,82,255,.06);color:var(--accent);font-weight:500}
 .select{border:1px solid var(--border);background:#fff;border-radius:999px;padding:5px 9px;font-size:12px}
 .page{padding:16px 0 0}
@@ -89,7 +89,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--fg);overflo
     <div class="brand">
       <div class="mark">Æ</div>
       <div><h1>BRICS-AETHER</h1><p>Dashboard • H3 Res 8 • Sovereign</p></div>
-      <div class="flags"><span>🇧🇷</span><span>🇷🇺</span><span>🇮🇳</span><span>🇨🇳</span><span>🇿🇦</span></div>
+      <div class="flags"><span>🇧🇷</span><span>🇷🇺</span><span>🇮🇳</span><span>🇨🇳</span><span>🇿🇦</span><span>🇪🇬</span><span>🇪🇹</span><span>🇮🇷</span><span>🇸🇦</span><span>🇦🇪</span><span>🇮🇩</span></div>
     </div>
     <div style="display:flex;gap:8px;align-items:center">
       <span class="pill">● LIVE • Confidential Space</span>
@@ -137,11 +137,17 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--fg);overflo
         <div id="map"></div>
         <div class="legend"><b>Legend</b> • sync 2 min<br><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--accent)"></span> Verified &nbsp; <span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#D97706"></span> Queued &nbsp; <span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#0A7A3E"></span> S5P ≥2.5e15</div>
         <div class="map-bar">
-          <div style="display:flex;gap:6px;flex-wrap:wrap" id="corridorChips">
+          <div style="display:flex;gap:6px;flex-wrap:wrap;overflow-x:auto;scrollbar-width:none" id="corridorChips">
             <button class="chip active" data-c="tamilnadu" onclick="flyTo('tamilnadu')">🇮🇳 Tamil Nadu</button>
-            <button class="chip" data-c="delhi" onclick="flyTo('delhi')">🇮🇳 Indo-Gangetic</button>
+            <button class="chip" data-c="delhi" onclick="flyTo('delhi')">🇮🇳 Delhi</button>
             <button class="chip" data-c="beijing" onclick="flyTo('beijing')">🇨🇳 Beijing</button>
             <button class="chip" data-c="saopaulo" onclick="flyTo('saopaulo')">🇧🇷 São Paulo</button>
+            <button class="chip" data-c="cairo" onclick="flyTo('cairo')">🇪🇬 Cairo</button>
+            <button class="chip" data-c="addis" onclick="flyTo('addis')">🇪🇹 Addis</button>
+            <button class="chip" data-c="tehran" onclick="flyTo('tehran')">🇮🇷 Tehran</button>
+            <button class="chip" data-c="riyadh" onclick="flyTo('riyadh')">🇸🇦 Riyadh</button>
+            <button class="chip" data-c="dubai" onclick="flyTo('dubai')">🇦🇪 Dubai</button>
+            <button class="chip" data-c="jakarta" onclick="flyTo('jakarta')">🇮🇩 Jakarta</button>
           </div>
           <span style="margin-left:auto;font-size:11px;color:var(--muted)">Chennai 13.08°N 80.27°E • H3 0.74km²</span>
         </div>
@@ -201,35 +207,253 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--fg);overflo
 <script>
 // ========== DATASETS — now includes Tamil Nadu ==========
 const JURISDICTIONS=[
-  {nation:'IN',state:'Tamil Nadu',district:'Chennai',lat:13.0827,lon:80.2707,office:'TNPCB Chennai',tier2:'TNPCB Member Sec.',tier3:'CPCB / MoEFCC (TN)',sla:30,lang:'ta-IN'},
-  {nation:'IN',state:'Tamil Nadu',district:'Coimbatore',lat:11.0168,lon:76.9558,office:'TNPCB Coimbatore',tier2:'TNPCB Member Sec.',tier3:'CPCB / MoEFCC (TN)',sla:30,lang:'ta-IN'},
-  {nation:'IN',state:'Tamil Nadu',district:'Madurai',lat:9.9252,lon:78.1198,office:'Collector Madurai',tier2:'TNPCB Member Sec.',tier3:'CPCB / MoEFCC (TN)',sla:30,lang:'ta-IN'},
-  {nation:'IN',state:'Tamil Nadu',district:'Tiruchirappalli',lat:10.7905,lon:78.7047,office:'TNPCB Trichy',tier2:'TNPCB Member Sec.',tier3:'CPCB / MoEFCC (TN)',sla:30,lang:'ta-IN'},
-  {nation:'IN',state:'Tamil Nadu',district:'Salem',lat:11.6643,lon:78.1460,office:'TNPCB Salem',tier2:'TNPCB Member Sec.',tier3:'CPCB / MoEFCC (TN)',sla:30,lang:'ta-IN'},
-  {nation:'IN',state:'Punjab',district:'Patiala',lat:30.335,lon:76.395,office:'SDM Patiala',tier2:'PPCB',tier3:'CPCB / MoEFCC',sla:30,lang:'pa-IN'},
-  {nation:'IN',state:'Punjab',district:'Ludhiana',lat:30.90,lon:75.85,office:'PPCB Ludhiana',tier2:'PPCB',tier3:'CPCB / MoEFCC',sla:45,lang:'pa-IN'},
-  {nation:'IN',state:'Gujarat',district:'Bharuch',lat:21.70,lon:72.97,office:'GPCB Bharuch',tier2:'GPCB',tier3:'CPCB / MoEFCC',sla:30,lang:'gu-IN'},
-  {nation:'IN',state:'Maharashtra',district:'Mumbai City',lat:19.07,lon:72.87,office:'MPCB Mumbai',tier2:'SPCB',tier3:'CPCB / MoEFCC',sla:60,lang:'mr-IN'},
-  {nation:'IN',state:'Delhi',district:'Central Delhi',lat:28.61,lon:77.23,office:'CPCB Delhi',tier2:'DPCC',tier3:'CPCB / MoEFCC',sla:30,lang:'hi-IN'},
-  {nation:'BR',state:'São Paulo',district:'São Paulo Capital',lat:-23.55,lon:-46.63,office:'CETESB São Paulo',tier2:'SEMA',tier3:'IBAMA / MMA',sla:60,lang:'pt-BR'},
-  {nation:'BR',state:'Rio de Janeiro',district:'Rio Capital',lat:-22.90,lon:-43.17,office:'INEA Rio',tier2:'SEMA',tier3:'IBAMA / MMA',sla:60,lang:'pt-BR'},
-  {nation:'CN',state:'Hebei',district:'Tangshan',lat:39.62,lon:118.18,office:'MEE Hebei',tier2:'Provincial Dept',tier3:'MEE Desk',sla:45,lang:'zh-CN'},
-  {nation:'RU',state:'Moscow Oblast',district:'Moscow',lat:55.75,lon:37.61,office:'Rosprirodnadzor Moscow',tier2:'Oblast Dir.',tier3:'Minprirody',sla:60,lang:'ru-RU'},
-  {nation:'ZA',state:'Gauteng',district:'Johannesburg',lat:-26.20,lon:28.04,office:'DEFF Gauteng',tier2:'Provincial',tier3:'DFFE',sla:60,lang:'en-ZA'},
-  {nation:'ZA',state:'Western Cape',district:'Cape Town',lat:-33.92,lon:18.42,office:'SAWS Cape Town',tier2:'Provincial',tier3:'DFFE',sla:60,lang:'en-ZA'},
+{nation:'IN',state:'Tamil Nadu',district:'Chennai',lat:13.0827,lon:80.2707,office:'Chennai Office',tier2:'Tamil Nadu Dept',tier3:'India Env Ministry',sla:30,lang:'en'},
+  {nation:'IN',state:'Maharashtra',district:'Mumbai City',lat:19.076,lon:72.8777,office:'Mumbai City Office',tier2:'Maharashtra Dept',tier3:'India Env Ministry',sla:30,lang:'en'},
+  {nation:'IN',state:'Gujarat',district:'Ahmedabad',lat:23.0225,lon:72.5714,office:'Ahmedabad Office',tier2:'Gujarat Dept',tier3:'India Env Ministry',sla:30,lang:'en'},
+  {nation:'IN',state:'Karnataka',district:'Bengaluru',lat:12.9716,lon:77.5946,office:'Bengaluru Office',tier2:'Karnataka Dept',tier3:'India Env Ministry',sla:30,lang:'en'},
+  {nation:'IN',state:'Kerala',district:'Thiruvananthapuram',lat:8.5241,lon:76.9366,office:'Thiruvananthapuram Office',tier2:'Kerala Dept',tier3:'India Env Ministry',sla:30,lang:'en'},
+  {nation:'IN',state:'Delhi',district:'Central Delhi',lat:28.6139,lon:77.2088,office:'Central Delhi Office',tier2:'Delhi Dept',tier3:'India Env Ministry',sla:30,lang:'en'},
+  {nation:'IN',state:'Rajasthan',district:'Jaipur',lat:26.9124,lon:75.7873,office:'Jaipur Office',tier2:'Rajasthan Dept',tier3:'India Env Ministry',sla:30,lang:'en'},
+  {nation:'IN',state:'Punjab',district:'Patiala',lat:30.3398,lon:76.3869,office:'Patiala Office',tier2:'Punjab Dept',tier3:'India Env Ministry',sla:30,lang:'en'},
+  {nation:'IN',state:'Haryana',district:'Gurugram',lat:28.4595,lon:77.0266,office:'Gurugram Office',tier2:'Haryana Dept',tier3:'India Env Ministry',sla:30,lang:'en'},
+  {nation:'IN',state:'Uttar Pradesh',district:'Lucknow',lat:26.8467,lon:80.9462,office:'Lucknow Office',tier2:'Uttar Pradesh Dept',tier3:'India Env Ministry',sla:30,lang:'en'},
+  {nation:'IN',state:'Madhya Pradesh',district:'Bhopal',lat:23.2599,lon:77.4126,office:'Bhopal Office',tier2:'Madhya Pradesh Dept',tier3:'India Env Ministry',sla:30,lang:'en'},
+  {nation:'IN',state:'Bihar',district:'Patna',lat:25.5941,lon:85.1376,office:'Patna Office',tier2:'Bihar Dept',tier3:'India Env Ministry',sla:30,lang:'en'},
+  {nation:'IN',state:'West Bengal',district:'Kolkata',lat:22.5726,lon:88.3639,office:'Kolkata Office',tier2:'West Bengal Dept',tier3:'India Env Ministry',sla:30,lang:'en'},
+  {nation:'IN',state:'Andhra Pradesh',district:'Visakhapatnam',lat:17.6868,lon:83.2185,office:'Visakhapatnam Office',tier2:'Andhra Pradesh Dept',tier3:'India Env Ministry',sla:30,lang:'en'},
+  {nation:'IN',state:'Telangana',district:'Hyderabad',lat:17.385,lon:78.4867,office:'Hyderabad Office',tier2:'Telangana Dept',tier3:'India Env Ministry',sla:30,lang:'en'},
+  {nation:'IN',state:'Odisha',district:'Bhubaneswar',lat:20.2961,lon:85.8245,office:'Bhubaneswar Office',tier2:'Odisha Dept',tier3:'India Env Ministry',sla:30,lang:'en'},
+  {nation:'IN',state:'Assam',district:'Guwahati',lat:26.1445,lon:91.7362,office:'Guwahati Office',tier2:'Assam Dept',tier3:'India Env Ministry',sla:30,lang:'en'},
+  {nation:'IN',state:'Himachal Pradesh',district:'Shimla',lat:31.1048,lon:77.1734,office:'Shimla Office',tier2:'Himachal Pradesh Dept',tier3:'India Env Ministry',sla:30,lang:'en'},
+  {nation:'IN',state:'Uttarakhand',district:'Dehradun',lat:30.3165,lon:78.0322,office:'Dehradun Office',tier2:'Uttarakhand Dept',tier3:'India Env Ministry',sla:30,lang:'en'},
+  {nation:'IN',state:'Chhattisgarh',district:'Raipur',lat:21.2514,lon:81.6296,office:'Raipur Office',tier2:'Chhattisgarh Dept',tier3:'India Env Ministry',sla:30,lang:'en'},
+  {nation:'BR',state:'São Paulo',district:'São Paulo Capital',lat:-23.5505,lon:-46.6333,office:'São Paulo Capital Office',tier2:'São Paulo Dept',tier3:'Brazil Env Ministry',sla:30,lang:'en'},
+  {nation:'BR',state:'Rio de Janeiro',district:'Rio Capital',lat:-22.9068,lon:-43.1729,office:'Rio Capital Office',tier2:'Rio de Janeiro Dept',tier3:'Brazil Env Ministry',sla:30,lang:'en'},
+  {nation:'BR',state:'Minas Gerais',district:'Belo Horizonte',lat:-19.9167,lon:-43.9345,office:'Belo Horizonte Office',tier2:'Minas Gerais Dept',tier3:'Brazil Env Ministry',sla:30,lang:'en'},
+  {nation:'BR',state:'Bahia',district:'Salvador',lat:-12.9777,lon:-38.5016,office:'Salvador Office',tier2:'Bahia Dept',tier3:'Brazil Env Ministry',sla:30,lang:'en'},
+  {nation:'BR',state:'Rio Grande do Sul',district:'Porto Alegre',lat:-30.0346,lon:-51.2177,office:'Porto Alegre Office',tier2:'Rio Grande do Sul Dept',tier3:'Brazil Env Ministry',sla:30,lang:'en'},
+  {nation:'BR',state:'Paraná',district:'Curitiba',lat:-25.429,lon:-49.2671,office:'Curitiba Office',tier2:'Paraná Dept',tier3:'Brazil Env Ministry',sla:30,lang:'en'},
+  {nation:'BR',state:'Pernambuco',district:'Recife',lat:-8.0476,lon:-34.877,office:'Recife Office',tier2:'Pernambuco Dept',tier3:'Brazil Env Ministry',sla:30,lang:'en'},
+  {nation:'BR',state:'Ceará',district:'Fortaleza',lat:-3.7172,lon:-38.5433,office:'Fortaleza Office',tier2:'Ceará Dept',tier3:'Brazil Env Ministry',sla:30,lang:'en'},
+  {nation:'BR',state:'Pará',district:'Belém',lat:-1.4558,lon:-48.4902,office:'Belém Office',tier2:'Pará Dept',tier3:'Brazil Env Ministry',sla:30,lang:'en'},
+  {nation:'BR',state:'Santa Catarina',district:'Florianópolis',lat:-27.5949,lon:-48.5482,office:'Florianópolis Office',tier2:'Santa Catarina Dept',tier3:'Brazil Env Ministry',sla:30,lang:'en'},
+  {nation:'BR',state:'Goiás',district:'Goiânia',lat:-16.6869,lon:-49.2648,office:'Goiânia Office',tier2:'Goiás Dept',tier3:'Brazil Env Ministry',sla:30,lang:'en'},
+  {nation:'BR',state:'Maranhão',district:'São Luís',lat:-2.5387,lon:-44.2825,office:'São Luís Office',tier2:'Maranhão Dept',tier3:'Brazil Env Ministry',sla:30,lang:'en'},
+  {nation:'BR',state:'Paraíba',district:'João Pessoa',lat:-7.1195,lon:-34.845,office:'João Pessoa Office',tier2:'Paraíba Dept',tier3:'Brazil Env Ministry',sla:30,lang:'en'},
+  {nation:'BR',state:'Amazonas',district:'Manaus',lat:-3.119,lon:-60.0217,office:'Manaus Office',tier2:'Amazonas Dept',tier3:'Brazil Env Ministry',sla:30,lang:'en'},
+  {nation:'BR',state:'Espírito Santo',district:'Vitória',lat:-20.3155,lon:-40.3128,office:'Vitória Office',tier2:'Espírito Santo Dept',tier3:'Brazil Env Ministry',sla:30,lang:'en'},
+  {nation:'BR',state:'Rio Grande do Norte',district:'Natal',lat:-5.7945,lon:-35.211,office:'Natal Office',tier2:'Rio Grande do Norte Dept',tier3:'Brazil Env Ministry',sla:30,lang:'en'},
+  {nation:'BR',state:'Alagoas',district:'Maceió',lat:-9.6658,lon:-35.7353,office:'Maceió Office',tier2:'Alagoas Dept',tier3:'Brazil Env Ministry',sla:30,lang:'en'},
+  {nation:'BR',state:'Mato Grosso',district:'Cuiabá',lat:-15.6014,lon:-56.0979,office:'Cuiabá Office',tier2:'Mato Grosso Dept',tier3:'Brazil Env Ministry',sla:30,lang:'en'},
+  {nation:'BR',state:'Piauí',district:'Teresina',lat:-5.0892,lon:-42.8016,office:'Teresina Office',tier2:'Piauí Dept',tier3:'Brazil Env Ministry',sla:30,lang:'en'},
+  {nation:'BR',state:'Distrito Federal',district:'Brasília',lat:-15.7975,lon:-47.8919,office:'Brasília Office',tier2:'Distrito Federal Dept',tier3:'Brazil Env Ministry',sla:30,lang:'en'},
+  {nation:'RU',state:'Moscow Oblast',district:'Moscow',lat:55.7558,lon:37.6173,office:'Moscow Office',tier2:'Moscow Oblast Dept',tier3:'Russia Env Ministry',sla:30,lang:'en'},
+  {nation:'RU',state:'Leningrad Oblast',district:'St Petersburg',lat:59.9343,lon:30.3351,office:'St Petersburg Office',tier2:'Leningrad Oblast Dept',tier3:'Russia Env Ministry',sla:30,lang:'en'},
+  {nation:'RU',state:'Krasnodar Krai',district:'Krasnodar',lat:45.0355,lon:38.9753,office:'Krasnodar Office',tier2:'Krasnodar Krai Dept',tier3:'Russia Env Ministry',sla:30,lang:'en'},
+  {nation:'RU',state:'Sverdlovsk Oblast',district:'Yekaterinburg',lat:56.8389,lon:60.6057,office:'Yekaterinburg Office',tier2:'Sverdlovsk Oblast Dept',tier3:'Russia Env Ministry',sla:30,lang:'en'},
+  {nation:'RU',state:'Novosibirsk Oblast',district:'Novosibirsk',lat:55.0084,lon:82.9357,office:'Novosibirsk Office',tier2:'Novosibirsk Oblast Dept',tier3:'Russia Env Ministry',sla:30,lang:'en'},
+  {nation:'RU',state:'Tatarstan',district:'Kazan',lat:55.7887,lon:49.1221,office:'Kazan Office',tier2:'Tatarstan Dept',tier3:'Russia Env Ministry',sla:30,lang:'en'},
+  {nation:'RU',state:'Rostov Oblast',district:'Rostov-on-Don',lat:47.2225,lon:39.7187,office:'Rostov-on-Don Office',tier2:'Rostov Oblast Dept',tier3:'Russia Env Ministry',sla:30,lang:'en'},
+  {nation:'RU',state:'Bashkortostan',district:'Ufa',lat:54.7348,lon:55.9578,office:'Ufa Office',tier2:'Bashkortostan Dept',tier3:'Russia Env Ministry',sla:30,lang:'en'},
+  {nation:'RU',state:'Chelyabinsk Oblast',district:'Chelyabinsk',lat:55.1644,lon:61.4368,office:'Chelyabinsk Office',tier2:'Chelyabinsk Oblast Dept',tier3:'Russia Env Ministry',sla:30,lang:'en'},
+  {nation:'RU',state:'Nizhny Novgorod Oblast',district:'Nizhny Novgorod',lat:56.2965,lon:43.9361,office:'Nizhny Novgorod Office',tier2:'Nizhny Novgorod Oblast Dept',tier3:'Russia Env Ministry',sla:30,lang:'en'},
+  {nation:'RU',state:'Samara Oblast',district:'Samara',lat:53.2415,lon:50.2212,office:'Samara Office',tier2:'Samara Oblast Dept',tier3:'Russia Env Ministry',sla:30,lang:'en'},
+  {nation:'RU',state:'Krasnoyarsk Krai',district:'Krasnoyarsk',lat:56.0153,lon:92.8932,office:'Krasnoyarsk Office',tier2:'Krasnoyarsk Krai Dept',tier3:'Russia Env Ministry',sla:30,lang:'en'},
+  {nation:'RU',state:'Voronezh Oblast',district:'Voronezh',lat:51.6615,lon:39.2003,office:'Voronezh Office',tier2:'Voronezh Oblast Dept',tier3:'Russia Env Ministry',sla:30,lang:'en'},
+  {nation:'RU',state:'Perm Krai',district:'Perm',lat:58.0105,lon:56.2502,office:'Perm Office',tier2:'Perm Krai Dept',tier3:'Russia Env Ministry',sla:30,lang:'en'},
+  {nation:'RU',state:'Volgograd Oblast',district:'Volgograd',lat:48.708,lon:44.5133,office:'Volgograd Office',tier2:'Volgograd Oblast Dept',tier3:'Russia Env Ministry',sla:30,lang:'en'},
+  {nation:'RU',state:'Saratov Oblast',district:'Saratov',lat:51.5336,lon:46.0342,office:'Saratov Office',tier2:'Saratov Oblast Dept',tier3:'Russia Env Ministry',sla:30,lang:'en'},
+  {nation:'RU',state:'Tyumen Oblast',district:'Tyumen',lat:57.1522,lon:65.5272,office:'Tyumen Office',tier2:'Tyumen Oblast Dept',tier3:'Russia Env Ministry',sla:30,lang:'en'},
+  {nation:'RU',state:'Irkutsk Oblast',district:'Irkutsk',lat:52.2869,lon:104.2807,office:'Irkutsk Office',tier2:'Irkutsk Oblast Dept',tier3:'Russia Env Ministry',sla:30,lang:'en'},
+  {nation:'RU',state:'Udmurtia',district:'Izhevsk',lat:56.8526,lon:53.2119,office:'Izhevsk Office',tier2:'Udmurtia Dept',tier3:'Russia Env Ministry',sla:30,lang:'en'},
+  {nation:'RU',state:'Altai Krai',district:'Barnaul',lat:53.3606,lon:83.7636,office:'Barnaul Office',tier2:'Altai Krai Dept',tier3:'Russia Env Ministry',sla:30,lang:'en'},
+  {nation:'CN',state:'Beijing',district:'Beijing',lat:39.9042,lon:116.4074,office:'Beijing Office',tier2:'Beijing Dept',tier3:'China Env Ministry',sla:30,lang:'en'},
+  {nation:'CN',state:'Shanghai',district:'Shanghai',lat:31.2304,lon:121.4737,office:'Shanghai Office',tier2:'Shanghai Dept',tier3:'China Env Ministry',sla:30,lang:'en'},
+  {nation:'CN',state:'Guangdong',district:'Guangzhou',lat:23.1291,lon:113.2644,office:'Guangzhou Office',tier2:'Guangdong Dept',tier3:'China Env Ministry',sla:30,lang:'en'},
+  {nation:'CN',state:'Hebei',district:'Shijiazhuang',lat:38.0428,lon:114.5149,office:'Shijiazhuang Office',tier2:'Hebei Dept',tier3:'China Env Ministry',sla:30,lang:'en'},
+  {nation:'CN',state:'Henan',district:'Zhengzhou',lat:34.7466,lon:113.6253,office:'Zhengzhou Office',tier2:'Henan Dept',tier3:'China Env Ministry',sla:30,lang:'en'},
+  {nation:'CN',state:'Sichuan',district:'Chengdu',lat:30.5728,lon:104.0668,office:'Chengdu Office',tier2:'Sichuan Dept',tier3:'China Env Ministry',sla:30,lang:'en'},
+  {nation:'CN',state:'Jiangsu',district:'Nanjing',lat:32.0603,lon:118.7969,office:'Nanjing Office',tier2:'Jiangsu Dept',tier3:'China Env Ministry',sla:30,lang:'en'},
+  {nation:'CN',state:'Zhejiang',district:'Hangzhou',lat:30.2741,lon:120.1551,office:'Hangzhou Office',tier2:'Zhejiang Dept',tier3:'China Env Ministry',sla:30,lang:'en'},
+  {nation:'CN',state:'Hunan',district:'Changsha',lat:28.2278,lon:112.9388,office:'Changsha Office',tier2:'Hunan Dept',tier3:'China Env Ministry',sla:30,lang:'en'},
+  {nation:'CN',state:'Anhui',district:'Hefei',lat:31.8206,lon:117.2272,office:'Hefei Office',tier2:'Anhui Dept',tier3:'China Env Ministry',sla:30,lang:'en'},
+  {nation:'CN',state:'Hubei',district:'Wuhan',lat:30.5928,lon:114.3055,office:'Wuhan Office',tier2:'Hubei Dept',tier3:'China Env Ministry',sla:30,lang:'en'},
+  {nation:'CN',state:'Fujian',district:'Fuzhou',lat:26.0745,lon:119.2965,office:'Fuzhou Office',tier2:'Fujian Dept',tier3:'China Env Ministry',sla:30,lang:'en'},
+  {nation:'CN',state:'Shandong',district:'Jinan',lat:36.6512,lon:117.12,office:'Jinan Office',tier2:'Shandong Dept',tier3:'China Env Ministry',sla:30,lang:'en'},
+  {nation:'CN',state:'Shaanxi',district:'Xian',lat:34.3416,lon:108.9398,office:'Xian Office',tier2:'Shaanxi Dept',tier3:'China Env Ministry',sla:30,lang:'en'},
+  {nation:'CN',state:'Liaoning',district:'Shenyang',lat:41.8057,lon:123.4328,office:'Shenyang Office',tier2:'Liaoning Dept',tier3:'China Env Ministry',sla:30,lang:'en'},
+  {nation:'CN',state:'Jiangxi',district:'Nanchang',lat:28.682,lon:115.8579,office:'Nanchang Office',tier2:'Jiangxi Dept',tier3:'China Env Ministry',sla:30,lang:'en'},
+  {nation:'CN',state:'Yunnan',district:'Kunming',lat:25.0453,lon:102.7097,office:'Kunming Office',tier2:'Yunnan Dept',tier3:'China Env Ministry',sla:30,lang:'en'},
+  {nation:'CN',state:'Guangxi',district:'Nanning',lat:22.817,lon:108.3665,office:'Nanning Office',tier2:'Guangxi Dept',tier3:'China Env Ministry',sla:30,lang:'en'},
+  {nation:'CN',state:'Shanxi',district:'Taiyuan',lat:37.8706,lon:112.5489,office:'Taiyuan Office',tier2:'Shanxi Dept',tier3:'China Env Ministry',sla:30,lang:'en'},
+  {nation:'CN',state:'Chongqing',district:'Chongqing',lat:29.563,lon:106.5516,office:'Chongqing Office',tier2:'Chongqing Dept',tier3:'China Env Ministry',sla:30,lang:'en'},
+  {nation:'ZA',state:'Gauteng',district:'Johannesburg',lat:-26.2041,lon:28.0473,office:'Johannesburg Office',tier2:'Gauteng Dept',tier3:'South Africa Env Ministry',sla:30,lang:'en'},
+  {nation:'ZA',state:'Western Cape',district:'Cape Town',lat:-33.9249,lon:18.4241,office:'Cape Town Office',tier2:'Western Cape Dept',tier3:'South Africa Env Ministry',sla:30,lang:'en'},
+  {nation:'ZA',state:'KwaZulu-Natal',district:'Durban',lat:-29.8587,lon:31.0218,office:'Durban Office',tier2:'KwaZulu-Natal Dept',tier3:'South Africa Env Ministry',sla:30,lang:'en'},
+  {nation:'ZA',state:'Eastern Cape',district:'Gqeberha',lat:-33.9608,lon:25.6022,office:'Gqeberha Office',tier2:'Eastern Cape Dept',tier3:'South Africa Env Ministry',sla:30,lang:'en'},
+  {nation:'ZA',state:'Free State',district:'Bloemfontein',lat:-29.0852,lon:26.1596,office:'Bloemfontein Office',tier2:'Free State Dept',tier3:'South Africa Env Ministry',sla:30,lang:'en'},
+  {nation:'ZA',state:'Limpopo',district:'Polokwane',lat:-23.9045,lon:29.4689,office:'Polokwane Office',tier2:'Limpopo Dept',tier3:'South Africa Env Ministry',sla:30,lang:'en'},
+  {nation:'ZA',state:'Mpumalanga',district:'Mbombela',lat:-25.4753,lon:30.9694,office:'Mbombela Office',tier2:'Mpumalanga Dept',tier3:'South Africa Env Ministry',sla:30,lang:'en'},
+  {nation:'ZA',state:'North West',district:'Mahikeng',lat:-25.8648,lon:25.6447,office:'Mahikeng Office',tier2:'North West Dept',tier3:'South Africa Env Ministry',sla:30,lang:'en'},
+  {nation:'ZA',state:'Northern Cape',district:'Kimberley',lat:-28.7282,lon:24.7499,office:'Kimberley Office',tier2:'Northern Cape Dept',tier3:'South Africa Env Ministry',sla:30,lang:'en'},
+  {nation:'ZA',state:'City of Tshwane',district:'Pretoria',lat:-25.7479,lon:28.2293,office:'Pretoria Office',tier2:'City of Tshwane Dept',tier3:'South Africa Env Ministry',sla:30,lang:'en'},
+  {nation:'ZA',state:'Ekurhuleni',district:'Germiston',lat:-26.2315,lon:28.1741,office:'Germiston Office',tier2:'Ekurhuleni Dept',tier3:'South Africa Env Ministry',sla:30,lang:'en'},
+  {nation:'ZA',state:'eThekwini',district:'Durban Metro',lat:-29.8587,lon:31.0218,office:'Durban Metro Office',tier2:'eThekwini Dept',tier3:'South Africa Env Ministry',sla:30,lang:'en'},
+  {nation:'ZA',state:'Nelson Mandela Bay',district:'Port Elizabeth',lat:-33.9608,lon:25.6022,office:'Port Elizabeth Office',tier2:'Nelson Mandela Bay Dept',tier3:'South Africa Env Ministry',sla:30,lang:'en'},
+  {nation:'ZA',state:'Buffalo City',district:'East London',lat:-33.0153,lon:27.9116,office:'East London Office',tier2:'Buffalo City Dept',tier3:'South Africa Env Ministry',sla:30,lang:'en'},
+  {nation:'ZA',state:'Mangaung',district:'Bloemfontein Metro',lat:-29.0852,lon:26.1596,office:'Bloemfontein Metro Office',tier2:'Mangaung Dept',tier3:'South Africa Env Ministry',sla:30,lang:'en'},
+  {nation:'ZA',state:'Msunduzi',district:'Pietermaritzburg',lat:-29.6032,lon:30.3794,office:'Pietermaritzburg Office',tier2:'Msunduzi Dept',tier3:'South Africa Env Ministry',sla:30,lang:'en'},
+  {nation:'ZA',state:'Polokwane Metro',district:'Polokwane City',lat:-23.9045,lon:29.4689,office:'Polokwane City Office',tier2:'Polokwane Metro Dept',tier3:'South Africa Env Ministry',sla:30,lang:'en'},
+  {nation:'ZA',state:'Rustenburg',district:'Rustenburg',lat:-25.6677,lon:27.2414,office:'Rustenburg Office',tier2:'Rustenburg Dept',tier3:'South Africa Env Ministry',sla:30,lang:'en'},
+  {nation:'ZA',state:'Stellenbosch',district:'Stellenbosch',lat:-33.9321,lon:18.8602,office:'Stellenbosch Office',tier2:'Stellenbosch Dept',tier3:'South Africa Env Ministry',sla:30,lang:'en'},
+  {nation:'ZA',state:'George',district:'George',lat:-33.963,lon:22.4617,office:'George Office',tier2:'George Dept',tier3:'South Africa Env Ministry',sla:30,lang:'en'},
+  {nation:'EG',state:'Cairo',district:'Cairo',lat:30.0444,lon:31.2357,office:'Cairo Office',tier2:'Cairo Dept',tier3:'Egypt Env Ministry',sla:30,lang:'en'},
+  {nation:'EG',state:'Alexandria',district:'Alexandria',lat:31.2001,lon:29.9187,office:'Alexandria Office',tier2:'Alexandria Dept',tier3:'Egypt Env Ministry',sla:30,lang:'en'},
+  {nation:'EG',state:'Giza',district:'Giza',lat:30.0131,lon:31.2089,office:'Giza Office',tier2:'Giza Dept',tier3:'Egypt Env Ministry',sla:30,lang:'en'},
+  {nation:'EG',state:'Qalyubia',district:'Banha',lat:30.4642,lon:31.1849,office:'Banha Office',tier2:'Qalyubia Dept',tier3:'Egypt Env Ministry',sla:30,lang:'en'},
+  {nation:'EG',state:'Port Said',district:'Port Said',lat:31.2653,lon:32.3019,office:'Port Said Office',tier2:'Port Said Dept',tier3:'Egypt Env Ministry',sla:30,lang:'en'},
+  {nation:'EG',state:'Suez',district:'Suez',lat:29.9737,lon:32.5263,office:'Suez Office',tier2:'Suez Dept',tier3:'Egypt Env Ministry',sla:30,lang:'en'},
+  {nation:'EG',state:'Luxor',district:'Luxor',lat:25.6872,lon:32.6396,office:'Luxor Office',tier2:'Luxor Dept',tier3:'Egypt Env Ministry',sla:30,lang:'en'},
+  {nation:'EG',state:'Aswan',district:'Aswan',lat:24.0889,lon:32.8998,office:'Aswan Office',tier2:'Aswan Dept',tier3:'Egypt Env Ministry',sla:30,lang:'en'},
+  {nation:'EG',state:'Asyut',district:'Asyut',lat:27.1809,lon:31.1893,office:'Asyut Office',tier2:'Asyut Dept',tier3:'Egypt Env Ministry',sla:30,lang:'en'},
+  {nation:'EG',state:'Beheira',district:'Damanhur',lat:31.0341,lon:30.4682,office:'Damanhur Office',tier2:'Beheira Dept',tier3:'Egypt Env Ministry',sla:30,lang:'en'},
+  {nation:'EG',state:'Beni Suef',district:'Beni Suef',lat:29.0661,lon:31.0994,office:'Beni Suef Office',tier2:'Beni Suef Dept',tier3:'Egypt Env Ministry',sla:30,lang:'en'},
+  {nation:'EG',state:'Dakahlia',district:'Mansoura',lat:31.0364,lon:31.3807,office:'Mansoura Office',tier2:'Dakahlia Dept',tier3:'Egypt Env Ministry',sla:30,lang:'en'},
+  {nation:'EG',state:'Damietta',district:'Damietta',lat:31.4175,lon:31.8144,office:'Damietta Office',tier2:'Damietta Dept',tier3:'Egypt Env Ministry',sla:30,lang:'en'},
+  {nation:'EG',state:'Faiyum',district:'Faiyum',lat:29.3084,lon:30.8428,office:'Faiyum Office',tier2:'Faiyum Dept',tier3:'Egypt Env Ministry',sla:30,lang:'en'},
+  {nation:'EG',state:'Gharbia',district:'Tanta',lat:30.7865,lon:31.0004,office:'Tanta Office',tier2:'Gharbia Dept',tier3:'Egypt Env Ministry',sla:30,lang:'en'},
+  {nation:'EG',state:'Ismailia',district:'Ismailia',lat:30.5965,lon:32.2715,office:'Ismailia Office',tier2:'Ismailia Dept',tier3:'Egypt Env Ministry',sla:30,lang:'en'},
+  {nation:'EG',state:'Kafr El Sheikh',district:'Kafr El Sheikh',lat:31.1119,lon:30.9398,office:'Kafr El Sheikh Office',tier2:'Kafr El Sheikh Dept',tier3:'Egypt Env Ministry',sla:30,lang:'en'},
+  {nation:'EG',state:'Matruh',district:'Mersa Matruh',lat:31.3525,lon:27.2453,office:'Mersa Matruh Office',tier2:'Matruh Dept',tier3:'Egypt Env Ministry',sla:30,lang:'en'},
+  {nation:'EG',state:'Minya',district:'Minya',lat:28.1099,lon:30.7503,office:'Minya Office',tier2:'Minya Dept',tier3:'Egypt Env Ministry',sla:30,lang:'en'},
+  {nation:'EG',state:'Monufia',district:'Shibin El Kom',lat:30.5513,lon:31.0096,office:'Shibin El Kom Office',tier2:'Monufia Dept',tier3:'Egypt Env Ministry',sla:30,lang:'en'},
+  {nation:'ET',state:'Addis Ababa',district:'Addis Ababa',lat:9.03,lon:38.74,office:'Addis Ababa Office',tier2:'Addis Ababa Dept',tier3:'Ethiopia Env Ministry',sla:30,lang:'en'},
+  {nation:'ET',state:'Afar',district:'Semera',lat:11.7934,lon:41.4097,office:'Semera Office',tier2:'Afar Dept',tier3:'Ethiopia Env Ministry',sla:30,lang:'en'},
+  {nation:'ET',state:'Amhara',district:'Bahir Dar',lat:11.5742,lon:37.3612,office:'Bahir Dar Office',tier2:'Amhara Dept',tier3:'Ethiopia Env Ministry',sla:30,lang:'en'},
+  {nation:'ET',state:'Benishangul-Gumuz',district:'Asosa',lat:10.0711,lon:34.5477,office:'Asosa Office',tier2:'Benishangul-Gumuz Dept',tier3:'Ethiopia Env Ministry',sla:30,lang:'en'},
+  {nation:'ET',state:'Central Ethiopia',district:'Hosaina',lat:7.55,lon:37.85,office:'Hosaina Office',tier2:'Central Ethiopia Dept',tier3:'Ethiopia Env Ministry',sla:30,lang:'en'},
+  {nation:'ET',state:'Dire Dawa',district:'Dire Dawa',lat:9.6,lon:41.85,office:'Dire Dawa Office',tier2:'Dire Dawa Dept',tier3:'Ethiopia Env Ministry',sla:30,lang:'en'},
+  {nation:'ET',state:'Gambela',district:'Gambela',lat:8.25,lon:34.59,office:'Gambela Office',tier2:'Gambela Dept',tier3:'Ethiopia Env Ministry',sla:30,lang:'en'},
+  {nation:'ET',state:'Harari',district:'Harar',lat:9.3149,lon:42.1181,office:'Harar Office',tier2:'Harari Dept',tier3:'Ethiopia Env Ministry',sla:30,lang:'en'},
+  {nation:'ET',state:'Oromia',district:'Adama',lat:8.54,lon:39.27,office:'Adama Office',tier2:'Oromia Dept',tier3:'Ethiopia Env Ministry',sla:30,lang:'en'},
+  {nation:'ET',state:'Sidama',district:'Hawassa',lat:7.062,lon:38.4764,office:'Hawassa Office',tier2:'Sidama Dept',tier3:'Ethiopia Env Ministry',sla:30,lang:'en'},
+  {nation:'ET',state:'Somali',district:'Jijiga',lat:9.35,lon:42.79,office:'Jijiga Office',tier2:'Somali Dept',tier3:'Ethiopia Env Ministry',sla:30,lang:'en'},
+  {nation:'ET',state:'South Ethiopia',district:'Worabe',lat:7.2,lon:38.2,office:'Worabe Office',tier2:'South Ethiopia Dept',tier3:'Ethiopia Env Ministry',sla:30,lang:'en'},
+  {nation:'ET',state:'South West Ethiopia',district:'Bonga',lat:7.26,lon:36.23,office:'Bonga Office',tier2:'South West Ethiopia Dept',tier3:'Ethiopia Env Ministry',sla:30,lang:'en'},
+  {nation:'ET',state:'Tigray',district:'Mekelle',lat:13.4967,lon:39.4753,office:'Mekelle Office',tier2:'Tigray Dept',tier3:'Ethiopia Env Ministry',sla:30,lang:'en'},
+  {nation:'ET',state:'SNNPR',district:'Arba Minch',lat:6.03,lon:37.55,office:'Arba Minch Office',tier2:'SNNPR Dept',tier3:'Ethiopia Env Ministry',sla:30,lang:'en'},
+  {nation:'ET',state:'Amhara North',district:'Gondar',lat:12.6,lon:37.45,office:'Gondar Office',tier2:'Amhara North Dept',tier3:'Ethiopia Env Ministry',sla:30,lang:'en'},
+  {nation:'ET',state:'Oromia East',district:'Bale Robe',lat:7.11,lon:40.0,office:'Bale Robe Office',tier2:'Oromia East Dept',tier3:'Ethiopia Env Ministry',sla:30,lang:'en'},
+  {nation:'ET',state:'Oromia West',district:'Nekemte',lat:9.09,lon:34.2,office:'Nekemte Office',tier2:'Oromia West Dept',tier3:'Ethiopia Env Ministry',sla:30,lang:'en'},
+  {nation:'ET',state:'Somali North',district:'Degehabur',lat:8.22,lon:43.56,office:'Degehabur Office',tier2:'Somali North Dept',tier3:'Ethiopia Env Ministry',sla:30,lang:'en'},
+  {nation:'ET',state:'Afar South',district:'Asayita',lat:11.0,lon:41.44,office:'Asayita Office',tier2:'Afar South Dept',tier3:'Ethiopia Env Ministry',sla:30,lang:'en'},
+  {nation:'IR',state:'Tehran',district:'Tehran',lat:35.6892,lon:51.389,office:'Tehran Office',tier2:'Tehran Dept',tier3:'Iran Env Ministry',sla:30,lang:'en'},
+  {nation:'IR',state:'Razavi Khorasan',district:'Mashhad',lat:36.297,lon:59.606,office:'Mashhad Office',tier2:'Razavi Khorasan Dept',tier3:'Iran Env Ministry',sla:30,lang:'en'},
+  {nation:'IR',state:'Isfahan',district:'Isfahan',lat:32.6539,lon:51.666,office:'Isfahan Office',tier2:'Isfahan Dept',tier3:'Iran Env Ministry',sla:30,lang:'en'},
+  {nation:'IR',state:'East Azerbaijan',district:'Tabriz',lat:38.0962,lon:46.2738,office:'Tabriz Office',tier2:'East Azerbaijan Dept',tier3:'Iran Env Ministry',sla:30,lang:'en'},
+  {nation:'IR',state:'Fars',district:'Shiraz',lat:29.5918,lon:52.5837,office:'Shiraz Office',tier2:'Fars Dept',tier3:'Iran Env Ministry',sla:30,lang:'en'},
+  {nation:'IR',state:'Khuzestan',district:'Ahvaz',lat:31.3183,lon:48.6706,office:'Ahvaz Office',tier2:'Khuzestan Dept',tier3:'Iran Env Ministry',sla:30,lang:'en'},
+  {nation:'IR',state:'Alborz',district:'Karaj',lat:35.84,lon:50.9391,office:'Karaj Office',tier2:'Alborz Dept',tier3:'Iran Env Ministry',sla:30,lang:'en'},
+  {nation:'IR',state:'Qom',district:'Qom',lat:34.6416,lon:50.8746,office:'Qom Office',tier2:'Qom Dept',tier3:'Iran Env Ministry',sla:30,lang:'en'},
+  {nation:'IR',state:'Kermanshah',district:'Kermanshah',lat:34.3142,lon:47.065,office:'Kermanshah Office',tier2:'Kermanshah Dept',tier3:'Iran Env Ministry',sla:30,lang:'en'},
+  {nation:'IR',state:'West Azerbaijan',district:'Urmia',lat:37.5527,lon:45.0759,office:'Urmia Office',tier2:'West Azerbaijan Dept',tier3:'Iran Env Ministry',sla:30,lang:'en'},
+  {nation:'IR',state:'Gilan',district:'Rasht',lat:37.2808,lon:49.5832,office:'Rasht Office',tier2:'Gilan Dept',tier3:'Iran Env Ministry',sla:30,lang:'en'},
+  {nation:'IR',state:'Kerman',district:'Kerman',lat:30.2839,lon:57.0834,office:'Kerman Office',tier2:'Kerman Dept',tier3:'Iran Env Ministry',sla:30,lang:'en'},
+  {nation:'IR',state:'Sistan and Baluchestan',district:'Zahedan',lat:29.4963,lon:60.8629,office:'Zahedan Office',tier2:'Sistan and Baluchestan Dept',tier3:'Iran Env Ministry',sla:30,lang:'en'},
+  {nation:'IR',state:'Hamadan',district:'Hamadan',lat:34.7983,lon:48.5146,office:'Hamadan Office',tier2:'Hamadan Dept',tier3:'Iran Env Ministry',sla:30,lang:'en'},
+  {nation:'IR',state:'Yazd',district:'Yazd',lat:31.8974,lon:54.3675,office:'Yazd Office',tier2:'Yazd Dept',tier3:'Iran Env Ministry',sla:30,lang:'en'},
+  {nation:'IR',state:'Ardabil',district:'Ardabil',lat:38.2514,lon:48.2973,office:'Ardabil Office',tier2:'Ardabil Dept',tier3:'Iran Env Ministry',sla:30,lang:'en'},
+  {nation:'IR',state:'Hormozgan',district:'Bandar Abbas',lat:27.1832,lon:56.2666,office:'Bandar Abbas Office',tier2:'Hormozgan Dept',tier3:'Iran Env Ministry',sla:30,lang:'en'},
+  {nation:'IR',state:'Markazi',district:'Arak',lat:34.0917,lon:49.6892,office:'Arak Office',tier2:'Markazi Dept',tier3:'Iran Env Ministry',sla:30,lang:'en'},
+  {nation:'IR',state:'Zanjan',district:'Zanjan',lat:36.6736,lon:48.4787,office:'Zanjan Office',tier2:'Zanjan Dept',tier3:'Iran Env Ministry',sla:30,lang:'en'},
+  {nation:'IR',state:'Kurdistan',district:'Sanandaj',lat:35.311,lon:46.9959,office:'Sanandaj Office',tier2:'Kurdistan Dept',tier3:'Iran Env Ministry',sla:30,lang:'en'},
+  {nation:'SA',state:'Riyadh',district:'Riyadh',lat:24.7136,lon:46.6753,office:'Riyadh Office',tier2:'Riyadh Dept',tier3:'Saudi Arabia Env Ministry',sla:30,lang:'en'},
+  {nation:'SA',state:'Makkah',district:'Jeddah',lat:21.5433,lon:39.1728,office:'Jeddah Office',tier2:'Makkah Dept',tier3:'Saudi Arabia Env Ministry',sla:30,lang:'en'},
+  {nation:'SA',state:'Eastern Province',district:'Dammam',lat:26.3927,lon:49.9777,office:'Dammam Office',tier2:'Eastern Province Dept',tier3:'Saudi Arabia Env Ministry',sla:30,lang:'en'},
+  {nation:'SA',state:'Asir',district:'Abha',lat:18.2164,lon:42.5053,office:'Abha Office',tier2:'Asir Dept',tier3:'Saudi Arabia Env Ministry',sla:30,lang:'en'},
+  {nation:'SA',state:'Jazan',district:'Jazan',lat:16.8892,lon:42.5511,office:'Jazan Office',tier2:'Jazan Dept',tier3:'Saudi Arabia Env Ministry',sla:30,lang:'en'},
+  {nation:'SA',state:'Medina',district:'Medina',lat:24.4672,lon:46.6753,office:'Medina Office',tier2:'Medina Dept',tier3:'Saudi Arabia Env Ministry',sla:30,lang:'en'},
+  {nation:'SA',state:'Qassim',district:'Buraidah',lat:26.3259,lon:43.9743,office:'Buraidah Office',tier2:'Qassim Dept',tier3:'Saudi Arabia Env Ministry',sla:30,lang:'en'},
+  {nation:'SA',state:'Tabuk',district:'Tabuk',lat:28.3835,lon:36.5662,office:'Tabuk Office',tier2:'Tabuk Dept',tier3:'Saudi Arabia Env Ministry',sla:30,lang:'en'},
+  {nation:'SA',state:'Hail',district:'Hail',lat:27.5114,lon:41.7208,office:'Hail Office',tier2:'Hail Dept',tier3:'Saudi Arabia Env Ministry',sla:30,lang:'en'},
+  {nation:'SA',state:'Najran',district:'Najran',lat:17.4933,lon:44.1277,office:'Najran Office',tier2:'Najran Dept',tier3:'Saudi Arabia Env Ministry',sla:30,lang:'en'},
+  {nation:'SA',state:'Al Bahah',district:'Al Bahah',lat:20.0129,lon:41.4677,office:'Al Bahah Office',tier2:'Al Bahah Dept',tier3:'Saudi Arabia Env Ministry',sla:30,lang:'en'},
+  {nation:'SA',state:'Al Jawf',district:'Sakakah',lat:29.9697,lon:40.2064,office:'Sakakah Office',tier2:'Al Jawf Dept',tier3:'Saudi Arabia Env Ministry',sla:30,lang:'en'},
+  {nation:'SA',state:'Northern Borders',district:'Arar',lat:30.9753,lon:41.0381,office:'Arar Office',tier2:'Northern Borders Dept',tier3:'Saudi Arabia Env Ministry',sla:30,lang:'en'},
+  {nation:'SA',state:'Taif',district:'Taif',lat:21.2854,lon:40.4158,office:'Taif Office',tier2:'Taif Dept',tier3:'Saudi Arabia Env Ministry',sla:30,lang:'en'},
+  {nation:'SA',state:'Khamis Mushait',district:'Khamis',lat:18.3063,lon:42.7296,office:'Khamis Office',tier2:'Khamis Mushait Dept',tier3:'Saudi Arabia Env Ministry',sla:30,lang:'en'},
+  {nation:'SA',state:'Dhahran',district:'Dhahran',lat:26.2361,lon:50.0393,office:'Dhahran Office',tier2:'Dhahran Dept',tier3:'Saudi Arabia Env Ministry',sla:30,lang:'en'},
+  {nation:'SA',state:'Yanbu',district:'Yanbu',lat:24.0232,lon:38.19,office:'Yanbu Office',tier2:'Yanbu Dept',tier3:'Saudi Arabia Env Ministry',sla:30,lang:'en'},
+  {nation:'SA',state:'Al Khobar',district:'Al Khobar',lat:26.2172,lon:50.1971,office:'Al Khobar Office',tier2:'Al Khobar Dept',tier3:'Saudi Arabia Env Ministry',sla:30,lang:'en'},
+  {nation:'SA',state:'Hafar Al-Batin',district:'Hafar',lat:28.432,lon:45.963,office:'Hafar Office',tier2:'Hafar Al-Batin Dept',tier3:'Saudi Arabia Env Ministry',sla:30,lang:'en'},
+  {nation:'SA',state:'Jubail',district:'Jubail',lat:27.0046,lon:49.6643,office:'Jubail Office',tier2:'Jubail Dept',tier3:'Saudi Arabia Env Ministry',sla:30,lang:'en'},
+  {nation:'AE',state:'Abu Dhabi',district:'Abu Dhabi',lat:24.4539,lon:54.3773,office:'Abu Dhabi Office',tier2:'Abu Dhabi Dept',tier3:'United Arab Emirates Env Ministry',sla:30,lang:'en'},
+  {nation:'AE',state:'Dubai',district:'Dubai',lat:25.2048,lon:55.2708,office:'Dubai Office',tier2:'Dubai Dept',tier3:'United Arab Emirates Env Ministry',sla:30,lang:'en'},
+  {nation:'AE',state:'Sharjah',district:'Sharjah',lat:25.3578,lon:55.3902,office:'Sharjah Office',tier2:'Sharjah Dept',tier3:'United Arab Emirates Env Ministry',sla:30,lang:'en'},
+  {nation:'AE',state:'Ajman',district:'Ajman',lat:25.4052,lon:55.5136,office:'Ajman Office',tier2:'Ajman Dept',tier3:'United Arab Emirates Env Ministry',sla:30,lang:'en'},
+  {nation:'AE',state:'Umm Al Quwain',district:'Umm Al Quwain',lat:25.5647,lon:55.5552,office:'Umm Al Quwain Office',tier2:'Umm Al Quwain Dept',tier3:'United Arab Emirates Env Ministry',sla:30,lang:'en'},
+  {nation:'AE',state:'Ras Al Khaimah',district:'Ras Al Khaimah',lat:25.7895,lon:55.9432,office:'Ras Al Khaimah Office',tier2:'Ras Al Khaimah Dept',tier3:'United Arab Emirates Env Ministry',sla:30,lang:'en'},
+  {nation:'AE',state:'Fujairah',district:'Fujairah',lat:25.1288,lon:56.3265,office:'Fujairah Office',tier2:'Fujairah Dept',tier3:'United Arab Emirates Env Ministry',sla:30,lang:'en'},
+  {nation:'AE',state:'Al Ain',district:'Al Ain',lat:24.1302,lon:55.8023,office:'Al Ain Office',tier2:'Al Ain Dept',tier3:'United Arab Emirates Env Ministry',sla:30,lang:'en'},
+  {nation:'AE',state:'Al Dhafra',district:'Madinat Zayed',lat:23.68,lon:53.65,office:'Madinat Zayed Office',tier2:'Al Dhafra Dept',tier3:'United Arab Emirates Env Ministry',sla:30,lang:'en'},
+  {nation:'AE',state:'Khor Fakkan',district:'Khor Fakkan',lat:25.3391,lon:56.3441,office:'Khor Fakkan Office',tier2:'Khor Fakkan Dept',tier3:'United Arab Emirates Env Ministry',sla:30,lang:'en'},
+  {nation:'AE',state:'Dibba',district:'Dibba',lat:25.6193,lon:56.2724,office:'Dibba Office',tier2:'Dibba Dept',tier3:'United Arab Emirates Env Ministry',sla:30,lang:'en'},
+  {nation:'AE',state:'Kalba',district:'Kalba',lat:25.0672,lon:56.3558,office:'Kalba Office',tier2:'Kalba Dept',tier3:'United Arab Emirates Env Ministry',sla:30,lang:'en'},
+  {nation:'AE',state:'Hatta',district:'Hatta',lat:24.7992,lon:56.1165,office:'Hatta Office',tier2:'Hatta Dept',tier3:'United Arab Emirates Env Ministry',sla:30,lang:'en'},
+  {nation:'AE',state:'Jebel Ali',district:'Jebel Ali',lat:24.9857,lon:55.0594,office:'Jebel Ali Office',tier2:'Jebel Ali Dept',tier3:'United Arab Emirates Env Ministry',sla:30,lang:'en'},
+  {nation:'AE',state:'Al Ruwaish',district:'Al Ruwaish',lat:24.1,lon:52.73,office:'Al Ruwaish Office',tier2:'Al Ruwaish Dept',tier3:'United Arab Emirates Env Ministry',sla:30,lang:'en'},
+  {nation:'AE',state:'Mussafah',district:'Mussafah',lat:24.3348,lon:54.4975,office:'Mussafah Office',tier2:'Mussafah Dept',tier3:'United Arab Emirates Env Ministry',sla:30,lang:'en'},
+  {nation:'AE',state:'Al Mirfa',district:'Al Mirfa',lat:23.98,lon:53.44,office:'Al Mirfa Office',tier2:'Al Mirfa Dept',tier3:'United Arab Emirates Env Ministry',sla:30,lang:'en'},
+  {nation:'AE',state:'Liwa',district:'Liwa Oasis',lat:23.13,lon:53.77,office:'Liwa Oasis Office',tier2:'Liwa Dept',tier3:'United Arab Emirates Env Ministry',sla:30,lang:'en'},
+  {nation:'AE',state:'Masafi',district:'Masafi',lat:25.3053,lon:56.1719,office:'Masafi Office',tier2:'Masafi Dept',tier3:'United Arab Emirates Env Ministry',sla:30,lang:'en'},
+  {nation:'AE',state:'Dhaid',district:'Dhaid',lat:25.2847,lon:55.8828,office:'Dhaid Office',tier2:'Dhaid Dept',tier3:'United Arab Emirates Env Ministry',sla:30,lang:'en'},
+  {nation:'ID',state:'Jakarta',district:'Jakarta',lat:-6.2088,lon:106.8456,office:'Jakarta Office',tier2:'Jakarta Dept',tier3:'Indonesia Env Ministry',sla:30,lang:'en'},
+  {nation:'ID',state:'West Java',district:'Bandung',lat:-6.9175,lon:107.6191,office:'Bandung Office',tier2:'West Java Dept',tier3:'Indonesia Env Ministry',sla:30,lang:'en'},
+  {nation:'ID',state:'Central Java',district:'Semarang',lat:-7.0051,lon:110.4381,office:'Semarang Office',tier2:'Central Java Dept',tier3:'Indonesia Env Ministry',sla:30,lang:'en'},
+  {nation:'ID',state:'East Java',district:'Surabaya',lat:-7.2575,lon:112.7521,office:'Surabaya Office',tier2:'East Java Dept',tier3:'Indonesia Env Ministry',sla:30,lang:'en'},
+  {nation:'ID',state:'North Sumatra',district:'Medan',lat:3.5952,lon:98.6722,office:'Medan Office',tier2:'North Sumatra Dept',tier3:'Indonesia Env Ministry',sla:30,lang:'en'},
+  {nation:'ID',state:'Banten',district:'Serang',lat:-6.1164,lon:106.1537,office:'Serang Office',tier2:'Banten Dept',tier3:'Indonesia Env Ministry',sla:30,lang:'en'},
+  {nation:'ID',state:'Bali',district:'Denpasar',lat:-8.65,lon:115.2167,office:'Denpasar Office',tier2:'Bali Dept',tier3:'Indonesia Env Ministry',sla:30,lang:'en'},
+  {nation:'ID',state:'South Sulawesi',district:'Makassar',lat:-5.1477,lon:119.4327,office:'Makassar Office',tier2:'South Sulawesi Dept',tier3:'Indonesia Env Ministry',sla:30,lang:'en'},
+  {nation:'ID',state:'South Sumatra',district:'Palembang',lat:-2.9761,lon:104.7754,office:'Palembang Office',tier2:'South Sumatra Dept',tier3:'Indonesia Env Ministry',sla:30,lang:'en'},
+  {nation:'ID',state:'Lampung',district:'Bandar Lampung',lat:-5.4297,lon:105.2626,office:'Bandar Lampung Office',tier2:'Lampung Dept',tier3:'Indonesia Env Ministry',sla:30,lang:'en'},
+  {nation:'ID',state:'Riau',district:'Pekanbaru',lat:0.5071,lon:101.4478,office:'Pekanbaru Office',tier2:'Riau Dept',tier3:'Indonesia Env Ministry',sla:30,lang:'en'},
+  {nation:'ID',state:'West Sumatra',district:'Padang',lat:-0.9492,lon:100.3543,office:'Padang Office',tier2:'West Sumatra Dept',tier3:'Indonesia Env Ministry',sla:30,lang:'en'},
+  {nation:'ID',state:'South Kalimantan',district:'Banjarmasin',lat:-3.3194,lon:114.5906,office:'Banjarmasin Office',tier2:'South Kalimantan Dept',tier3:'Indonesia Env Ministry',sla:30,lang:'en'},
+  {nation:'ID',state:'East Kalimantan',district:'Samarinda',lat:-0.5022,lon:117.1536,office:'Samarinda Office',tier2:'East Kalimantan Dept',tier3:'Indonesia Env Ministry',sla:30,lang:'en'},
+  {nation:'ID',state:'West Kalimantan',district:'Pontianak',lat:-0.0263,lon:109.3425,office:'Pontianak Office',tier2:'West Kalimantan Dept',tier3:'Indonesia Env Ministry',sla:30,lang:'en'},
+  {nation:'ID',state:'Papua',district:'Jayapura',lat:-2.5337,lon:140.7181,office:'Jayapura Office',tier2:'Papua Dept',tier3:'Indonesia Env Ministry',sla:30,lang:'en'},
+  {nation:'ID',state:'Aceh',district:'Banda Aceh',lat:5.5483,lon:95.3238,office:'Banda Aceh Office',tier2:'Aceh Dept',tier3:'Indonesia Env Ministry',sla:30,lang:'en'},
+  {nation:'ID',state:'Yogyakarta',district:'Yogyakarta',lat:-7.7956,lon:110.3695,office:'Yogyakarta Office',tier2:'Yogyakarta Dept',tier3:'Indonesia Env Ministry',sla:30,lang:'en'},
+  {nation:'ID',state:'West Nusa Tenggara',district:'Mataram',lat:-8.5833,lon:116.1167,office:'Mataram Office',tier2:'West Nusa Tenggara Dept',tier3:'Indonesia Env Ministry',sla:30,lang:'en'},
+  {nation:'ID',state:'North Sulawesi',district:'Manado',lat:1.4748,lon:124.8421,office:'Manado Office',tier2:'North Sulawesi Dept',tier3:'Indonesia Env Ministry',sla:30,lang:'en'},
 ];
 const FORECASTS={
   tamilnadu:{label:'Tamil Nadu — Chennai–Coimbatore corridor',data:[68,74,82,95,118,142,128,98],base:[62,64,66,68,70,72,74,76],note:'Sea-breeze 9 km/h • NE monsoon • PM2.5 sea-salt',badge:'142 in 36h'},
   delhi:{label:'Indo-Gangetic • Delhi–Mumbai',data:[112,128,142,198,312,278,210,165],base:[95,98,102,105,108,110,112,115],note:'NW 12 km/h → Delhi 22h • stubble',badge:'312 in 14h'},
   beijing:{label:'Beijing–Shanghai',data:[140,165,188,210,245,260,230,200],base:[110,115,118,120,122,124,126,128],note:'E 8 km/h • industrial',badge:'260 in 36h'},
   saopaulo:{label:'São Paulo–Rio',data:[85,98,110,135,168,152,118,96],base:[70,72,74,76,78,80,82,84],note:'S/SE 6 km/h • queimada',badge:'168 in 24h'},
-  // keep bounds
+  // New BRICS+ forecasts
+  cairo:{label:'Egypt — Cairo–Alexandria',data:[92,105,118,142,178,165,132,102],base:[78,80,82,84,86,88,90,92],note:'NW 11 km/h • dust + urban',badge:'178 in 24h'},
+  addis:{label:'Ethiopia — Addis Ababa Rift',data:[55,62,71,88,112,102,84,66],base:[48,50,52,54,56,58,60,62],note:'SW 7 km/h • biomass',badge:'112 in 24h'},
+  tehran:{label:'Iran — Tehran–Isfahan',data:[88,102,118,145,182,168,132,102],base:[72,74,76,78,80,82,84,86],note:'W 9 km/h • dust + industrial',badge:'182 in 24h'},
+  riyadh:{label:'Saudi Arabia — Riyadh–Jeddah',data:[78,92,108,132,168,155,122,92],base:[65,67,69,71,73,75,77,79],note:'N 10 km/h • dust storm',badge:'168 in 24h'},
+  dubai:{label:'UAE — Dubai–Abu Dhabi',data:[62,71,82,98,124,112,88,68],base:[52,54,56,58,60,62,64,66],note:'NW 8 km/h • marine + dust',badge:'124 in 24h'},
+  jakarta:{label:'Indonesia — Jakarta–Surabaya',data:[58,66,75,92,118,108,84,64],base:[50,52,54,56,58,60,62,64],note:'SE 6 km/h • peat + urban',badge:'118 in 24h'},
+  moscow:{label:'Moscow–St.P • Wildfire',data:[60,72,88,105,132,118,92,75],base:[55,56,58,60,62,64,66,68],note:'NE 10 km/h • PBLH 180m',badge:'132 in 24h'},
+  joburg:{label:'Jo’burg–Cape Town • Dust',data:[70,82,95,118,145,130,105,82],base:[60,62,64,66,68,70,72,74],note:'SW 14 km/h • dust + industrial',badge:'145 in 24h'},
 };
 const CORRIDOR_BOUNDS={
   tamilnadu:[[13.5,78.5],[11.0,76.8],[9.9,78.1],[13.0,80.3]],
   delhi:[[28.61,77.20],[26.91,75.78],[23.02,72.57],[19.07,72.87]],
   beijing:[[39.90,116.40],[37.8,118.2],[32.06,118.79],[31.23,121.47]],
   saopaulo:[[-23.55,-46.63],[-23.0,-45.2],[-22.90,-43.17]],
+  cairo:[[31.2,29.9],[30.0,31.2],[25.6,32.6],[31.3,32.3]],
+  addis:[[9.5,38.7],[11.5,37.3],[7.0,38.4],[9.0,41.8]],
+  tehran:[[35.6,51.3],[36.2,59.6],[32.6,51.6],[29.5,52.5]],
+  riyadh:[[24.7,46.6],[21.5,39.1],[18.2,42.5],[26.3,49.9]],
+  dubai:[[25.2,55.2],[24.4,54.3],[25.1,56.3],[25.7,55.9]],
+  jakarta:[[-6.2,106.8],[-6.9,107.6],[-7.2,112.7],[-2.5,140.7]],
   moscow:[[55.75,37.61],[58.0,36.5],[59.93,30.33]],
   joburg:[[-26.20,28.04],[-30.55,22.93],[-33.92,18.42]]
 };
@@ -242,7 +466,7 @@ function generateReports(){
   const out=[];
   const now=Date.now();
   // bias: 30% of reports to Tamil Nadu for default live view
-  for(let i=0;i<140;i++){
+  for(let i=0;i<420;i++){
     let j;
     if(rng()<0.30){
       const tn=JURISDICTIONS.filter(x=>x.state==='Tamil Nadu');
@@ -267,7 +491,7 @@ function generateReports(){
   return out;
 }
 const REPORTS=generateReports();
-let ALERTS=REPORTS.filter(r=>r.verified && r.pm25>95).slice(0,28).map(r=>({id:'A'+r.id,reportId:r.id,nation:r.nation,state:r.state,district:r.district,pm25:r.pm25,conf:r.conf,type:r.type,ts:r.ts,tier1:JURISDICTIONS.find(j=>j.district===r.district)?.office||r.office,severity:r.pm25>250?'c': r.pm25>150?'h':'m'}));
+let ALERTS=REPORTS.filter(r=>r.verified && r.pm25>95).slice(0,44).map(r=>({id:'A'+r.id,reportId:r.id,nation:r.nation,state:r.state,district:r.district,pm25:r.pm25,conf:r.conf,type:r.type,ts:r.ts,tier1:JURISDICTIONS.find(j=>j.district===r.district)?.office||r.office,severity:r.pm25>250?'c': r.pm25>150?'h':'m'}));
 
 // FILTERS
 let activeLayer='all';
@@ -282,7 +506,7 @@ const customDates=document.getElementById('customDates');
 
 function initFilters(){
   try{
-    fCountry.innerHTML='<option value="ALL">All BRICS — 5 nations</option>';
+    fCountry.innerHTML='<option value="ALL">All BRICS — 11 nations</option>';
     [...new Set(JURISDICTIONS.map(j=>j.nation))].sort().forEach(n=>{
       const name={IN:'India',BR:'Brazil',CN:'China',RU:'Russia',ZA:'South Africa'}[n]||n;
       const o=document.createElement('option'); o.value=n; o.textContent=`${name} (${n})`; fCountry.appendChild(o);
@@ -398,7 +622,7 @@ function updateDashboard(){
   document.getElementById('livePill').textContent = `● ${alerts.length} plumes • ${reports.length} validations • ${tr.label}`;
   // chart region
   const key = fState.value==='Tamil Nadu' ? 'tamilnadu' : (()=>{
-    const cmap={IN:'delhi',CN:'beijing',BR:'saopaulo',RU:'moscow',ZA:'joburg'};
+    const cmap={IN:'tamilnadu',BR:'saopaulo',RU:'moscow',CN:'beijing',ZA:'joburg',EG:'cairo',ET:'addis',IR:'tehran',SA:'riyadh',AE:'dubai',ID:'jakarta'};
     const n=fCountry.value;
     if(n!=='ALL' && cmap[n]) return cmap[n];
     if(fDistrict.value!=='ALL'){ const j=JURISDICTIONS.find(x=>x.district===fDistrict.value); if(j && cmap[j.nation]) return cmap[j.nation];}
@@ -432,7 +656,7 @@ function updateDashboard(){
     const j=JURISDICTIONS.find(x=>x.state===fState.value);
     if(j) map.setView([j.lat,j.lon], 6);
   } else if(fCountry.value!=='ALL'){
-    const cmap={IN:'tamilnadu',CN:'beijing',BR:'saopaulo',RU:'moscow',ZA:'joburg'};
+    const cmap={IN:'tamilnadu',BR:'saopaulo',RU:'moscow',CN:'beijing',ZA:'joburg',EG:'cairo',ET:'addis',IR:'tehran',SA:'riyadh',AE:'dubai',ID:'jakarta'};
     const b=CORRIDOR_BOUNDS[cmap[fCountry.value]||'tamilnadu'];
     if(b) map.fitBounds(b,{padding:[18,18]});
   }
