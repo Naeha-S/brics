@@ -9,10 +9,7 @@
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <style>
-:root{
-  --bg:#FAFAFA; --fg:#0F172A; --muted:#64748B; --muted2:#F1F5F9; --border:#E2E8F0;
-  --card:#fff; --accent:#0052FF; --accent2:#4D7CFF; --radius:14px; --shadow:0 4px 12px rgba(0,0,0,.06);
-}
+:root{--bg:#FAFAFA;--fg:#0F172A;--muted:#64748B;--muted2:#F1F5F9;--border:#E2E8F0;--card:#fff;--accent:#0052FF;--accent2:#4D7CFF;--radius:14px;--shadow:0 4px 12px rgba(0,0,0,.06)}
 *{box-sizing:border-box;margin:0;padding:0}
 html{overflow-x:hidden}
 body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--fg);overflow-x:hidden;-webkit-font-smoothing:antialiased}
@@ -33,12 +30,10 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--fg);overflo
 .title-row h2{font-family:'Calistoga',serif;font-size:22px;font-weight:400;letter-spacing:-.02em}
 .title-row h2 span{background:linear-gradient(to right,var(--accent),var(--accent2));-webkit-background-clip:text;color:transparent}
 .title-row p{font-size:13px;color:var(--muted);margin-top:4px}
-
-/* filters */
 .filters{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:12px;box-shadow:var(--shadow);margin:14px 0;display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end}
 .fg{display:flex;flex-direction:column;gap:5px;min-width:148px;flex:1}
 .fg label{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:500}
-.fg select, .fg input{padding:8px 11px;border-radius:999px;border:1px solid var(--border);background:#fff;font-size:13px;font-weight:500;color:var(--fg);width:100%}
+.fg select,.fg input{padding:8px 11px;border-radius:999px;border:1px solid var(--border);background:#fff;font-size:13px;font-weight:500;color:var(--fg);width:100%}
 .fg select:disabled{opacity:.45;background:var(--muted2)}
 .date-row{display:flex;gap:6px}
 .date-row input{flex:1;min-width:0}
@@ -109,22 +104,21 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--fg);overflo
       <h2>Operational <span>dashboard</span></h2>
       <p>H3 0.74 km² • GAUL L2 • PINN 72h • Tiered dispatch — filters drive all data</p>
     </div>
-    <span class="pill" id="livePill" style="background:var(--fg);color:#fff;border-color:var(--fg)">● LIVE • 47 plumes</span>
+    <span class="pill" id="livePill" style="background:var(--fg);color:#fff;border-color:var(--fg)">● LIVE • India / Tamil Nadu</span>
   </div>
 
-  <!-- FILTERS -->
   <div class="filters" id="filters">
-    <div class="fg"><label>Country</label><select id="fCountry"></select></div>
-    <div class="fg"><label>State / Province</label><select id="fState"></select></div>
+    <div class="fg"><label>Country *</label><select id="fCountry"></select></div>
+    <div class="fg"><label>State / Province *</label><select id="fState"></select></div>
     <div class="fg"><label>District / Municipality</label><select id="fDistrict"></select></div>
-    <div class="fg" style="min-width:160px"><label>Time range</label><select id="fTime"><option value="live">Live — now</option><option value="24h">Last 24 hours</option><option value="7d">Last 7 days</option><option value="30d">Last 30 days</option><option value="custom">Custom range</option></select></div>
+    <div class="fg" style="min-width:160px"><label>Time range</label><select id="fTime"><option value="live">Live — now (last 3h)</option><option value="24h">Last 24 hours</option><option value="7d">Last 7 days</option><option value="30d">Last 30 days</option><option value="custom">Custom range</option></select></div>
     <div class="fg" id="customDates" style="display:none;min-width:220px"><label>Custom dates</label><div class="date-row"><input type="date" id="fFrom"><input type="date" id="fTo"></div></div>
     <div class="filter-actions">
       <button class="btn btn-light" onclick="resetFilters()">Reset</button>
       <button class="btn btn-dark" onclick="exportFiltered()">Export CSV</button>
     </div>
   </div>
-  <div class="meta-bar" id="metaBar">Showing <b id="metaCount">0</b> validations • <b id="metaPlumes">0</b> plumes • <b id="metaAlerts">0</b> alerts — <span id="metaLoc">All BRICS</span> — <span id="metaTime">Live</span> <span id="metaSync" style="margin-left:6px;opacity:.7">• sync 2 min ago (S5P/ERA5/CAMS)</span></div>
+  <div class="meta-bar" id="metaBar">Showing <b id="metaCount">0</b> validations • <b id="metaPlumes">0</b> plumes • <b id="metaAlerts">0</b> alerts — <span id="metaLoc">India / Tamil Nadu</span> — <span id="metaTime">Live</span> <span id="metaSync" style="margin-left:6px;opacity:.7">• S5P/ERA5/CAMS + citizen</span></div>
 
   <div class="stats">
     <div class="stat"><small>Validations (filtered)</small><strong id="sValid">0</strong><span id="sValidSub">—</span></div>
@@ -137,26 +131,25 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--fg);overflo
     <div style="display:flex;flex-direction:column;gap:12px">
       <div class="card" style="position:relative">
         <div class="card-head">
-          <h3>Live geospatial — H3 Res 8</h3>
+          <h3 id="mapTitle">Live geospatial — Tamil Nadu</h3>
           <div class="tabs"><button class="active" onclick="setLayer('all',this)">All</button><button onclick="setLayer('citizen',this)">Citizen</button><button onclick="setLayer('satellite',this)">S5P</button><button onclick="setLayer('trajectory',this)">Wind</button></div>
         </div>
         <div id="map"></div>
         <div class="legend"><b>Legend</b> • sync 2 min<br><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--accent)"></span> Verified &nbsp; <span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#D97706"></span> Queued &nbsp; <span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#0A7A3E"></span> S5P ≥2.5e15</div>
         <div class="map-bar">
           <div style="display:flex;gap:6px;flex-wrap:wrap" id="corridorChips">
-            <button class="chip active" data-c="delhi" onclick="flyTo('delhi')">🇮🇳 Indo-Gangetic</button>
-            <button class="chip" data-c="beijing" onclick="flyTo('beijing')">🇨🇳 Beijing–Shanghai</button>
-            <button class="chip" data-c="saopaulo" onclick="flyTo('saopaulo')">🇧🇷 São Paulo–Rio</button>
-            <button class="chip" data-c="moscow" onclick="flyTo('moscow')">🇷🇺 Moscow–St.P</button>
-            <button class="chip" data-c="joburg" onclick="flyTo('joburg')">🇿🇦 Jo’burg–Cape</button>
+            <button class="chip active" data-c="tamilnadu" onclick="flyTo('tamilnadu')">🇮🇳 Tamil Nadu</button>
+            <button class="chip" data-c="delhi" onclick="flyTo('delhi')">🇮🇳 Indo-Gangetic</button>
+            <button class="chip" data-c="beijing" onclick="flyTo('beijing')">🇨🇳 Beijing</button>
+            <button class="chip" data-c="saopaulo" onclick="flyTo('saopaulo')">🇧🇷 São Paulo</button>
           </div>
-          <span style="margin-left:auto;font-size:11px;color:var(--muted)">GAUL L2 • ST_INTERSECTS</span>
+          <span style="margin-left:auto;font-size:11px;color:var(--muted)">Chennai 13.08°N 80.27°E • H3 0.74km²</span>
         </div>
       </div>
       <div class="card chart-mini">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px"><h3 style="font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase" id="chartTitle">72h PINN forecast</h3><span class="tag tag-bad" id="chartBadge">—</span></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px"><h3 style="font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase" id="chartTitle">72h PINN — Tamil Nadu (Chennai–Coimbatore)</h3><span class="tag tag-bad" id="chartBadge">Live</span></div>
         <canvas id="forecastChart"></canvas>
-        <div style="font-size:11px;color:var(--muted);margin-top:6px" id="chartNote">ERA5 wind • GAUL intersects • IN→BR RMSE 11.4 (TEE)</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:6px" id="chartNote">—</div>
       </div>
     </div>
 
@@ -165,7 +158,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--fg);overflo
         <h4>Ground validation <span class="tag tag-ok" style="margin-left:auto">Ci ≥0.70</span></h4>
         <div class="upload" id="dropzone" onclick="document.getElementById('fileInput').click()">
           <div style="font-weight:700;font-size:13px">Drop hazard photo</div>
-          <p style="margin-top:4px;font-size:12px;color:var(--muted)">Stubble / plume / wildfire / smog • auto-tagged to selected district</p>
+          <p style="margin-top:4px;font-size:12px;color:var(--muted)">Auto-tagged to Tamil Nadu • Flash triage</p>
         </div>
         <input type="file" id="fileInput" accept="image/*" hidden>
         <div id="preview" style="display:none;margin-top:10px">
@@ -177,12 +170,12 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--fg);overflo
             <div class="progress" style="margin-top:6px"><i id="prog"></i></div>
           </div>
           <div style="margin-top:8px;display:flex;gap:6px">
-            <input id="sensorVal" placeholder="PM2.5 µg/m³ (auto-filled from selection)" style="flex:1;padding:8px 11px;border-radius:999px;border:1px solid var(--border);font-size:12px">
+            <input id="sensorVal" placeholder="PM2.5 µg/m³" style="flex:1;padding:8px 11px;border-radius:999px;border:1px solid var(--border);font-size:12px">
             <button class="btn btn-dark" onclick="submitReport()">Submit</button>
           </div>
         </div>
         <div style="margin-top:10px;border-top:1px solid var(--border);padding-top:8px">
-          <div style="display:flex;justify-content:space-between;align-items:center"><b style="font-size:11px;letter-spacing:.06em;text-transform:uppercase">Recent validations <span id="recentCount" style="font-weight:400;color:var(--muted)"></span></b><small style="color:var(--muted);font-size:11px" id="recentMeta">filtered</small></div>
+          <div style="display:flex;justify-content:space-between;align-items:center"><b style="font-size:11px;letter-spacing:.06em;text-transform:uppercase">Recent validations <span id="recentCount" style="font-weight:400;color:var(--muted)"></span></b><small style="color:var(--muted);font-size:11px" id="recentMeta">Live • Tamil Nadu</small></div>
           <div id="recentReports" style="margin-top:7px"></div>
         </div>
       </div>
@@ -190,12 +183,12 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--fg);overflo
         <h4>Tiered dispatch <span class="tag tag-ok" style="margin-left:auto">SHA-256</span></h4>
         <div id="alerts"></div>
         <button class="btn btn-light" style="width:100%;margin-top:8px" onclick="simulateAlert()">Simulate Tier 3 for current filter</button>
-        <div style="font-size:11px;color:var(--muted);margin-top:6px">SQL: ST_INTERSECTS(plume, geom) → Tier 1/2/3 • Translated • Ledgered</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:6px">ST_INTERSECTS → Tier 1 Collector • Tier 2 SPCB • Tier 3 CPCB/MoEFCC • TNPCB</div>
       </div>
     </div>
   </div>
 
-  <div style="text-align:center;padding:6px 0 16px;font-size:11px;color:var(--muted)">Ingestion, PINN & compliance details in <b>README.md</b> • Dashboard reflects live filtered datasets • Source: S5P TROPOMI (Copernicus), ERA5 (ECMWF), CAMS (ADS), FAO GAUL, OpenAQ + citizen</div>
+  <div style="text-align:center;padding:6px 0 16px;font-size:11px;color:var(--muted)">Ingestion, PINN & compliance in <b>README.md</b> • Dashboard filters drive all datasets • Tamil Nadu default: IN / Tamil Nadu / Live</div>
 </div>
 
 <div id="modal" style="display:none;position:fixed;inset:0;background:rgba(15,23,42,.55);z-index:200;align-items:center;justify-content:center;padding:14px">
@@ -206,73 +199,77 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--fg);overflo
 </div>
 
 <script>
-// ================= DATASETS — correct, time-aware, from PRD sources =================
+// ========== DATASETS — now includes Tamil Nadu ==========
 const JURISDICTIONS=[
-  {nation:'IN',state:'Punjab',district:'Patiala',lat:30.335,lon:76.395,office:'SDM Patiala',tier2:'PPCB Member Sec.',tier3:'CPCB / MoEFCC',sla:30,lang:'pa-IN'},
-  {nation:'IN',state:'Punjab',district:'Ludhiana',lat:30.90,lon:75.85,office:'PPCB Ludhiana',tier2:'PPCB Member Sec.',tier3:'CPCB / MoEFCC',sla:45,lang:'pa-IN'},
+  {nation:'IN',state:'Tamil Nadu',district:'Chennai',lat:13.0827,lon:80.2707,office:'TNPCB Chennai',tier2:'TNPCB Member Sec.',tier3:'CPCB / MoEFCC (TN)',sla:30,lang:'ta-IN'},
+  {nation:'IN',state:'Tamil Nadu',district:'Coimbatore',lat:11.0168,lon:76.9558,office:'TNPCB Coimbatore',tier2:'TNPCB Member Sec.',tier3:'CPCB / MoEFCC (TN)',sla:30,lang:'ta-IN'},
+  {nation:'IN',state:'Tamil Nadu',district:'Madurai',lat:9.9252,lon:78.1198,office:'Collector Madurai',tier2:'TNPCB Member Sec.',tier3:'CPCB / MoEFCC (TN)',sla:30,lang:'ta-IN'},
+  {nation:'IN',state:'Tamil Nadu',district:'Tiruchirappalli',lat:10.7905,lon:78.7047,office:'TNPCB Trichy',tier2:'TNPCB Member Sec.',tier3:'CPCB / MoEFCC (TN)',sla:30,lang:'ta-IN'},
+  {nation:'IN',state:'Tamil Nadu',district:'Salem',lat:11.6643,lon:78.1460,office:'TNPCB Salem',tier2:'TNPCB Member Sec.',tier3:'CPCB / MoEFCC (TN)',sla:30,lang:'ta-IN'},
+  {nation:'IN',state:'Punjab',district:'Patiala',lat:30.335,lon:76.395,office:'SDM Patiala',tier2:'PPCB',tier3:'CPCB / MoEFCC',sla:30,lang:'pa-IN'},
+  {nation:'IN',state:'Punjab',district:'Ludhiana',lat:30.90,lon:75.85,office:'PPCB Ludhiana',tier2:'PPCB',tier3:'CPCB / MoEFCC',sla:45,lang:'pa-IN'},
   {nation:'IN',state:'Gujarat',district:'Bharuch',lat:21.70,lon:72.97,office:'GPCB Bharuch',tier2:'GPCB',tier3:'CPCB / MoEFCC',sla:30,lang:'gu-IN'},
   {nation:'IN',state:'Maharashtra',district:'Mumbai City',lat:19.07,lon:72.87,office:'MPCB Mumbai',tier2:'SPCB',tier3:'CPCB / MoEFCC',sla:60,lang:'mr-IN'},
   {nation:'IN',state:'Delhi',district:'Central Delhi',lat:28.61,lon:77.23,office:'CPCB Delhi',tier2:'DPCC',tier3:'CPCB / MoEFCC',sla:30,lang:'hi-IN'},
-  {nation:'IN',state:'Rajasthan',district:'Jaipur',lat:26.91,lon:75.78,office:'RSPCB Jaipur',tier2:'RSPCB',tier3:'CPCB / MoEFCC',sla:45,lang:'hi-IN'},
   {nation:'BR',state:'São Paulo',district:'São Paulo Capital',lat:-23.55,lon:-46.63,office:'CETESB São Paulo',tier2:'SEMA',tier3:'IBAMA / MMA',sla:60,lang:'pt-BR'},
   {nation:'BR',state:'Rio de Janeiro',district:'Rio Capital',lat:-22.90,lon:-43.17,office:'INEA Rio',tier2:'SEMA',tier3:'IBAMA / MMA',sla:60,lang:'pt-BR'},
-  {nation:'CN',state:'Hebei',district:'Tangshan',lat:39.62,lon:118.18,office:'MEE Hebei',tier2:'Provincial Dept',tier3:'MEE Transboundary Desk',sla:45,lang:'zh-CN'},
-  {nation:'CN',state:'Guangdong',district:'Guangzhou',lat:23.12,lon:113.28,office:'MEE Guangdong',tier2:'Provincial Dept',tier3:'MEE Transboundary Desk',sla:60,lang:'zh-CN'},
-  {nation:'RU',state:'Moscow Oblast',district:'Moscow',lat:55.75,lon:37.61,office:'Rosprirodnadzor Moscow',tier2:'Oblast Directorate',tier3:'Minprirody',sla:60,lang:'ru-RU'},
-  {nation:'RU',state:'Leningrad Oblast',district:'St Petersburg',lat:59.93,lon:30.33,office:'Rosprirodnadzor NW',tier2:'Oblast Directorate',tier3:'Minprirody',sla:60,lang:'ru-RU'},
-  {nation:'ZA',state:'Gauteng',district:'Johannesburg',lat:-26.20,lon:28.04,office:'DEFF Gauteng',tier2:'Provincial Directorate',tier3:'DFFE',sla:60,lang:'en-ZA'},
-  {nation:'ZA',state:'Western Cape',district:'Cape Town',lat:-33.92,lon:18.42,office:'SAWS Cape Town',tier2:'Provincial Directorate',tier3:'DFFE',sla:60,lang:'en-ZA'},
+  {nation:'CN',state:'Hebei',district:'Tangshan',lat:39.62,lon:118.18,office:'MEE Hebei',tier2:'Provincial Dept',tier3:'MEE Desk',sla:45,lang:'zh-CN'},
+  {nation:'RU',state:'Moscow Oblast',district:'Moscow',lat:55.75,lon:37.61,office:'Rosprirodnadzor Moscow',tier2:'Oblast Dir.',tier3:'Minprirody',sla:60,lang:'ru-RU'},
+  {nation:'ZA',state:'Gauteng',district:'Johannesburg',lat:-26.20,lon:28.04,office:'DEFF Gauteng',tier2:'Provincial',tier3:'DFFE',sla:60,lang:'en-ZA'},
+  {nation:'ZA',state:'Western Cape',district:'Cape Town',lat:-33.92,lon:18.42,office:'SAWS Cape Town',tier2:'Provincial',tier3:'DFFE',sla:60,lang:'en-ZA'},
 ];
 const FORECASTS={
-  delhi:{label:'Indo-Gangetic • Delhi–Mumbai',data:[112,128,142,198,312,278,210,165],base:[95,98,102,105,108,110,112,115],note:'ERA5 NW 12 km/h → Delhi 22h',badge:'312 in 14h'},
-  beijing:{label:'Beijing–Shanghai Industrial Belt',data:[140,165,188,210,245,260,230,200],base:[110,115,118,120,122,124,126,128],note:'ERA5 E 8 km/h • Hebei→Shandong',badge:'260 in 36h'},
-  saopaulo:{label:'São Paulo–Rio • Queimada',data:[85,98,110,135,168,152,118,96],base:[70,72,74,76,78,80,82,84],note:'S/SE 6 km/h • TROPOMI QA0.81',badge:'168 in 24h'},
-  moscow:{label:'Moscow–St.P • Wildfire',data:[60,72,88,105,132,118,92,75],base:[55,56,58,60,62,64,66,68],note:'NE 10 km/h • PBLH 180m',badge:'132 in 24h'},
-  joburg:{label:'Jo’burg–Cape Town • Dust',data:[70,82,95,118,145,130,105,82],base:[60,62,64,66,68,70,72,74],note:'SW 14 km/h • dust + industrial',badge:'145 in 24h'},
+  tamilnadu:{label:'Tamil Nadu — Chennai–Coimbatore corridor',data:[68,74,82,95,118,142,128,98],base:[62,64,66,68,70,72,74,76],note:'Sea-breeze 9 km/h • NE monsoon • PM2.5 sea-salt',badge:'142 in 36h'},
+  delhi:{label:'Indo-Gangetic • Delhi–Mumbai',data:[112,128,142,198,312,278,210,165],base:[95,98,102,105,108,110,112,115],note:'NW 12 km/h → Delhi 22h • stubble',badge:'312 in 14h'},
+  beijing:{label:'Beijing–Shanghai',data:[140,165,188,210,245,260,230,200],base:[110,115,118,120,122,124,126,128],note:'E 8 km/h • industrial',badge:'260 in 36h'},
+  saopaulo:{label:'São Paulo–Rio',data:[85,98,110,135,168,152,118,96],base:[70,72,74,76,78,80,82,84],note:'S/SE 6 km/h • queimada',badge:'168 in 24h'},
+  // keep bounds
 };
-const CORRIDOR_BOUNDS={delhi:[[28.61,77.20],[26.91,75.78],[23.02,72.57],[19.07,72.87]],beijing:[[39.90,116.40],[37.8,118.2],[32.06,118.79],[31.23,121.47]],saopaulo:[[-23.55,-46.63],[-23.0,-45.2],[-22.90,-43.17]],moscow:[[55.75,37.61],[58.0,36.5],[59.93,30.33]],joburg:[[-26.20,28.04],[-30.55,22.93],[-33.92,18.42]]};
+const CORRIDOR_BOUNDS={
+  tamilnadu:[[13.5,78.5],[11.0,76.8],[9.9,78.1],[13.0,80.3]],
+  delhi:[[28.61,77.20],[26.91,75.78],[23.02,72.57],[19.07,72.87]],
+  beijing:[[39.90,116.40],[37.8,118.2],[32.06,118.79],[31.23,121.47]],
+  saopaulo:[[-23.55,-46.63],[-23.0,-45.2],[-22.90,-43.17]],
+  moscow:[[55.75,37.61],[58.0,36.5],[59.93,30.33]],
+  joburg:[[-26.20,28.04],[-30.55,22.93],[-33.92,18.42]]
+};
 
-// Generate realistic time-aware reports from datasets (CAMS/ERA5/S5P + citizen)
+// Generate reports - weighted so Tamil Nadu has live data
 function mulberry32(a){return function(){let t=a+=0x6D2B79F5;t=Math.imul(t^t>>>15,t|1);t^=t+Math.imul(t^t>>>7,t|61);return((t^t>>>14)>>>0)/4294967296}}
 const rng=mulberry32(20260818);
 function generateReports(){
-  const types=['Agricultural_Stubble','Industrial_Plume','Wildfire_Conflagration','Urban_Smog'];
+  const types=['Agricultural_Stubble','Industrial_Plume','Wildfire_Conflagration','Urban_Smog','Coastal_Haze'];
   const out=[];
   const now=Date.now();
-  // 120 reports over 30 days, weighted to last 7 days (more live)
-  for(let i=0;i<120;i++){
-    const j=JURISDICTIONS[Math.floor(rng()*JURISDICTIONS.length)];
-    const t=rng();
+  // bias: 30% of reports to Tamil Nadu for default live view
+  for(let i=0;i<140;i++){
+    let j;
+    if(rng()<0.30){
+      const tn=JURISDICTIONS.filter(x=>x.state==='Tamil Nadu');
+      j=tn[Math.floor(rng()*tn.length)];
+    } else {
+      j=JURISDICTIONS[Math.floor(rng()*JURISDICTIONS.length)];
+    }
     let ageMs;
-    if(t<0.45) ageMs=rng()*2*3600*1000; // 45% in last 2h (live)
-    else if(t<0.70) ageMs=2*3600*1000 + rng()*22*3600*1000; // 25% in last 24h
-    else if(t<0.88) ageMs=24*3600*1000 + rng()*6*24*3600*1000; // 18% in 7d
-    else ageMs=7*24*3600*1000 + rng()*23*24*3600*1000; // 12% older
+    const t=rng();
+    if(t<0.50) ageMs=rng()*3*3600*1000;
+    else if(t<0.75) ageMs=3*3600*1000 + rng()*21*3600*1000;
+    else if(t<0.90) ageMs=24*3600*1000 + rng()*6*24*3600*1000;
+    else ageMs=7*24*3600*1000 + rng()*23*24*3600*1000;
     const ts=new Date(now-ageMs);
-    const isHazard=rng()>0.08;
+    const isHazard=rng()>0.10;
     const conf=isHazard? (0.72+rng()*0.27) : (0.35+rng()*0.3);
-    const opacity=rng()*0.6+0.3;
-    const pm25= isHazard? (80+rng()*220) : (22+rng()*55);
-    const verified=isHazard && conf>=0.70 && rng()>0.12;
-    out.push({
-      id:'R'+String(4800+i),
-      nation:j.nation, state:j.state, district:j.district, lat:j.lat + (rng()-.5)*.18, lon:j.lon + (rng()-.5)*.18,
-      type: types[Math.floor(rng()*types.length)], isHazard, conf: +conf.toFixed(3), opacity:+opacity.toFixed(2), pm25:Math.round(pm25),
-      verified, ts, office:j.office, lang:j.lang,
-      img:`https://picsum.photos/seed/${j.district}${i}/200/200`
-    });
+    const pm25=isHazard? (75+rng()*180) : (22+rng()*50);
+    const verified=isHazard && conf>=0.70 && rng()>0.10;
+    out.push({id:'R'+String(5000+i),nation:j.nation,state:j.state,district:j.district,lat:j.lat+(rng()-.5)*.35,lon:j.lon+(rng()-.5)*.35,type:types[Math.floor(rng()*types.length)],isHazard,conf:+conf.toFixed(3),pm25:Math.round(pm25),verified,ts,office:j.office,lang:j.lang,img:`https://picsum.photos/seed/${j.district}${i}tn/200/200`});
   }
   out.sort((a,b)=>b.ts-a.ts);
   return out;
 }
 const REPORTS=generateReports();
-let ALERTS=REPORTS.filter(r=>r.verified && r.pm25>120).slice(0,22).map(r=>({
-  id:'A'+r.id, reportId:r.id, nation:r.nation, state:r.state, district:r.district, pm25:r.pm25, conf:r.conf, type:r.type, ts:r.ts,
-  tier1:JURISDICTIONS.find(j=>j.district===r.district)?.office||r.office,
-  severity: r.pm25>250?'c': r.pm25>150?'h':'m'
-}));
+let ALERTS=REPORTS.filter(r=>r.verified && r.pm25>95).slice(0,28).map(r=>({id:'A'+r.id,reportId:r.id,nation:r.nation,state:r.state,district:r.district,pm25:r.pm25,conf:r.conf,type:r.type,ts:r.ts,tier1:JURISDICTIONS.find(j=>j.district===r.district)?.office||r.office,severity:r.pm25>250?'c': r.pm25>150?'h':'m'}));
 
-// ========== FILTER STATE ==========
+// FILTERS
 let activeLayer='all';
 let chart;
 const fCountry=document.getElementById('fCountry');
@@ -284,38 +281,54 @@ const fTo=document.getElementById('fTo');
 const customDates=document.getElementById('customDates');
 
 function initFilters(){
-  // country
-  fCountry.innerHTML='<option value="ALL">All BRICS — 5 nations</option>';
-  [...new Set(JURISDICTIONS.map(j=>j.nation))].forEach(n=>{
-    const name={IN:'India',BR:'Brazil',CN:'China',RU:'Russia',ZA:'South Africa'}[n]||n;
-    fCountry.innerHTML+=`<option value="${n}">${name} (${n})</option>`;
-  });
-  fState.innerHTML='<option value="ALL">All states / provinces</option>';
-  fDistrict.innerHTML='<option value="ALL">All districts / municipalities</option>';
-  const today=new Date().toISOString().slice(0,10);
-  fTo.value=today;
-  const d=new Date(); d.setDate(d.getDate()-7); fFrom.value=d.toISOString().slice(0,10);
-  fCountry.addEventListener('change', onCountry);
-  fState.addEventListener('change', onState);
-  fDistrict.addEventListener('change', updateDashboard);
-  fTime.addEventListener('change', onTime);
-  fFrom.addEventListener('change', updateDashboard);
-  fTo.addEventListener('change', updateDashboard);
-  // default: All
-  updateDashboard();
+  try{
+    fCountry.innerHTML='<option value="ALL">All BRICS — 5 nations</option>';
+    [...new Set(JURISDICTIONS.map(j=>j.nation))].sort().forEach(n=>{
+      const name={IN:'India',BR:'Brazil',CN:'China',RU:'Russia',ZA:'South Africa'}[n]||n;
+      const o=document.createElement('option'); o.value=n; o.textContent=`${name} (${n})`; fCountry.appendChild(o);
+    });
+    fState.innerHTML='<option value="ALL">All states / provinces</option>';
+    fDistrict.innerHTML='<option value="ALL">All districts / municipalities</option>';
+    const today=new Date().toISOString().slice(0,10);
+    fTo.value=today;
+    const d=new Date(); d.setDate(d.getDate()-7); fFrom.value=d.toISOString().slice(0,10);
+
+    fCountry.addEventListener('change', onCountry);
+    fState.addEventListener('change', onState);
+    fDistrict.addEventListener('change', updateDashboard);
+    fTime.addEventListener('change', onTime);
+    fFrom.addEventListener('change', updateDashboard);
+    fTo.addEventListener('change', updateDashboard);
+
+    // DEFAULT: India / Tamil Nadu / Live (as requested)
+    fCountry.value='IN';
+    onCountry();
+    fState.value='Tamil Nadu';
+    onState();
+    fDistrict.value='ALL';
+    fTime.value='live';
+    onTime();
+    // ensure map is ready then update
+    setTimeout(()=>{ updateDashboard(); if(map) map.invalidateSize(); }, 150);
+  }catch(e){
+    console.error('initFilters',e);
+    // fallback: force dashboard
+    updateDashboard();
+  }
 }
 function onCountry(){
   const n=fCountry.value;
-  const states=[...new Set(JURISDICTIONS.filter(j=>n==='ALL'||j.nation===n).map(j=>j.state))];
+  const states=[...new Set(JURISDICTIONS.filter(j=>n==='ALL'||j.nation===n).map(j=>j.state))].sort();
   fState.innerHTML='<option value="ALL">All states / provinces</option>' + states.map(s=>`<option value="${s}">${s}</option>`).join('');
   fDistrict.innerHTML='<option value="ALL">All districts / municipalities</option>';
+  // keep Tamil Nadu if IN selected
+  if(n==='IN' && states.includes('Tamil Nadu') && !fState.value) fState.value='Tamil Nadu';
   updateDashboard();
 }
 function onState(){
   const n=fCountry.value, s=fState.value;
-  const dists=JURISDICTIONS.filter(j=> (n==='ALL'||j.nation===n) && (s==='ALL'||j.state===s)).map(j=>j.district);
-  const uniq=[...new Set(dists)];
-  fDistrict.innerHTML='<option value="ALL">All districts / municipalities</option>' + uniq.map(d=>`<option value="${d}">${d}</option>`).join('');
+  const dists=[...new Set(JURISDICTIONS.filter(j=> (n==='ALL'||j.nation===n) && (s==='ALL'||j.state===s)).map(j=>j.district))].sort();
+  fDistrict.innerHTML='<option value="ALL">All districts / municipalities</option>' + dists.map(d=>`<option value="${d}">${d}</option>`).join('');
   updateDashboard();
 }
 function onTime(){
@@ -323,7 +336,9 @@ function onTime(){
   updateDashboard();
 }
 function resetFilters(){
-  fCountry.value='ALL'; onCountry(); fState.value='ALL'; onState(); fDistrict.value='ALL'; fTime.value='live'; onTime();
+  fCountry.value='IN'; onCountry();
+  fState.value='Tamil Nadu'; onState();
+  fDistrict.value='ALL'; fTime.value='live'; onTime();
 }
 function getTimeRange(){
   const now=new Date();
@@ -349,7 +364,7 @@ function filteredReports(){
     if(r.ts < from || r.ts > to) return false;
     if(activeLayer==='citizen' && r.verified) return false;
     if(activeLayer==='satellite' && r.isHazard) return false;
-    if(activeLayer==='trajectory' && r.pm25<120) return false;
+    if(activeLayer==='trajectory' && r.pm25<100) return false;
     return true;
   });
 }
@@ -368,69 +383,76 @@ function updateDashboard(){
   const reports=filteredReports();
   const alerts=filteredAlerts();
   const tr=getTimeRange();
-  // meta
   document.getElementById('metaCount').textContent=reports.length;
   document.getElementById('metaPlumes').textContent=alerts.length;
   document.getElementById('metaAlerts').textContent=alerts.length;
-  const loc = fDistrict.value!=='ALL' ? `${fCountry.value!=='ALL'?fCountry.value:'BRICS'} / ${fState.value} / ${fDistrict.value}` : fState.value!=='ALL'? `${fCountry.value!=='ALL'?fCountry.value:'BRICS'} / ${fState.value}` : fCountry.value!=='ALL'? document.querySelector(`#fCountry option[value="${fCountry.value}"]`).textContent : 'All BRICS';
+  const loc = fDistrict.value!=='ALL' ? `${fState.value} / ${fDistrict.value}` : fState.value!=='ALL'? `${fCountry.value} / ${fState.value}` : fCountry.value!=='ALL'? document.querySelector(`#fCountry option[value="${fCountry.value}"]`)?.textContent || fCountry.value : 'All BRICS';
   document.getElementById('metaLoc').textContent=loc;
   document.getElementById('metaTime').textContent=tr.label;
-  // stats
   document.getElementById('sValid').textContent=reports.length;
   document.getElementById('sValidSub').textContent=`${reports.filter(r=>r.verified).length} verified (Ci≥0.70)`;
   document.getElementById('sPlumes').textContent=alerts.length;
   document.getElementById('sPlumesSub').textContent=`H3 Res 8 • 0.74 km²`;
-  const avgPM = reports.length? Math.round(reports.reduce((a,r)=>a+r.pm25,0)/reports.length) : 0;
-  document.getElementById('sDisp').textContent= alerts.length? (4.2 + (Math.random()-.5)*1.2).toFixed(1)+' min' : '—';
+  document.getElementById('sDisp').textContent= alerts.length? (4.2 + (Math.random()-.5)*.8).toFixed(1)+' min' : '—';
   document.getElementById('sDispSub').textContent= alerts.length? `${alerts.length} SHA-256 dossiers` : 'no alerts in filter';
   document.getElementById('livePill').textContent = `● ${alerts.length} plumes • ${reports.length} validations • ${tr.label}`;
-  // corridor highlight + chart title per nation
-  const nation=fCountry.value;
-  const cmap={IN:'delhi',CN:'beijing',BR:'saopaulo',RU:'moscow',ZA:'joburg'};
-  const key = nation!=='ALL' && cmap[nation] ? cmap[nation] : (fDistrict.value!=='ALL' ? (()=>{
-    const j=JURISDICTIONS.find(x=>x.district===fDistrict.value); if(!j) return 'delhi';
-    return cmap[j.nation]||'delhi';
-  })() : 'delhi');
-  document.querySelectorAll('.chip').forEach(c=>c.classList.toggle('active', c.getAttribute('data-c')===key));
+  // chart region
+  const key = fState.value==='Tamil Nadu' ? 'tamilnadu' : (()=>{
+    const cmap={IN:'delhi',CN:'beijing',BR:'saopaulo',RU:'moscow',ZA:'joburg'};
+    const n=fCountry.value;
+    if(n!=='ALL' && cmap[n]) return cmap[n];
+    if(fDistrict.value!=='ALL'){ const j=JURISDICTIONS.find(x=>x.district===fDistrict.value); if(j && cmap[j.nation]) return cmap[j.nation];}
+    return 'tamilnadu';
+  })();
   if(chart){
-    const fc=FORECASTS[key];
+    const fc=FORECASTS[key]||FORECASTS.tamilnadu;
     chart.data.datasets[0].data=fc.data;
     chart.data.datasets[1].data=fc.base;
     chart.update();
     document.getElementById('chartTitle').textContent=`72h PINN — ${fc.label}`;
     document.getElementById('chartBadge').textContent=fc.badge;
-    document.getElementById('chartNote').textContent=fc.note + ` • filtered ${tr.label}`;
+    document.getElementById('chartNote').textContent=fc.note + ` • ${tr.label} • filtered`;
   }
-  // map
+  document.getElementById('mapTitle').textContent = fState.value==='Tamil Nadu' ? 'Live geospatial — Tamil Nadu' : `Live geospatial — ${loc}`;
   renderMap(reports);
-  // recent
   renderRecent(reports.slice(0,8));
-  // alerts
   renderAlerts(alerts.slice(0,6));
-  // sensor placeholder
-  const hint = fDistrict.value!=='ALL' ? JURISDICTIONS.find(j=>j.district===fDistrict.value) : null;
-  document.getElementById('sensorVal').placeholder = hint? `PM2.5 µg/m³ for ${hint.district} (H3: auto)` : 'PM2.5 µg/m³ (auto-tagged to filter district)';
-  // fly to district if single selected
+  const hint = fDistrict.value!=='ALL' ? JURISDICTIONS.find(j=>j.district===fDistrict.value) : fState.value!=='ALL' ? JURISDICTIONS.find(j=>j.state===fState.value) : null;
+  document.getElementById('sensorVal').placeholder = hint? `PM2.5 µg/m³ for ${hint.district}` : 'PM2.5 µg/m³ (auto-tagged to Tamil Nadu)';
+  // center map
   if(fDistrict.value!=='ALL'){
     const j=JURISDICTIONS.find(x=>x.district===fDistrict.value);
-    if(j && map) map.setView([j.lat,j.lon], 8);
+    if(j) map.setView([j.lat,j.lon], 9);
+  } else if(fState.value==='Tamil Nadu'){
+    map.setView([11.1271,78.6569], 7);
+    // show tamilnadu corridor
+    map.removeLayer(corridorLine);
+    corridorLine=L.polyline(CORRIDOR_BOUNDS.tamilnadu,{color:'#0F172A',weight:3,opacity:.9,dashArray:'6 6'}).addTo(map);
   } else if(fState.value!=='ALL'){
     const j=JURISDICTIONS.find(x=>x.state===fState.value);
-    if(j && map) map.setView([j.lat,j.lon], 6);
+    if(j) map.setView([j.lat,j.lon], 6);
   } else if(fCountry.value!=='ALL'){
-    const bounds=CORRIDOR_BOUNDS[cmap[fCountry.value]];
-    if(bounds) map.fitBounds(bounds,{padding:[18,18]});
+    const cmap={IN:'tamilnadu',CN:'beijing',BR:'saopaulo',RU:'moscow',ZA:'joburg'};
+    const b=CORRIDOR_BOUNDS[cmap[fCountry.value]||'tamilnadu'];
+    if(b) map.fitBounds(b,{padding:[18,18]});
   }
+  setTimeout(()=>map.invalidateSize(), 80);
 }
 
-// ========== MAP ==========
-const map=L.map('map',{zoomControl:false}).setView([22.5,78.8],4.2);
+// MAP
+const map=L.map('map',{zoomControl:false}).setView([11.1271,78.6569],7);
 L.control.zoom({position:'bottomright'}).addTo(map);
 L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',{attribution:'© CARTO'}).addTo(map);
-let corridorLine=L.polyline(CORRIDOR_BOUNDS.delhi,{color:'#0F172A',weight:3,opacity:.9,dashArray:'6 6'}).addTo(map);
+let corridorLine=L.polyline(CORRIDOR_BOUNDS.tamilnadu,{color:'#0F172A',weight:3,opacity:.9,dashArray:'6 6'}).addTo(map);
 let markerLayer=L.layerGroup().addTo(map);
 function renderMap(reports){
   markerLayer.clearLayers();
+  if(reports.length===0){
+    // show empty hint as marker in center
+    const c=map.getCenter();
+    const icon=L.divIcon({html:`<div style="background:#fff;border:1px solid var(--border);border-radius:999px;padding:6px 10px;font-size:11px;box-shadow:var(--shadow);white-space:nowrap">No validations in this filter • try 24h / 7d</div>`,iconSize:[200,30],className:''});
+    // don't add hint marker, keep map empty but not broken
+  }
   reports.forEach(r=>{
     const c = r.verified ? '#0052FF' : (r.isHazard ? '#D97706' : '#0A7A3E');
     const icon=L.divIcon({html:`<div style="width:10px;height:10px;background:${c};border:2px solid #fff;border-radius:50%;box-shadow:0 2px 6px rgba(0,0,0,.15)"></div>`,iconSize:[10,10],className:''});
@@ -438,21 +460,13 @@ function renderMap(reports){
     m.on('click',()=>openModal(`${r.district} — ${r.type} • ${r.pm25}µg/m³`, r.img));
     markerLayer.addLayer(m);
   });
-  // corridor line update
-  const n=fCountry.value;
-  const cmap={IN:'delhi',CN:'beijing',BR:'saopaulo',RU:'moscow',ZA:'joburg'};
-  const key=n!=='ALL'&&cmap[n]?cmap[n]:'delhi';
-  map.removeLayer(corridorLine);
-  corridorLine=L.polyline(CORRIDOR_BOUNDS[key],{color:'#0F172A',weight:3,opacity:.9,dashArray:'6 6'}).addTo(map);
 }
 function flyTo(k){
   document.querySelectorAll('.chip').forEach(c=>c.classList.remove('active'));
-  // find button with data-c
   const btn=document.querySelector(`.chip[data-c="${k}"]`);
   if(btn) btn.classList.add('active');
-  map.fitBounds(CORRIDOR_BOUNDS[k],{padding:[16,16]});
-  map.removeLayer(corridorLine);
-  corridorLine=L.polyline(CORRIDOR_BOUNDS[k],{color:'#0F172A',weight:3,opacity:.9,dashArray:'6 6'}).addTo(map);
+  const b=CORRIDOR_BOUNDS[k];
+  if(b){ map.fitBounds(b,{padding:[16,16]}); map.removeLayer(corridorLine); corridorLine=L.polyline(b,{color:'#0F172A',weight:3,opacity:.9,dashArray:'6 6'}).addTo(map); }
 }
 function setLayer(layer,btn){
   document.querySelectorAll('.tabs button').forEach(b=>b.classList.remove('active'));btn.classList.add('active');
@@ -460,45 +474,40 @@ function setLayer(layer,btn){
   updateDashboard();
 }
 
-// ========== CHART ==========
+// CHART
 const ctx=document.getElementById('forecastChart').getContext('2d');
 const g=ctx.createLinearGradient(0,0,0,110);g.addColorStop(0,'rgba(0,82,255,.14)');g.addColorStop(1,'rgba(0,82,255,0)');
-chart=new Chart(ctx,{type:'line',data:{labels:['Now','+6h','+12h','+18h','+24h','+36h','+48h','+72h'],datasets:[{label:'PINN',data:FORECASTS.delhi.data,borderColor:'#0052FF',backgroundColor:g,fill:true,tension:.35,pointRadius:2,borderWidth:2},{label:'CAMS',data:FORECASTS.delhi.base,borderColor:'#94A3B8',borderDash:[4,4],fill:false,tension:.3,pointRadius:0,borderWidth:1}]},options:{plugins:{legend:{display:true,labels:{font:{size:11},usePointStyle:true,boxWidth:8}}},scales:{y:{beginAtZero:false,min:60,max:330,grid:{color:'#E2E8F0'},ticks:{font:{size:10}}},x:{grid:{display:false},ticks:{font:{size:10}}}},responsive:true,maintainAspectRatio:false});
+let chart=new Chart(ctx,{type:'line',data:{labels:['Now','+6h','+12h','+18h','+24h','+36h','+48h','+72h'],datasets:[{label:'PINN',data:FORECASTS.tamilnadu.data,borderColor:'#0052FF',backgroundColor:g,fill:true,tension:.35,pointRadius:2,borderWidth:2},{label:'CAMS',data:FORECASTS.tamilnadu.base,borderColor:'#94A3B8',borderDash:[4,4],fill:false,tension:.3,pointRadius:0,borderWidth:1}]},options:{plugins:{legend:{display:true,labels:{font:{size:11},usePointStyle:true,boxWidth:8}}},scales:{y:{beginAtZero:false,min:50,max:330,grid:{color:'#E2E8F0'},ticks:{font:{size:10}}},x:{grid:{display:false},ticks:{font:{size:10}}}},responsive:true,maintainAspectRatio:false});
 
-// ========== UPLOAD ==========
+// UPLOAD
 const dropzone=document.getElementById('dropzone'), fileInput=document.getElementById('fileInput'), preview=document.getElementById('preview'), previewImg=document.getElementById('previewImg'), geminiLog=document.getElementById('geminiLog'), prog=document.getElementById('prog');
 ['dragenter','dragover'].forEach(e=>dropzone.addEventListener(e,ev=>{ev.preventDefault();dropzone.classList.add('drag')}));['dragleave','drop'].forEach(e=>dropzone.addEventListener(e,ev=>{ev.preventDefault();dropzone.classList.remove('drag')}));dropzone.addEventListener('drop',e=>handleFile(e.dataTransfer.files[0]));fileInput.addEventListener('change',e=>handleFile(e.target.files[0]));
 function handleFile(f){
   if(!f) return;
   previewImg.src=URL.createObjectURL(f);
   preview.style.display='block';
-  geminiLog.innerHTML='→ Flash: validating against selected district…';
+  geminiLog.innerHTML='→ Flash: validating against Tamil Nadu…';
   prog.style.width='10%';
-  const hints = fDistrict.value!=='ALL' ? `H3 for ${fDistrict.value}` : fState.value!=='ALL' ? `H3 for ${fState.value}` : 'H3 auto';
-  const steps=[`[1/4] ${hints} • GAUL ST_INTERSECTS • App Check OK`,`[2/4] Flash C0.93 opacity0.71 ✓ (Ci≥0.70)`,`[3/4] S5P QA0.81 CAMS z+2.4 ERA5 u-3.2 • ${getTimeRange().label}`,`[4/4] Verified → PINN 22h cone → Tier 1/2/3 for current filter`];
+  const steps=[`[1/4] H3 for ${fDistrict.value!=='ALL'?fDistrict.value: fState.value} • GAUL ST_INTERSECTS`,`[2/4] Flash C0.93 opacity0.71 ✓ (Ci≥0.70)`,`[3/4] S5P QA0.81 CAMS z+2.4 ERA5 u-3.2 • ${getTimeRange().label}`,`[4/4] Verified → PINN 22h cone → Tier 1/2/3`];
   let i=0; const it=setInterval(()=>{geminiLog.innerHTML+='<br>'+steps[i];prog.style.width=((i+1)*25)+'%';i++;if(i===steps.length)clearInterval(it)},480);
 }
 function submitReport(){
-  const v=document.getElementById('sensorVal').value|| String(90+Math.floor(Math.random()*140));
+  const v=document.getElementById('sensorVal').value|| String(88+Math.floor(Math.random()*90));
   const hint = fDistrict.value!=='ALL' ? JURISDICTIONS.find(j=>j.district===fDistrict.value) : fState.value!=='ALL' ? JURISDICTIONS.find(j=>j.state===fState.value) : JURISDICTIONS.find(j=>j.nation===fCountry.value) || JURISDICTIONS[0];
   const now=new Date();
-  const rep={id:'R'+Math.floor(Math.random()*90000), nation:hint.nation, state:hint.state, district:hint.district, lat:hint.lat + (Math.random()-.5)*.12, lon:hint.lon + (Math.random()-.5)*.12, type:'Agricultural_Stubble', isHazard:true, conf:0.934, opacity:0.71, pm25:parseInt(v)||165, verified:true, ts:now, office:hint.office, lang:hint.lang, img:URL.createObjectURL(document.getElementById('fileInput').files[0]|| new Blob()) || `https://picsum.photos/seed/${Math.random()}/200/200`};
-  // fix img if blob url invalid
-  if(!rep.img || rep.img.startsWith('blob:')) {
-    // keep preview img
-    rep.img=document.getElementById('previewImg').src || `https://picsum.photos/seed/${Math.random()}/200/200`;
-  }
+  const imgSrc = document.getElementById('previewImg').src && !document.getElementById('previewImg').src.includes('blob:') ? document.getElementById('previewImg').src : `https://picsum.photos/seed/${Math.random()}tn/200/200`;
+  const rep={id:'R'+Math.floor(Math.random()*90000), nation:hint.nation, state:hint.state, district:hint.district, lat:hint.lat + (Math.random()-.5)*.12, lon:hint.lon + (Math.random()-.5)*.12, type:'Coastal_Haze', isHazard:true, conf:0.934, opacity:0.71, pm25:parseInt(v)||112, verified:true, ts:now, office:hint.office, lang:hint.lang, img: document.getElementById('previewImg').src || `https://picsum.photos/seed/${Math.random()}tn/200/200`};
   REPORTS.unshift(rep);
   ALERTS.unshift({id:'A'+rep.id, reportId:rep.id, nation:rep.nation, state:rep.state, district:rep.district, pm25:rep.pm25, conf:rep.conf, type:rep.type, ts:now, tier1:hint.office, severity: rep.pm25>250?'c':'h'});
   updateDashboard();
-  alert(`Report ${rep.id} • Flash 0.934 • PINN 22h • Tier 1 ${hint.office} • ${hint.district} • ${getTimeRange().label} • SHA ledger`);
+  alert(`Report ${rep.id} • Flash 0.934 • PINN 22h • ${hint.district}, ${hint.state} • ${getTimeRange().label} • Tier 1 ${hint.office}`);
 }
 function renderRecent(reports){
   const el=document.getElementById('recentReports');
   el.innerHTML='';
   document.getElementById('recentCount').textContent=`(${reports.length})`;
-  document.getElementById('recentMeta').textContent=getTimeRange().label;
-  if(reports.length===0){ el.innerHTML=`<div style="text-align:center;padding:14px;color:var(--muted);font-size:12px;border:1px dashed var(--border);border-radius:10px">No validations in this filter + time range<br><span style="font-size:11px">Try All states or Last 7 days</span></div>`; return; }
+  document.getElementById('recentMeta').textContent=getTimeRange().label + ' • ' + (fState.value==='Tamil Nadu'?'TN':'filtered');
+  if(reports.length===0){ el.innerHTML=`<div style="text-align:center;padding:14px;color:var(--muted);font-size:12px;border:1px dashed var(--border);border-radius:10px">No validations in this filter + time range<br><span style="font-size:11px">Try Last 24h / 7 days or All districts</span></div>`; return; }
   reports.forEach(r=>{
     const d=document.createElement('div');
     d.style.cssText='border:1px solid var(--border);border-radius:10px;padding:7px 8px;margin-bottom:6px;display:flex;gap:7px;align-items:center;background:#fff;cursor:pointer';
@@ -511,7 +520,7 @@ function renderRecent(reports){
 }
 function renderAlerts(alerts){
   const el=document.getElementById('alerts'); el.innerHTML='';
-  if(alerts.length===0){ el.innerHTML=`<div style="text-align:center;padding:14px;color:var(--muted);font-size:12px;border:1px dashed var(--border);border-radius:10px">No alerts in this filter + time range</div>`; return; }
+  if(alerts.length===0){ el.innerHTML=`<div style="text-align:center;padding:14px;color:var(--muted);font-size:12px;border:1px dashed var(--border);border-radius:10px">No alerts in this filter + time range<br><span style="font-size:11px">Switch to Last 24h or All districts</span></div>`; return; }
   alerts.forEach(a=>{
     const d=document.createElement('div'); d.className='alert';
     const tier=JURISDICTIONS.find(j=>j.district===a.district);
@@ -521,12 +530,12 @@ function renderAlerts(alerts){
   });
 }
 function simulateAlert(){
-  const hint = fDistrict.value!=='ALL' ? JURISDICTIONS.find(j=>j.district===fDistrict.value) : fState.value!=='ALL' ? JURISDICTIONS.find(j=>j.state===fState.value) : (fCountry.value!=='ALL'? JURISDICTIONS.find(j=>j.nation===fCountry.value): JURISDICTIONS[0]);
+  const hint = fDistrict.value!=='ALL' ? JURISDICTIONS.find(j=>j.district===fDistrict.value) : fState.value!=='ALL' ? JURISDICTIONS.find(j=>j.state===fState.value) : (fCountry.value!=='ALL'? JURISDICTIONS.find(j=>j.nation===fCountry.value): JURISDICTIONS.find(j=>j.state==='Tamil Nadu'));
   const now=new Date();
-  ALERTS.unshift({id:'A'+Math.floor(Math.random()*90000), reportId:'R', nation:hint.nation, state:hint.state, district:hint.district, pm25: 280+Math.floor(Math.random()*40), conf:0.91, type:'Industrial_Plume', ts:now, tier1:hint.office, severity:'c'});
+  ALERTS.unshift({id:'A'+Math.floor(Math.random()*90000), reportId:'R', nation:hint.nation, state:hint.state, district:hint.district, pm25: 165+Math.floor(Math.random()*60), conf:0.91, type:'Coastal_Haze', ts:now, tier1:hint.office, severity:'h'});
   updateDashboard();
 }
-function openModal(t,i){document.getElementById('modal').style.display='flex';document.getElementById('modalImg').src=i;document.getElementById('modalBody').innerHTML=`<b>${t}</b><p style="margin-top:6px;color:var(--muted)">Flash C0.934 • H3 8 • PINN ℒ • GAUL ST_INTERSECTS → Tier 1/2/3 • SHA-256 dossier • Filter: ${fCountry.value}/${fState.value}/${fDistrict.value} • ${getTimeRange().label}</p>`;}
+function openModal(t,i){document.getElementById('modal').style.display='flex';document.getElementById('modalImg').src=i;document.getElementById('modalBody').innerHTML=`<b>${t}</b><p style="margin-top:6px;color:var(--muted)">Flash C0.93 • H3 8 • PINN ℒ • GAUL ST_INTERSECTS → Tier 1/2/3 • SHA-256 dossier • Filter: ${fState.value}/${fDistrict.value} • ${getTimeRange().label}</p>`;}
 function closeModal(){document.getElementById('modal').style.display='none'}
 function exportFiltered(){
   const reports=filteredReports();
@@ -534,15 +543,18 @@ function exportFiltered(){
   const rows=reports.map(r=>`${r.id},${r.nation},${r.state},"${r.district}",${r.lat.toFixed(4)},${r.lon.toFixed(4)},${r.type},${r.pm25},${r.conf},${r.verified},${r.ts.toISOString()},S5P/CAMS/ERA5+citizen`).join('\n');
   const blob=new Blob([header+rows],{type:'text/csv'});
   const url=URL.createObjectURL(blob);
-  const a=document.createElement('a'); a.href=url; a.download=`aether_${fCountry.value}_${fTime.value}_${new Date().toISOString().slice(0,10)}.csv`; a.click();
+  const a=document.createElement('a'); a.href=url; a.download=`aether_${fState.value}_${fTime.value}_${new Date().toISOString().slice(0,10)}.csv`; a.click();
   URL.revokeObjectURL(url);
 }
 document.getElementById('lang').addEventListener('change',e=>{
   const t=document.createElement('div');t.style.cssText='position:fixed;bottom:14px;left:50%;transform:translateX(-50%);background:var(--fg);color:#fff;padding:6px 11px;border-radius:999px;font-size:11px;z-index:300';t.textContent='Translation → '+e.target.value;document.body.appendChild(t);setTimeout(()=>t.remove(),1600);
 });
 
-// init
-initFilters();
+// INIT — ensure map tiles loaded before first render
+window.addEventListener('load', ()=> setTimeout(()=>{ map.invalidateSize(); initFilters(); }, 120));
+if(document.readyState==='complete') setTimeout(()=>{ try{initFilters(); map.invalidateSize();}catch(e){console.error(e)}}, 200);
+// fallback immediate
+setTimeout(()=>{ if(fCountry.options.length===0) initFilters(); }, 500);
 </script>
 </body>
 </html>
