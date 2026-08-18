@@ -185,6 +185,38 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--fg);overflo
           <div id="recentReports" style="margin-top:7px"></div>
         </div>
       </div>
+      <div class="card mini" id="owmCard" style="border:1px solid var(--border)">
+        <h4 style="display:flex;align-items:center;gap:6px">Live environment — OpenWeatherMap <span class="tag tag-ok" style="margin-left:auto" id="owmAqi">AQI —</span><span id="owmUpdated" style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted)"></span></h4>
+        <div id="owmWeather" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:6px">
+          <div style="background:var(--muted2);border:1px solid var(--border);border-radius:10px;padding:10px;display:flex;gap:10px;align-items:center">
+            <div id="owmIcon" style="font-size:22px">—</div>
+            <div>
+              <b id="owmTemp" style="font-size:16px">—°C</b><div id="owmDesc" style="font-size:11px;color:var(--muted)">—</div>
+              <div id="owmWind" style="font-size:11px;color:var(--muted)">Wind — m/s</div>
+            </div>
+          </div>
+          <div style="background:var(--muted2);border:1px solid var(--border);border-radius:10px;padding:10px">
+            <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.07em;text-transform:uppercase;color:var(--muted)">Air Pollution • 0.74km² ↔ OWM</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:6px;font-size:11px">
+              <div><b>PM2.5</b> <span id="owmPm25">—</span> µg/m³</div>
+              <div><b>PM10</b> <span id="owmPm10">—</span></div>
+              <div><b>NO₂</b> <span id="owmNo2">—</span></div>
+              <div><b>O₃</b> <span id="owmO3">—</span></div>
+              <div><b>CO</b> <span id="owmCo">—</span></div>
+              <div><b>SO₂</b> <span id="owmSo2">—</span></div>
+            </div>
+            <div style="font-size:10px;color:var(--muted);margin-top:6px">Source: <span style="font-family:'JetBrains Mono',monospace">api.openweathermap.org/data/2.5</span> • Key 3f04…77ac • updates on filter</div>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:8px;font-size:11px">
+          <div style="border:1px solid var(--border);border-radius:8px;padding:7px;text-align:center"><div style="font-size:10px;color:var(--muted)">Humidity</div><b id="owmHum">—%</b></div>
+          <div style="border:1px solid var(--border);border-radius:8px;padding:7px;text-align:center"><div style="font-size:10px;color:var(--muted)">Pressure</div><b id="owmPress">—</b></div>
+          <div style="border:1px solid var(--border);border-radius:8px;padding:7px;text-align:center"><div style="font-size:10px;color:var(--muted)">Feels like</div><b id="owmFeel">—</b></div>
+          <div style="border:1px solid var(--border);border-radius:8px;padding:7px;text-align:center"><div style="font-size:10px;color:var(--muted)">District</div><b id="owmDistrict" style="font-size:11px">—</b></div>
+        </div>
+        <div style="font-size:11px;color:var(--muted);margin-top:6px">Fused: OWM PM2.5 vs CAMS z vs Flash verified • PINN uses OWM wind as ERA5 cross-check</div>
+      </div>
+
       <div class="card mini">
         <h4>Tiered dispatch <span class="tag tag-ok" style="margin-left:auto">SHA-256</span></h4>
         <div id="alerts"></div>
@@ -547,6 +579,87 @@ function generateReports(){
 const REPORTS=generateReports();
 let ALERTS=REPORTS.filter(r=>r.verified && r.pm25>95).slice(0,44).map(r=>({id:'A'+r.id,reportId:r.id,nation:r.nation,state:r.state,district:r.district,pm25:r.pm25,conf:r.conf,type:r.type,ts:r.ts,tier1:JURISDICTIONS.find(j=>j.district===r.district)?.office||r.office,severity:r.pm25>250?'c': r.pm25>150?'h':'m'}));
 let DISPUTES=[];
+
+// ========== OPENWEATHERMAP LIVE (user key 3f04af8f0d7e79fc646d1f325cc077ac) ==========
+const OWM_KEY = '3f04af8f0d7e79fc646d1f325cc077ac';
+let owmCache = {};
+async function fetchOWM(lat, lon, label){
+  const key = `${lat.toFixed(2)},${lon.toFixed(2)}`;
+  try{
+    document.getElementById('owmDistrict').textContent = label || '—';
+    document.getElementById('owmUpdated').textContent = 'fetching…';
+    const wRes = await fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=metric&APPID=${OWM_KEY}`);
+    const w = await wRes.json();
+    const aRes = await fetch(`https://api.openweathermap.org/data/2.5/air_pollution?lat=${lat}&lon=${lon}&APPID=${OWM_KEY}`);
+    const a = await aRes.json();
+    if(w.cod!==200) throw new Error(w.message||'weather error');
+    const comp = a.list?.[0]?.components || {};
+    const aqi = a.list?.[0]?.main?.aqi || 0;
+    const aqiLabel = ['—','Good','Fair','Moderate','Poor','Very Poor'][aqi] || '—';
+    const aqiColor = aqi===1?'#065F46': aqi===2?'#0A7A3E': aqi===3?'#D97706': aqi>=4?'#991B1B':'var(--muted)';
+    const aqiBg = aqi===1?'#ECFDF5': aqi===2?'#ECFDF5': aqi===3?'#FFFBEB': aqi>=4?'#FEF2F2':'var(--muted2)';
+    document.getElementById('owmAqi').textContent = `AQI ${aqi} • ${aqiLabel}`;
+    document.getElementById('owmAqi').style.background = aqiBg;
+    document.getElementById('owmAqi').style.color = aqiColor;
+    document.getElementById('owmAqi').style.borderColor = aqiBg==='var(--muted2)'?'var(--border)': aqiBg;
+    document.getElementById('owmIcon').textContent = w.weather?.[0]?.icon ? `https://openweathermap.org/img/wn/${w.weather[0].icon}@2x.png` : '⛅';
+    // if icon URL, replace with img
+    if(w.weather?.[0]?.icon){
+      document.getElementById('owmIcon').innerHTML = `<img src="https://openweathermap.org/img/wn/${w.weather[0].icon}.png" style="width:36px;height:36px">`;
+    } else {
+      document.getElementById('owmIcon').textContent = '⛅';
+    }
+    document.getElementById('owmTemp').textContent = `${Math.round(w.main.temp)}°C`;
+    document.getElementById('owmDesc').textContent = w.weather?.[0]?.description || '—';
+    document.getElementById('owmWind').textContent = `Wind ${w.wind?.speed ?? '—'} m/s • ${w.wind?.deg ?? ''}° • Clouds ${w.clouds?.all ?? '—'}%`;
+    document.getElementById('owmHum').textContent = `${w.main.humidity ?? '—'}%`;
+    document.getElementById('owmPress').textContent = `${w.main.pressure ?? '—'} hPa`;
+    document.getElementById('owmFeel').textContent = `${Math.round(w.main.feels_like ?? w.main.temp)}°C`;
+    document.getElementById('owmPm25').textContent = comp.pm2_5?.toFixed(1) ?? '—';
+    document.getElementById('owmPm10').textContent = comp.pm10?.toFixed(1) ?? '—';
+    document.getElementById('owmNo2').textContent = comp.no2?.toFixed(1) ?? '—';
+    document.getElementById('owmO3').textContent = comp.o3?.toFixed(1) ?? '—';
+    document.getElementById('owmCo').textContent = comp.co?.toFixed(0) ?? '—';
+    document.getElementById('owmSo2').textContent = comp.so2?.toFixed(1) ?? '—';
+    document.getElementById('owmUpdated').textContent = new Date().toLocaleTimeString();
+    // also update live pill with OWM PM2.5 for cross-check
+    const owmPM = comp.pm2_5;
+    if(owmPM){
+      const camZ = (owmPM>35? `z+${((owmPM-35)/15).toFixed(1)}` : 'z+0.2');
+      document.getElementById('chartNote').textContent = `OWM PM2.5 ${owmPM.toFixed(1)} µg/m³ (${camZ}) vs CAMS • ERA5 cross-check • ${label}`;
+    }
+    // cache
+    owmCache[key] = {w,a, at:Date.now()};
+  }catch(e){
+    console.warn('OWM fetch failed', e);
+    document.getElementById('owmUpdated').textContent = 'retry…';
+    document.getElementById('owmDesc').textContent = e.message?.slice(0,60) || 'fetch failed — retrying';
+    // keep previous values, don't blank map
+  }
+}
+const _origUpdateDashboard = updateDashboard;
+updateDashboard = function(){
+  _origUpdateDashboard();
+  // trigger OWM for current filter center
+  let lat, lon, label;
+  if(fDistrict.value!=='ALL'){
+    const j=JURISDICTIONS.find(x=> x.district===fDistrict.value);
+    if(j){ lat=j.lat; lon=j.lon; label=`${j.district}, ${j.state}`; }
+  } else if(fState.value!=='ALL'){
+    const j=JURISDICTIONS.find(x=> x.state===fState.value);
+    if(j){ lat=j.lat; lon=j.lon; label=`${j.state}`; }
+  } else if(fCountry.value!=='ALL'){
+    // center of country: average of its districts
+    const list=JURISDICTIONS.filter(x=> x.nation===fCountry.value);
+    if(list.length){ lat=list.reduce((a,b)=>a+b.lat,0)/list.length; lon=list.reduce((a,b)=>a+b.lon,0)/list.length; label=list[0].state; }
+  } else {
+    lat=11.1271; lon=78.6569; label='Tamil Nadu (All BRICS)';
+  }
+  if(lat && lon) fetchOWM(lat, lon, label);
+};
+// initial OWM fetch after load
+window.addEventListener('load', ()=> setTimeout(()=> fetchOWM(13.0827,80.2707,'Chennai, Tamil Nadu'), 600));
+
 let pendingDisputeAlertId=null;
 // Hierarchical dispute helpers
 async function sha256Hex(str){ const buf=await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str)); return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join(''); }

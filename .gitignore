@@ -26,3 +26,5 @@ data/*.parquet
 # Build outputs
 dist/
 out/
+
+# OpenWeatherMap key is demo-only in prototype/index.html — rotate after hackathon
