@@ -1,3 +1,5 @@
+> **Update 18 Aug 2026 — Rebranded to BRICS-AETHER** per Detailed PRD v1.0-PROD (Atmospheric Earth Observation & Federated Environmental Response Intelligence System). VAYU prototype now powers AETHER's H3 Res 8 + PINN + Confidential Space pipeline — same live link, upgraded to sovereign DPG spec.
+
 # VAYU — Federated Climate Intelligence for BRICS
 ### Build with AI: Code for Communities — 2nd Edition | Google Cloud Hackathon 2026
 **Track:** *Sustainability* — AI-powered federated climate action platform  
