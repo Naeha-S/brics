@@ -2,436 +2,468 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>BRICS-AETHER — Atmospheric Earth Observation & Federated Environmental Response Intelligence</title>
-<link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+<title>BRICS-AETHER — Federated Environmental Intelligence</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fragment+Mono&display=swap" rel="stylesheet"/>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <style>
-:root{--navy:#0A1024;--navy2:#141E3C;--teal:#0E8A7B;--teal2:#14B8A6;--blue:#1A73E8;--blue2:#4285F4;--amber:#F59E0B;--red:#DC2626;--ink:#0F172A;--muted:#64748B;--line:#E2E8F0;--bg:#F8FAFC;--card:#FFFFFF;--glass:rgba(255,255,255,.88)}
+:root{
+  --navy:#0B1D3A; --navy2:#132B4E; --ink:#0F1A2E; --muted:#6B7A90; --line:#E8ECF1; --line2:#EDF1F5;
+  --bg:#F6F8FA; --card:#FFFFFF;
+  --b1:#0A7A3E; --b2:#1E3A8A; --b3:#D97706; --b4:#B91C1C; --b5:#047857;
+  --radius:16px; --radius-sm:12px;
+}
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased}
-a{text-decoration:none;color:inherit}
-/* TOPBAR */
-.topbar{position:sticky;top:0;z-index:100;background:rgba(10,16,36,.96);backdrop-filter:blur(10px);border-bottom:1px solid rgba(255,255,255,.08);display:flex;align-items:center;justify-content:space-between;padding:0 20px;height:60px;color:#fff}
-.brand{display:flex;align-items:center;gap:12px}
-.logo{width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,#0E8A7B 0%,#1A73E8 100%);display:grid;place-items:center;font-weight:800;font-size:13px;letter-spacing:.5px;color:#fff;box-shadow:0 4px 14px rgba(14,138,123,.45)}
-.brand h1{font-family:'Google Sans',sans-serif;font-size:16px;font-weight:700;letter-spacing:.2px;line-height:1}
-.brand p{font-size:10px;letter-spacing:1.2px;text-transform:uppercase;color:#94A3B8;font-weight:600}
-.badges{display:flex;gap:7px;align-items:center}
-.badge{font-size:10px;font-weight:700;letter-spacing:.5px;padding:5px 9px;border-radius:20px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.08);color:#E2E8F0}
-.badge.live{background:rgba(14,138,123,.18);border-color:rgba(20,184,166,.35);color:#5EEAD4}
-.badge.live::before{content:'● ';color:#14B8A6;animation:pulse 1.4s infinite}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.45}}
-.nav{display:flex;gap:6px}
-.nav button{padding:7px 12px;border-radius:20px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.06);color:#CBD5E1;font-size:12px;font-weight:600;cursor:pointer}
-.nav button.active{background:#fff;color:var(--navy);border-color:#fff}
-.select{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);color:#E2E8F0;border-radius:8px;padding:6px 10px;font-size:11px}
+html{overflow-x:hidden}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);overflow-x:hidden;-webkit-font-smoothing:antialiased;line-height:1.5}
+a{color:inherit;text-decoration:none}
+.wrap{max-width:1240px;margin:0 auto;padding:0 24px}
+@media(max-width:640px){.wrap{padding:0 16px}}
+
+/* TOP BAR */
+.topbar{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.94);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.topbar-inner{max-width:1240px;margin:0 auto;padding:0 24px;height:56px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+@media(max-width:640px){.topbar-inner{padding:0 16px}}
+.brand{display:flex;align-items:center;gap:12px;min-width:0}
+.mark{width:36px;height:36px;border-radius:9px;background:var(--navy);display:grid;place-items:center;color:#fff;font-weight:700;font-size:13px;letter-spacing:.4px;flex-shrink:0}
+.brand h1{font-size:14px;font-weight:700;letter-spacing:.2px;line-height:1}
+.brand p{font-size:11px;color:var(--muted);font-weight:500;white-space:nowrap}
+.brics-flags{display:flex;align-items:center;gap:5px;margin-left:6px}
+.flag{width:22px;height:22px;border-radius:50%;display:grid;place-items:center;font-size:12px;border:1px solid var(--line);background:#fff;flex-shrink:0;box-shadow:0 1px 2px rgba(0,0,0,.06)}
+.nav{display:flex;gap:4px;align-items:center}
+.nav button{padding:7px 12px;border-radius:999px;border:1px solid transparent;background:transparent;font-size:13px;font-weight:500;color:var(--muted);cursor:pointer;transition:.15s}
+.nav button.active{background:var(--ink);color:#fff;border-color:var(--ink)}
+.nav button:hover{color:var(--ink)}
+.top-actions{display:flex;align-items:center;gap:8px}
+.select{border:1px solid var(--line);background:#fff;border-radius:999px;padding:6px 10px;font-size:12px;font-weight:500;color:var(--ink)}
+.badge-dpg{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:600;letter-spacing:.3px;padding:6px 10px;border-radius:999px;background:#0B1D3A;color:#fff}
+.badge-dpg i{width:6px;height:6px;border-radius:50%;background:#18C07A;display:inline-block}
+@media(max-width:980px){.nav{display:none}.brics-flags{display:none}}
+
 /* HERO */
-.wrap{max-width:1440px;margin:0 auto;padding:18px 20px 40px}
-.hero{background:linear-gradient(135deg,#0A1024 0%,#141E3C 55%,#0E3A4A 100%);border-radius:18px;padding:22px 22px 18px;color:#fff;position:relative;overflow:hidden;border:1px solid rgba(255,255,255,.08)}
-.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(600px 280px at 78% 18%, rgba(20,184,166,.18), transparent 60%), radial-gradient(500px 300px at 12% 88%, rgba(66,133,244,.16), transparent 60%)}
-.hero>*{position:relative}
-.eyebrow{font-size:10px;letter-spacing:1.6px;text-transform:uppercase;color:#5EEAD4;font-weight:700;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-.eyebrow i{font-style:normal;background:rgba(94,234,212,.12);border:1px solid rgba(94,234,212,.22);padding:3px 8px;border-radius:20px}
-.hero h2{font-family:'Google Sans',sans-serif;font-size:26px;line-height:1.15;margin:10px 0 8px;font-weight:700}
-.hero h2 span{background:linear-gradient(90deg,#5EEAD4,#60A5FA);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.hero p{font-size:13px;line-height:1.55;color:#CBD5E1;max-width:760px}
-.okrs{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:16px}
-.okr{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:14px;padding:12px;backdrop-filter:blur(6px)}
-.okr small{font-size:10px;letter-spacing:.9px;text-transform:uppercase;color:#94A3B8;font-weight:700}
-.okr strong{font-size:19px;display:block;margin:4px 0 2px;color:#fff}
-.okr span{font-size:11px;color:#CBD5E1;line-height:1.4}
-.okr em{font-style:normal;font-size:11px;font-weight:700;color:#5EEAD4}
-.divider{height:1px;background:rgba(255,255,255,.1);margin:14px 0}
-.corridors{display:flex;flex-wrap:wrap;gap:7px}
-.chip{padding:6px 11px;border-radius:20px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);color:#E2E8F0;font-size:11px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:6px}
-.chip.active{background:#fff;color:var(--navy);border-color:#fff}
-.chip .dot{width:7px;height:7px;border-radius:50%}
-/* SECTIONS */
-.section{margin-top:16px}
-.card{background:var(--card);border:1px solid var(--line);border-radius:16px;overflow:hidden}
-.card-head{padding:13px 16px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:12px}
-.card-head h3{font-size:12px;font-weight:800;letter-spacing:.4px;text-transform:uppercase;color:var(--ink)}
-.card-head p{font-size:11px;color:var(--muted)}
-.tabs{display:flex;gap:6px}
-.tabs button{font-size:11px;font-weight:700;padding:6px 10px;border-radius:20px;border:1px solid var(--line);background:#fff;cursor:pointer}
-.tabs button.active{background:var(--ink);color:#fff}
-/* GRID LAYOUT */
-.grid{display:grid;grid-template-columns:1.42fr .88fr;gap:16px}
-.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-@media(max-width:1080px){.okrs{grid-template-columns:1fr 1fr}.grid,.grid2{grid-template-columns:1fr}#map{height:420px}}
-#map{height:520px;width:100%;background:#EAF0F6}
-.legend{position:absolute;bottom:12px;left:12px;background:#fff;border:1px solid var(--line);border-radius:10px;padding:9px 11px;font-size:11px;box-shadow:0 6px 18px rgba(0,0,0,.08);z-index:500}
-.legend b{font-size:11px}
-.swatch{width:12px;height:9px;border-radius:3px;display:inline-block;margin-right:6px;vertical-align:middle}
+.hero{padding:32px 0 0}
+.hero-card{background:var(--navy);border-radius:var(--radius);overflow:hidden;position:relative;color:#fff}
+.hero-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#0A7A3E 0%,#1E3A8A 22%,#D97706 44%,#B91C1C 68%,#047857 84%,#EAB308 100%);opacity:.95}
+.hero-inner{display:grid;grid-template-columns:1.15fr .85fr;gap:0;min-height:380px}
+.hero-left{padding:32px 28px 28px;position:relative}
+.hero-left::after{content:'';position:absolute;inset:0;background:radial-gradient(520px 320px at 20% 18%, rgba(24,192,122,.10), transparent 60%), radial-gradient(420px 280px at 88% 88%, rgba(59,130,246,.12), transparent 60%);pointer-events:none}
+.hero-left>*{position:relative}
+.kicker{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:11px;font-weight:600;letter-spacing:.7px;text-transform:uppercase;color:#8CA0BE}
+.kicker span{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);padding:4px 8px;border-radius:999px}
+.hero h2{font-size:30px;line-height:1.18;font-weight:700;letter-spacing:-.4px;margin:14px 0 10px;max-width:560px}
+.hero h2 em{font-style:normal;color:#8AD4B8}
+.hero p{font-size:14px;line-height:1.6;color:#C2CFE6;max-width:560px}
+.okr-row{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:20px}
+.okr{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.10);border-radius:12px;padding:12px}
+.okr small{display:block;font-size:10px;font-weight:600;letter-spacing:.7px;text-transform:uppercase;color:#8CA0BE;margin-bottom:4px}
+.okr strong{display:block;font-size:18px;font-weight:700;color:#fff;line-height:1}
+.okr span{font-size:11px;color:#9FB0CC;line-height:1.4}
+.hero-right{background:linear-gradient(180deg,#0F2A52 0%,#0B1D3A 100%);border-left:1px solid rgba(255,255,255,.08);padding:18px;display:flex;flex-direction:column;gap:12px}
+.hero-right-head{display:flex;align-items:center;justify-content:space-between}
+.hero-right-head h3{font-size:12px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;color:#8CA0BE}
+.hero-right-head .live{font-size:11px;font-weight:700;color:#18C07A;background:rgba(24,192,122,.12);border:1px solid rgba(24,192,122,.22);padding:4px 8px;border-radius:999px}
+.chart-wrap{background:#fff;border-radius:12px;padding:12px 12px 8px;border:1px solid rgba(0,0,0,.06)}
+.chart-wrap canvas{width:100%!important;height:150px!important}
+.insight{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.insight-card{border-radius:10px;padding:10px;border:1px solid rgba(255,255,255,.12)}
+.insight-card.bad{background:rgba(220,38,38,.10);border-color:rgba(220,38,38,.22)}
+.insight-card.ok{background:rgba(16,185,129,.10);border-color:rgba(16,185,129,.22)}
+.insight-card b{font-size:11px;display:block;margin-bottom:2px}
+.insight-card.bad b{color:#FCA5A5}
+.insight-card.ok b{color:#6EE7B7}
+.insight-card span{font-size:11px;color:#C2CFE6;line-height:1.4}
+@media(max-width:980px){.hero-inner{grid-template-columns:1fr}.hero-right{border-left:none;border-top:1px solid rgba(255,255,255,.08)}.hero h2{font-size:26px}.okr-row{grid-template-columns:1fr 1fr}}
+
+/* SECTION */
+.section{padding:28px 0 0}
+.section-head{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin-bottom:14px}
+.section-head h3{font-size:16px;font-weight:700;letter-spacing:-.2px}
+.section-head p{font-size:13px;color:var(--muted);margin-top:4px}
+.section-head .link{font-size:13px;font-weight:600;color:var(--ink);border:1px solid var(--line);padding:7px 12px;border-radius:999px;background:#fff}
+
+/* INGEST PIPELINE */
+.pipeline{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px;overflow:hidden}
+.pipeline-track{display:flex;align-items:stretch;gap:0;overflow-x:auto;scrollbar-width:none;padding-bottom:2px}
+.pipeline-track::-webkit-scrollbar{display:none}
+.source{flex:1 0 168px;min-width:168px;border:1px solid var(--line);border-radius:12px;background:#fff;padding:14px;text-align:left;display:flex;flex-direction:column;gap:8px}
+.source .icon{width:28px;height:28px;border-radius:8px;display:grid;place-items:center;font-size:14px;border:1px solid var(--line);background:var(--bg)}
+.source b{font-size:12px;font-weight:700;line-height:1.2}
+.source span{font-size:11px;color:var(--muted);line-height:1.4}
+.source .meta{margin-top:auto;font-size:10px;font-weight:600;letter-spacing:.4px;text-transform:uppercase;color:var(--muted);background:var(--bg);border:1px solid var(--line);padding:4px 7px;border-radius:999px;align-self:flex-start}
+.arrow{flex:0 0 28px;display:grid;place-items:center;color:#9AA8C3;font-weight:700;align-self:center}
+.hub{flex:1 0 220px;min-width:220px;background:var(--navy);color:#fff;border-radius:12px;padding:14px;display:flex;flex-direction:column;gap:6px;border:1px solid rgba(255,255,255,.08)}
+.hub b{font-size:12px}
+.hub span{font-size:11px;color:#9FB0CC;line-height:1.4}
+.hub .tag{font-size:10px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.14);padding:4px 7px;border-radius:999px;color:#E2E8F0;align-self:flex-start}
+.pipeline-foot{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.chip{font-size:11px;font-weight:600;padding:6px 10px;border-radius:999px;border:1px solid var(--line);background:#fff;color:var(--ink)}
+.chip.strong{background:var(--ink);color:#fff;border-color:var(--ink)}
+
+/* AI STEPS */
+.ai-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.ai-step{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:16px;display:flex;flex-direction:column;gap:10px}
+.ai-step .num{width:28px;height:28px;border-radius:999px;background:var(--ink);color:#fff;display:grid;place-items:center;font-size:12px;font-weight:700}
+.ai-step h4{font-size:13px;font-weight:700}
+.ai-step p{font-size:12px;color:var(--muted);line-height:1.5}
+.ai-step .spec{font-family:'Fragment Mono',monospace;font-size:11px;background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:8px;line-height:1.5}
+.ai-step .foot{margin-top:auto;display:flex;gap:6px;flex-wrap:wrap}
+.mono{font-family:'Fragment Mono',monospace}
+.tag-sm{font-size:10px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;padding:4px 7px;border-radius:999px;border:1px solid var(--line);background:#fff;color:var(--muted)}
+.tag-sm.dark{background:var(--ink);color:#fff;border-color:var(--ink)}
+.tag-sm.ok{background:#ECFDF5;color:#065F46;border-color:#A7F3D0}
+.tag-sm.bad{background:#FEF2F2;color:#991B1B;border-color:#FECACA}
+@media(max-width:860px){.ai-grid{grid-template-columns:1fr}}
+
+/* OPERATIONS */
+.ops{display:grid;grid-template-columns:1.45fr .95fr;gap:16px}
+@media(max-width:980px){.ops{grid-template-columns:1fr}}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden}
+.card-head{padding:14px 16px;border-bottom:1px solid var(--line2);display:flex;align-items:center;justify-content:space-between;gap:12px;background:#fff}
+.card-head h4{font-size:12px;font-weight:700;letter-spacing:.4px;text-transform:uppercase}
+.card-head p{font-size:12px;color:var(--muted)}
+.tabs{display:flex;gap:4px}
+.tabs button{font-size:11px;font-weight:600;padding:6px 10px;border-radius:999px;border:1px solid var(--line);background:#fff;color:var(--muted);cursor:pointer}
+.tabs button.active{background:var(--ink);color:#fff;border-color:var(--ink)}
+#map{height:500px;width:100%;background:#E9EEF4}
+@media(max-width:980px){#map{height:420px}}
+.map-foot{padding:10px 14px;border-top:1px solid var(--line2);display:flex;gap:8px;flex-wrap:wrap;background:#fff}
+.legend{position:absolute;bottom:12px;left:12px;background:#fff;border:1px solid var(--line);border-radius:10px;padding:10px 12px;font-size:11px;box-shadow:0 8px 22px rgba(0,0,0,.08);z-index:500;line-height:1.6}
+.legend strong{font-size:11px}
+.dot{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:6px;vertical-align:middle;border:1px solid rgba(0,0,0,.06)}
+.stack{display:flex;flex-direction:column;gap:16px}
 .mini{padding:14px}
-.mini h4{font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.4px;margin-bottom:8px;display:flex;align-items:center;gap:8px}
+.mini h4{font-size:12px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;margin-bottom:8px;display:flex;align-items:center;gap:8px}
 .mini p{font-size:12px;color:var(--muted);line-height:1.5}
-.upload{border:1.6px dashed #A5B4FC;background:#F8FAFF;border-radius:12px;padding:14px;text-align:center;cursor:pointer;transition:.2s}
-.upload:hover{background:#EEF2FF}
-.upload.drag{border-color:var(--blue);background:#E0E7FF}
-.btn{padding:9px 14px;border-radius:9px;border:none;font-weight:700;font-size:12px;cursor:pointer;display:inline-flex;align-items:center;gap:7px;justify-content:center}
-.btn-primary{background:var(--blue);color:#fff}
-.btn-dark{background:var(--navy);color:#fff}
+.upload{border:1.5px dashed #C7D2FE;background:#F8FAFF;border-radius:12px;padding:16px;text-align:center;cursor:pointer;transition:.15s}
+.upload:hover{background:#EEF2FF;border-color:#A5B4FC}
+.upload.drag{background:#E0E7FF;border-color:#6366F1}
+.btn{padding:9px 14px;border-radius:999px;border:none;font-weight:600;font-size:12px;cursor:pointer;display:inline-flex;align-items:center;gap:7px;justify-content:center;transition:.15s}
+.btn-primary{background:var(--ink);color:#fff}
+.btn-primary:hover{background:var(--navy2)}
 .btn-ghost{background:#fff;border:1px solid var(--line);color:var(--ink)}
-.tag{font-size:10px;font-weight:800;letter-spacing:.6px;text-transform:uppercase;padding:4px 8px;border-radius:20px}
+.btn-ghost:hover{background:var(--bg)}
+.tag{font-size:10px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;padding:4px 8px;border-radius:999px}
 .tag-ok{background:#ECFDF5;color:#065F46;border:1px solid #A7F3D0}
 .tag-warn{background:#FFFBEB;color:#92400E;border:1px solid #FDE68A}
 .tag-bad{background:#FEF2F2;color:#991B1B;border:1px solid #FECACA}
-.tag-info{background:#EFF6FF;color:#1E40AF;border:1px solid #BFDBFE}
-.progress{height:6px;background:#E2E8F0;border-radius:20px;overflow:hidden}
-.progress i{display:block;height:100%;background:linear-gradient(90deg,var(--blue),var(--teal));width:0%;transition:.8s}
-.log{font-family:'JetBrains Mono',monospace;font-size:11px;background:#0F172A;color:#E2E8F0;border-radius:10px;padding:11px;line-height:1.6;max-height:150px;overflow:auto;border:1px solid #1E293B}
-.alert{border:1px solid var(--line);border-radius:12px;padding:11px;background:#fff;display:flex;gap:11px;align-items:flex-start;margin-bottom:8px}
-.sev{width:4px;align-self:stretch;border-radius:20px}
-.sev-c{background:var(--red)}.sev-h{background:#F59E0B}.sev-m{background:#EAB308}
-/* INGEST DIAGRAM */
-.ingest{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}
-.src{border:1px solid var(--line);border-radius:12px;background:var(--card);padding:11px;text-align:center}
-.src b{font-size:11px;display:block;margin-bottom:4px}
-.src span{font-size:10px;color:var(--muted);line-height:1.4;display:block}
-.src .icon{font-size:18px;margin-bottom:6px}
-.pipe{border:1px solid var(--line);border-radius:12px;background:linear-gradient(180deg,#F8FAFC,#EFF6FF);padding:12px;text-align:center}
-.pipe b{font-size:11px;color:var(--blue)}
-/* TIER TABLE */
-.tier{border:1px solid var(--line);border-radius:12px;overflow:hidden;background:#fff}
-.tier table{width:100%;border-collapse:collapse;font-size:11px}
-.tier th{background:var(--navy);color:#fff;padding:8px 8px;text-align:left;font-size:10px;letter-spacing:.5px;text-transform:uppercase}
-.tier td{padding:7px 8px;border-top:1px solid var(--line);vertical-align:top}
-.tier tr:nth-child(even){background:#F8FAFC}
-/* Equation */
-.eq{background:#0F172A;color:#E2E8F0;border-radius:12px;padding:12px 14px;font-family:'JetBrains Mono',monospace;font-size:11px;line-height:1.6;border:1px solid #1E293B;overflow:auto}
-.eq b{color:#5EEAD4}
+.progress{height:5px;background:var(--line);border-radius:999px;overflow:hidden}
+.progress i{display:block;height:100%;background:var(--ink);width:0%;transition:.7s}
+.log{font-family:'Fragment Mono',monospace;font-size:11px;background:#0F1A2E;color:#D6E0F0;border-radius:10px;padding:10px;line-height:1.6;max-height:150px;overflow:auto;border:1px solid #1E2F4A}
+.alert{display:flex;gap:10px;align-items:flex-start;padding:11px;border:1px solid var(--line);border-radius:12px;background:#fff}
+.alert + .alert{margin-top:8px}
+.sev{width:3px;align-self:stretch;border-radius:999px;flex-shrink:0}
+.sev-c{background:#DC2626}.sev-h{background:#D97706}.sev-m{background:#A3A3A3}
+
+/* MATRIX */
+.matrix{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:860px){.matrix{grid-template-columns:1fr}}
+.table-wrap{border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;background:#fff}
+.table-wrap table{width:100%;border-collapse:collapse;font-size:12px}
+.table-wrap th{background:var(--ink);color:#fff;padding:9px 10px;text-align:left;font-size:11px;letter-spacing:.4px;text-transform:uppercase;font-weight:600}
+.table-wrap td{padding:8px 10px;border-top:1px solid var(--line2);vertical-align:top}
+.table-wrap tr:nth-child(even) td{background:#F9FBFD}
+
+/* FOOT */
+.footer{margin-top:28px;padding:16px 14px;border:1px solid var(--line);border-radius:12px;background:#fff;display:flex;gap:12px;flex-wrap:wrap;align-items:center;justify-content:space-between}
+.footer small{font-size:11px;color:var(--muted)}
+
+/* CORRIDORS */
+.corridor-bar{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+.corridor{padding:6px 10px;border-radius:999px;border:1px solid var(--line);background:#fff;font-size:12px;font-weight:500;cursor:pointer;display:inline-flex;align-items:center;gap:7px}
+.corridor.active{background:var(--ink);color:#fff;border-color:var(--ink)}
+.corridor .cflag{width:16px;height:16px;border-radius:50%;display:grid;place-items:center;font-size:10px;border:1px solid var(--line);background:#fff}
 </style>
 </head>
 <body>
 <header class="topbar">
-  <div class="brand">
-    <div class="logo">Æ</div>
-    <div>
-      <h1>BRICS-AETHER</h1>
-      <p>Atmospheric Earth Observation • Federated Response</p>
+  <div class="topbar-inner">
+    <div class="brand">
+      <div class="mark">Æ</div>
+      <div>
+        <h1>BRICS-AETHER</h1>
+        <p>Atmospheric Intelligence • 2026</p>
+      </div>
+      <div class="brics-flags" aria-label="BRICS flags">
+        <span class="flag" title="Brazil">🇧🇷</span>
+        <span class="flag" title="Russia">🇷🇺</span>
+        <span class="flag" title="India">🇮🇳</span>
+        <span class="flag" title="China">🇨🇳</span>
+        <span class="flag" title="South Africa">🇿🇦</span>
+      </div>
     </div>
-    <span class="badge live">LIVE • S5P + ERA5 + CAMS → H3 RES 8</span>
-    <span class="badge" style="background:rgba(245,158,11,.14);border-color:rgba(245,158,11,.3);color:#FDE68A">DIGITAL PUBLIC GOOD • DPG</span>
-  </div>
-  <nav class="nav">
-    <button class="active" data-view="overview">Overview</button>
-    <button data-view="ingest">Data</button>
-    <button data-view="ai">PINN</button>
-    <button data-view="ops">Operations</button>
-    <button data-view="dispatch">Dispatch</button>
-  </nav>
-  <div style="display:flex;align-items:center;gap:8px">
-    <span class="badge" style="background:rgba(255,255,255,.09)">Confidential Space • TEE</span>
-    <select id="lang" class="select">
-      <option>🌐 English</option>
-      <option>🇮🇳 हिन्दी</option>
-      <option>🇧🇷 Português</option>
-      <option>🇷🇺 Русский</option>
-      <option>🇨🇳 中文</option>
-      <option>🇿🇦 English (ZA)</option>
-    </select>
+    <nav class="nav">
+      <button class="active" data-view="overview">Overview</button>
+      <button data-view="ingest">Data</button>
+      <button data-view="ai">Model</button>
+      <button data-view="ops">Operations</button>
+      <button data-view="dispatch">Dispatch</button>
+    </nav>
+    <div class="top-actions">
+      <span class="badge-dpg"><i></i> Digital Public Good</span>
+      <select id="lang" class="select">
+        <option>EN</option><option>हिन्दी</option><option>PT</option><option>RU</option><option>中文</option>
+      </select>
+    </div>
   </div>
 </header>
 
 <div class="wrap">
   <!-- HERO -->
   <div class="hero">
-    <div class="eyebrow"><i>INDIA 2026 BRICS CHAIRSHIP — Building for Resilience, Innovation, Cooperation & Sustainability</i> <span style="background:#fff;color:var(--navy);padding:3px 8px;border-radius:20px;font-weight:800">GEN AI + PINN + FEDERATED</span> <span style="background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);padding:3px 8px;border-radius:20px">Google Cloud Confidential Space</span></div>
-    <h2>Sovereign intelligence for air that <span>crosses borders</span> — sub-kilometer, 72-hour, &lt;5 min to the accountable officer.</h2>
-    <p>BRICS-AETHER fuses Sentinel-5P TROPOMI, ECMWF ERA5 & Copernicus CAMS with citizen ground validation through a <b>physics-informed, federated AI</b>. No raw citizen data leaves its country — only encrypted model deltas are aggregated inside hardware TEEs.</p>
-    <div class="okrs">
-      <div class="okr"><small>Hyper-Local Detection</small><strong>0.74 km²</strong><span>H3 Index Resolution 8 — sub-km plume polygons <em>✓ Sub-km</em></span></div>
-      <div class="okr"><small>Predictive Horizon</small><strong>72 Hours</strong><span>Advection-Diffusion PINN → PM2.5 / NO₂ <em>≥85% accuracy</em></span></div>
-      <div class="okr"><small>Sovereignty Compliance</small><strong>100%</strong><span>DPDP • LGPD • DSL/PIPL • POPIA • 152-FZ <em>Zero-trust</em></span></div>
-      <div class="okr"><small>Response Latency</small><strong>&lt;5 min</strong><span>Detection → dossier → Tiered dispatch <em>Automated</em></span></div>
-    </div>
-    <div class="divider"></div>
-    <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
-      <span style="font-size:11px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:#94A3B8">Corridors:</span>
-      <button class="chip active" onclick="flyTo('delhi')"><span class="dot" style="background:#EF4444"></span> Indo-Gangetic Plain</button>
-      <button class="chip" onclick="flyTo('beijing')"><span class="dot" style="background:#F59E0B"></span> Beijing–Shanghai Industrial Belt</button>
-      <button class="chip" onclick="flyTo('saopaulo')"><span class="dot" style="background:#10B981"></span> São Paulo–Rio / Amazônia Edge</button>
-      <button class="chip" onclick="flyTo('moscow')"><span class="dot" style="background:#38BDF8"></span> Moscow–St Petersburg</button>
-      <button class="chip" onclick="flyTo('joburg')"><span class="dot" style="background:#A78BFA"></span> Jo’burg–Cape Town</button>
-      <span style="margin-left:auto;display:flex;gap:6px"><span class="badge" style="background:#fff;color:var(--navy);border-color:#fff">Vertex AI • Gemini 1.5 Flash + Pro</span><span class="badge">Earth Engine + BigQuery GIS (H3)</span></span>
+    <div class="hero-card">
+      <div class="hero-inner">
+        <div class="hero-left">
+          <div class="kicker">
+            <span>India 2026 BRICS Chairship</span>
+            <span>Resilience • Innovation • Cooperation • Sustainability</span>
+            <span style="background:rgba(255,255,255,.12)">Google Cloud • Confidential Space TEE</span>
+          </div>
+          <h2>Sovereign intelligence for air that <em>crosses borders</em> — 0.74 km², 72-hour, under 5 minutes.</h2>
+          <p>BRICS-AETHER fuses Sentinel-5P, ERA5 & CAMS with citizen validation through physics-informed federated AI. Raw data never leaves its country — only encrypted model deltas are aggregated in hardware.</p>
+          <div class="okr-row">
+            <div class="okr"><small>Resolution</small><strong>0.74 km²</strong><span>H3 Res 8 • sub-km plumes</span></div>
+            <div class="okr"><small>Forecast</small><strong>72 h • ≥85%</strong><span>PINN advection-diffusion</span></div>
+            <div class="okr"><small>Compliance</small><strong>100%</strong><span>DPDP • LGPD • PIPL • POPIA</span></div>
+            <div class="okr"><small>Latency</small><strong>&lt;5 min</strong><span>Detection → dossier → Tier dispatch</span></div>
+          </div>
+          <div class="corridor-bar">
+            <button class="corridor active" onclick="flyTo('delhi')"><span class="cflag">🇮🇳</span> Indo-Gangetic</button>
+            <button class="corridor" onclick="flyTo('beijing')"><span class="cflag">🇨🇳</span> Beijing–Shanghai</button>
+            <button class="corridor" onclick="flyTo('saopaulo')"><span class="cflag">🇧🇷</span> São Paulo–Rio</button>
+            <button class="corridor" onclick="flyTo('moscow')"><span class="cflag">🇷🇺</span> Moscow–St.P</button>
+            <button class="corridor" onclick="flyTo('joburg')"><span class="cflag">🇿🇦</span> Jo’burg–Cape Town</button>
+          </div>
+        </div>
+        <div class="hero-right">
+          <div class="hero-right-head"><h3>Corridor Forecast • Delhi–Mumbai</h3><span class="live">● Live PINN</span></div>
+          <div class="chart-wrap"><canvas id="forecastChart" height="150"></canvas></div>
+          <div class="insight">
+            <div class="insight-card bad"><b>⚠︎ Ankleshwar 312 µg/m³ in 14h</b><span>ERA5 NW 12 km/h → Delhi in 22h. GAUL crosses 2 states.</span></div>
+            <div class="insight-card ok"><b>◆ Federated — TEE attested</b><span>IN → BR RMSE 11.4. No image left IN. DP ε=2.1</span></div>
+          </div>
+          <div style="display:flex;gap:6px;flex-wrap:wrap"><span class="tag tag-ok" style="background:rgba(236,253,245,.12);color:#6EE7B7;border-color:rgba(110,231,183,.22)">Gemini Flash + Pro</span><span class="tag tag-ok" style="background:rgba(255,255,255,.08);color:#CBD5E1;border-color:rgba(255,255,255,.14)">H3 • GAUL • BQ GIS</span></div>
+        </div>
+      </div>
     </div>
   </div>
 
-  <!-- INOBS: 3 FAILURES -->
-  <div class="grid2 section">
-    <div class="card mini">
-      <h4>⚠️ Three Systemic Failures we fix</h4>
-      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:6px">
-        <div style="background:#FEF2F2;border:1px solid #FECACA;border-radius:10px;padding:10px"><b style="font-size:11px;color:#991B1B">Spatial Incompleteness</b><p style="font-size:11px">Ground stations cluster in metros → corridors & rural zones blind. 1 monitor per 200k+ people.</p></div>
-        <div style="background:#FFFBEB;border:1px solid #FDE68A;border-radius:10px;padding:10px"><b style="font-size:11px;color:#92400E">Transboundary Invisibility</b><p style="font-size:11px">Stubble (IN), wildfire (BR/RU), industrial smog (CN/ZA) cross borders without joint detection.</p></div>
-        <div style="background:#EFF6FF;border:1px solid #BFDBFE;border-radius:10px;padding:10px"><b style="font-size:11px;color:#1E40AF">Institutional Latency</b><p style="font-size:11px">Detection never auto-routes to Tier 1/2/3 authority → uncoordinated, delayed response.</p></div>
-      </div>
+  <!-- SYSTEMIC FAILURES -->
+  <div class="section">
+    <div class="section-head">
+      <div><h3>Why cities miss what AETHER sees</h3><p>Three systemic failures — one federated fix</p></div>
     </div>
-    <div class="card mini">
-      <h4>🛰️ Live Telemetry — H3 Res 8 pipeline heartbeat</h4>
-      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:6px">
-        <div style="background:#F8FAFC;border:1px solid var(--line);border-radius:10px;padding:10px;text-align:center"><small style="font-size:10px;font-weight:700;letter-spacing:.7px;text-transform:uppercase;color:var(--muted)">Citizen Stream</small><strong style="font-size:16px;display:block">12.4k</strong><span style="font-size:11px;color:var(--muted)">Firebase → Pub/Sub<br><b style="color:#0E8A7B">>100k msgs/sec cap</b></span></div>
-        <div style="background:#F8FAFC;border:1px solid var(--line);border-radius:10px;padding:10px;text-align:center"><small style="font-size:10px;font-weight:700;letter-spacing:.7px;text-transform:uppercase;color:var(--muted)">S5P Cells Today</small><strong style="font-size:16px;display:block">941k</strong><span style="font-size:11px;color:var(--muted)">3.5×5.5 km • QA≥0.75<br>Earth Engine</span></div>
-        <div style="background:#F8FAFC;border:1px solid var(--line);border-radius:10px;padding:10px;text-align:center"><small style="font-size:10px;font-weight:700;letter-spacing:.7px;text-transform:uppercase;color:var(--muted)">Plumes Forecast</small><strong style="font-size:16px;display:block">47</strong><span style="font-size:11px;color:var(--muted)">PINN 72-h<br><b style="color:#1A73E8">24 new today</b></span></div>
-        <div style="background:#F8FAFC;border:1px solid var(--line);border-radius:10px;padding:10px;text-align:center"><small style="font-size:10px;font-weight:700;letter-spacing:.7px;text-transform:uppercase;color:var(--muted)">Dossiers Dispatched</small><strong style="font-size:16px;display:block">312</strong><span style="font-size:11px;color:var(--muted)">Median <b>4.2 min</b><br>TEE + ledger</span></div>
-      </div>
-      <div class="log" style="margin-top:10px">→ Pub/Sub ingestion 2.3k ev/s • Earth Engine H3 tiling Res 8 → 0.74 km² cells • Confidential Space TEE: 5 nodes attested • BigQuery GIS: ST_INTERSECTS with FAO GAUL L2 • Vertex PINN: λ_data 1.0 / λ_PINN 0.35 • Last sync: 2 min ago (CAMS 06 UTC • ERA5 05 UTC • S5P NRTI)</div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px">
+      <div class="card" style="padding:16px"><div style="width:28px;height:28px;border-radius:8px;background:#FEF2F2;border:1px solid #FECACA;display:grid;place-items:center;font-size:13px">◌</div><h4 style="margin:10px 0 6px;font-size:13px;font-weight:700">Spatial incompleteness</h4><p style="font-size:12px;color:var(--muted);line-height:1.6">1 monitor per 200k+ people. Corridors and rural belts are blind by design. AETHER tiles to 0.74 km² with H3 Res 8.</p></div>
+      <div class="card" style="padding:16px"><div style="width:28px;height:28px;border-radius:8px;background:#FFFBEB;border:1px solid #FDE68A;display:grid;place-items:center;font-size:13px">↗</div><h4 style="margin:10px 0 6px;font-size:13px;font-weight:700">Transboundary drift</h4><p style="font-size:12px;color:var(--muted);line-height:1.6">Stubble (IN), wildfire (BR/RU), industrial smog (CN/ZA) ignore borders. ERA5 winds + PINN cones forecast the crossing.</p></div>
+      <div class="card" style="padding:16px"><div style="width:28px;height:28px;border-radius:8px;background:#EFF6FF;border:1px solid #BFDBFE;display:grid;place-items:center;font-size:13px">◐</div><h4 style="margin:10px 0 6px;font-size:13px;font-weight:700">Institutional latency</h4><p style="font-size:12px;color:var(--muted);line-height:1.6">Detection rarely routes to the accountable officer. AETHER auto-intersects GAUL and dispatches Tier 1/2/3 with a dossier.</p></div>
     </div>
   </div>
 
-  <!-- DATA INGESTION ENGINE -->
-  <div class="card section" id="ingestSection">
-    <div class="card-head">
-      <div><h3>Data Ingestion Engine — Sovereign + Global</h3><p>Five sources → H3 geospatial pipeline. Raw citizen data never leaves national bucket.</p></div>
-      <span class="tag tag-info">H3 Res 8 • FAO GAUL • BigQuery GIS</span>
+  <!-- INGEST PIPELINE -->
+  <div class="section" id="ingestSection">
+    <div class="section-head">
+      <div><h3>Ingestion engine</h3><p>Global science + ground truth, tiled to H3 Res 8 and fused in BigQuery GIS</p></div>
+      <span class="chip strong">Sovereign buckets • Zero raw egress</span>
     </div>
-    <div style="padding:14px">
-      <div class="ingest">
-        <div class="src"><div class="icon">🛰️</div><b>Sentinel-5P TROPOMI</b><span>COPERNICUS/S5P/OFFL/L3_NO2<br>3.5×5.5 km • Daily<br><b>NO₂ column • QA≥0.75</b><br>Earth Engine Python API</span></div>
-        <div class="src"><div class="icon">🌬️</div><b>ECMWF ERA5</b><span>reanalysis-era5-single-levels<br>0.25° (~31 km) • Hourly<br><b>10m u/v wind • surface P</b><br>cdsapi → GCS</span></div>
-        <div class="src"><div class="icon">🌫️</div><b>Copernicus CAMS</b><span>cams-global-forecast<br>0.4° • 3-hourly • +120h<br><b>PM2.5/PM10/SO₂/CO/O₃</b><br>ADS REST → BQ Storage Write</span></div>
-        <div class="src"><div class="icon">🗺️</div><b>FAO GAUL 2015</b><span>Vector boundaries<br>ADM0/ADM1/ADM2<br><b>GAUL L2 polygons</b><br>BQ public-data.fao_gaul</span></div>
-        <div class="src"><div class="icon">📱</div><b>Citizen Ground Telemetry</b><span>Photos + sensor PM2.5<br>Real-time • Point<br><b>Firebase → Cloud Run Gateway</b><br>Pub/Sub >100k/sec</span></div>
+    <div class="pipeline">
+      <div class="pipeline-track">
+        <div class="source"><div class="icon">🛰</div><b>Sentinel-5P TROPOMI</b><span>3.5 × 5.5 km • Daily<br>NO₂ column, QA ≥0.75</span><span class="meta">Earth Engine API</span></div>
+        <div class="arrow">→</div>
+        <div class="source"><div class="icon">🌬</div><b>ECMWF ERA5</b><span>0.25° (~31 km) • Hourly<br>10m u/v wind, surface pressure</span><span class="meta">cdsapi → GCS</span></div>
+        <div class="arrow">→</div>
+        <div class="source"><div class="icon">🌫</div><b>Copernicus CAMS</b><span>0.4° • 3-hourly • +120h<br>PM2.5 / PM10 / SO₂ / CO / O₃</span><span class="meta">ADS → BQ Write</span></div>
+        <div class="arrow">→</div>
+        <div class="source"><div class="icon">🗺</div><b>FAO GAUL 2015</b><span>ADM0/1/2 vector<br>Administrative polygons</span><span class="meta">BQ public data</span></div>
+        <div class="arrow">→</div>
+        <div class="source"><div class="icon">📱</div><b>Citizen telemetry</b><span>Photos + PM2.5 sensors<br>Real-time point observations</span><span class="meta">Firebase → Pub/Sub</span></div>
+        <div class="arrow">→</div>
+        <div class="hub"><b>Earth Engine + BigQuery GIS</b><span>H3 Res 8 tiling (0.74 km²) • ST_INTERSECTS plume polygon with GAUL • Pub/Sub >100k msgs/sec</span><span class="tag">TEE attested • BQ ledger</span></div>
       </div>
-      <div style="display:grid;grid-template-columns:1fr auto 1fr;gap:10px;margin-top:10px;align-items:center">
-        <div class="pipe"><b>Google Earth Engine & BigQuery GIS</b><span style="font-size:11px;color:var(--muted)"> H3 Res 8 tiling (0.74 km²) + ST_INTERSECTS with GAUL</span></div>
-        <div style="font-weight:800;color:var(--blue)">→</div>
-        <div class="pipe"><b>Firebase Ingestion Gateway</b><span style="font-size:11px;color:var(--muted)"> App Check + Cloud Run → Pub/Sub → BQ brics-aether.*</span></div>
+      <div class="pipeline-foot">
+        <span class="chip">asia-south1 (Mumbai) • southamerica-east1 (São Paulo) • africa-south1 (JHB) • Isolated CN node</span>
+        <span class="chip">TTL: images 90d • audit 7y • raw 30d then aggregate</span>
       </div>
-      <div style="margin-top:10px;display:flex;gap:7px;flex-wrap:wrap"><span class="tag tag-ok">Sovereign buckets: asia-south1 • southamerica-east1 • africa-south1 • isolated CN node</span><span class="tag tag-info">BigQuery GIS: H3 • ST_INTERSECTS(p.plume_polygon, g.geom)</span><span class="tag tag-warn">TTL: images 90d • audit 7y • CAMS/ERA5 30d then aggregate</span></div>
     </div>
   </div>
 
   <!-- AI PIPELINE -->
-  <div class="grid2 section">
-    <div class="card">
-      <div class="card-head"><h3>AI Processing & Routing Engine — 3 Stages</h3><span class="tag tag-ok">Vertex AI • Confidential Space</span></div>
-      <div style="padding:14px;display:grid;gap:10px">
-        <div style="display:grid;grid-template-columns:1fr auto 1fr auto 1fr;gap:8px;align-items:center">
-          <div style="border:1px solid var(--line);border-radius:12px;padding:10px;background:#F8FAFF;text-align:center"><b style="font-size:11px">Gemini 1.5 Flash<br>Triage</b><span style="font-size:10px;color:var(--muted)">Verify hazard<br>Ci ≥0.70 else drop</span><span class="tag tag-info" style="margin-top:6px;display:inline-block">p95 &lt;1s</span></div>
-          <div style="font-weight:800;color:var(--blue)">→</div>
-          <div style="border:1px solid var(--line);border-radius:12px;padding:10px;background:#ECFDF5;text-align:center"><b style="font-size:11px">Vertex AI PINN<br>Dispersion</b><span style="font-size:10px;color:var(--muted)">Advection-Diffusion<br>Federated</span><span class="tag tag-ok" style="margin-top:6px;display:inline-block">72h • ≥85%</span></div>
-          <div style="font-weight:800;color:var(--blue)">→</div>
-          <div style="border:1px solid var(--line);border-radius:12px;padding:10px;background:#FFFBEB;text-align:center"><b style="font-size:11px">Gemini 1.5 Pro<br>Agent</b><span style="font-size:10px;color:var(--muted)">Dossier + routing<br>1M token ctx</span><span class="tag tag-warn" style="margin-top:6px;display:inline-block">GAUL intersect</span></div>
-        </div>
-        <div class="eq">
-          <div style="font-size:10px;font-weight:800;letter-spacing:.7px;text-transform:uppercase;color:#94A3B8;margin-bottom:6px">PINN Advection-Diffusion — loss enforces physics even under cloud cover</div>
-          <div><b>∂C/∂t + u ∂C/∂x + v ∂C/∂y = Dₓ ∂²C/∂x² + D_y ∂²C/∂y² + R(x,y,t) − S(x,y,t)</b></div>
-          <div style="margin-top:6px;color:#94A3B8">u,v = ERA5 10m wind • Dₓ,D_y = PBL diffusion • R sink • S emission</div>
-          <div style="margin-top:8px"><b>ℒ_total = λ_data ℒ_MSE(C_pred, C_obs) + λ_PINN ‖ ∂C/∂t + u∂C/∂x + v∂C/∂y − D∂²C − R + S ‖²</b> <span style="color:#5EEAD4">λ_data 1.0 • λ_PINN 0.35</span></div>
-          <div style="margin-top:8px;color:#94A3B8">Federated: <b>W_{t+1} = W_t + Σ (n_k/N) ΔW_k</b> — only ΔW_k leaves country, via gRPC to Confidential Space TEE</div>
-        </div>
-        <div class="log">→ Stage 1 Flash: {is_atmospheric_hazard:true, classification:Agricultural_Stubble, opacity:0.71, C:0.934} • Stage 2 PINN: Federated 5 nodes • Stage 3 Pro Agent: back-trace to origin + GAUL Tier 1/2/3 dispatch</div>
-      </div>
+  <div class="section">
+    <div class="section-head">
+      <div><h3>Physics-informed intelligence</h3><p>Flash verifies, PINN transports, Pro dispatches — all federated in Confidential Space</p></div>
+      <span class="chip">λ_data 1.0 • λ_PINN 0.35 • DP ε=2.1</span>
     </div>
-    <div class="card">
-      <div class="card-head"><h3>72-Hour Corridor Forecast — PINN + ERA5 Winds</h3><span class="tag tag-bad">Spike in 14h • Ankleshwar 312 µg/m³</span></div>
-      <div style="padding:12px 14px 6px"><canvas id="forecastChart" height="138"></canvas></div>
-      <div style="padding:0 14px 12px;display:grid;grid-template-columns:1fr 1fr;gap:9px">
-        <div style="background:#FEF2F2;border:1px solid #FECACA;border-radius:10px;padding:9px"><div style="font-size:10px;font-weight:800;color:#991B1B">⚠️ Predicted Breach + Transboundary</div><div style="font-size:12px;font-weight:700">Ankleshwar → Delhi NCR in 22h</div><div style="font-size:11px;color:var(--muted)">ERA5 NW 12 km/h • GAUL ray crosses 2 ADM1 • dossier to Tier 1+2+3</div></div>
-        <div style="background:#ECFDF5;border:1px solid #A7F3D0;border-radius:10px;padding:9px"><div style="font-size:10px;font-weight:800;color:#065F46">● Federated Ledger — TEE Attested</div><div style="font-size:12px;font-weight:700">IN → BR transfer RMSE 11.4</div><div style="font-size:11px;color:var(--muted)">ΔW encrypted • DP noise • no image left IN • Confidential VMs</div></div>
-      </div>
+    <div class="ai-grid">
+      <div class="ai-step"><div class="num">1</div><h4>Gemini 1.5 Flash triage</h4><p>Crowd photo validation. Drops if <code class="mono">Ci &lt; 0.70</code> or no hazard. Outputs <span class="mono">is_atmospheric_hazard</span>, type, opacity 0→1.</p><div class="spec">Agricultural_Stubble · Industrial_Plume<br>Wildfire_Conflagration · Urban_Smog<br>p95 &lt;1s per image</div><div class="foot"><span class="tag-sm dark">Flash</span><span class="tag-sm">Ci ≥ 0.70</span></div></div>
+      <div class="ai-step"><div class="num">2</div><h4>Vertex AI PINN — advection-diffusion</h4><p>Spatiotemporal GNN embeds physics so forecasts hold even under cloud cover.</p><div class="spec"><span class="mono">∂C/∂t + u∂C/∂x + v∂C/∂y = Dₓ∂²C/∂x² + D_y∂²C/∂y² + R − S</span><br><span class="mono">ℒ = λ_dataℒ_MSE + λ_PINN‖…‖²</span> &nbsp;·&nbsp; <span class="mono">W_{t+1}=W_t+Σ(n_k/N)ΔW_k</span></div><div class="foot"><span class="tag-sm ok">72h • ≥85%</span><span class="tag-sm">TEE FedAvg</span></div></div>
+      <div class="ai-step"><div class="num">3</div><h4>Gemini 1.5 Pro agent</h4><p>Back-traces wind vectors, compiles dossier (TROPOMI + ERA5 + photos), translates to HI/PT/ZH/RU/EN, mints SHA-256.</p><div class="spec">BigQuery GIS: <span class="mono">ST_INTERSECTS(plume_polygon, geom)</span><br>Context 1M tokens • Multilingual dispatch</div><div class="foot"><span class="tag-sm dark">Pro</span><span class="tag-sm">GAUL L2</span></div></div>
     </div>
   </div>
 
-  <!-- MAIN OPS GRID -->
-  <div class="grid section">
-    <div class="card" style="position:relative">
-      <div class="card-head">
-        <h3>Live Geospatial — H3 Res 8 (0.74 km²) + GAUL L2</h3>
-        <div class="tabs">
-          <button class="active" onclick="setLayer('all',this)">All</button>
-          <button onclick="setLayer('citizen',this)">Citizen</button>
-          <button onclick="setLayer('satellite',this)">S5P / CAMS</button>
-          <button onclick="setLayer('trajectory',this)">Wind</button>
+  <!-- OPS -->
+  <div class="section">
+    <div class="ops">
+      <div class="card" style="position:relative">
+        <div class="card-head">
+          <div><h4>Operational map — H3 Res 8 • GAUL L2</h4><p>Plume polygons tiled to 0.74 km², intersected with FAO admin</p></div>
+          <div class="tabs"><button class="active" onclick="setLayer('all',this)">All</button><button onclick="setLayer('citizen',this)">Citizen</button><button onclick="setLayer('satellite',this)">S5P</button><button onclick="setLayer('trajectory',this)">Wind</button></div>
         </div>
+        <div id="map"></div>
+        <div class="legend"><strong>Legend</strong> • last sync 2 min<br><span class="dot" style="background:#DC2626"></span> Verified (Flash ≥0.70 + z>2) &nbsp; <span class="dot" style="background:#D97706"></span> Citizen queued<br><span class="dot" style="background:#2563EB"></span> S5P NO₂ ≥2.5e15 &nbsp; <span class="dot" style="background:#7C3AED"></span> ERA5 wind cone</div>
+        <div class="map-foot"><span class="chip">ST_INTERSECTS • H3 Res 8</span><span class="chip">Pub/Sub >100k/sec • Cloud SQL ledger</span></div>
       </div>
-      <div id="map"></div>
-      <div class="legend">
-        <b style="font-size:11px">Legend • H3 • Last sync 2 min</b><br>
-        <span class="swatch" style="background:#DC2626"></span> Verified hazard (Flash≥0.70 + CAMS z>2)<br>
-        <span class="swatch" style="background:#F59E0B"></span> Citizen queued (Flash pending)<br>
-        <span class="swatch" style="background:#1A73E8"></span> S5P NO₂ ≥2.5e15 molec/cm²<br>
-        <span class="swatch" style="background:#7C3AED"></span> ERA5 wind trajectory (PINN cone)
-      </div>
-      <div style="padding:10px 12px;border-top:1px solid var(--line);display:flex;gap:7px;flex-wrap:wrap">
-        <span class="tag tag-info">BigQuery GIS: ST_INTERSECTS(p.plume_polygon, g.geom) → FAO GAUL</span>
-        <span class="tag tag-ok">H3 Res 8 • 0.74 km² • Pub/Sub >100k/sec</span>
-      </div>
-    </div>
-
-    <div style="display:flex;flex-direction:column;gap:16px">
-      <!-- CITIZEN -->
-      <div class="card mini" id="citizenCard">
-        <h4>📸 Citizen Submission — Gemini 1.5 Flash Triage <span class="tag tag-ok" style="margin-left:auto">Ci ≥0.70</span></h4>
-        <div class="upload" id="dropzone" onclick="document.getElementById('fileInput').click()">
-          <div style="font-size:22px">⤴︎ Upload hazard photo</div>
-          <b style="font-size:12px">Drop or click — stubble / plume / wildfire / vehicular</b>
-          <p style="margin-top:4px">Firebase + App Check → Pub/Sub. Works on WhatsApp/Telegram + 6 languages. On-device blur if needed for POPIA/LGPD.</p>
-          <div style="margin-top:8px;display:flex;gap:6px;justify-content:center;flex-wrap:wrap"><span class="tag tag-info">STT: hi • pt • ru • zh • pa</span><span class="tag tag-info">Translation API</span><span class="tag tag-ok">App Check</span></div>
-        </div>
-        <input type="file" id="fileInput" accept="image/*" hidden>
-        <div id="preview" style="display:none;margin-top:10px">
-          <img id="previewImg" style="width:100%;height:150px;object-fit:cover;border-radius:10px;border:1px solid var(--line)">
-          <div style="background:#F8FAFC;border:1px solid var(--line);border-radius:10px;padding:10px;margin-top:8px">
-            <div style="font-size:10px;font-weight:800;letter-spacing:.7px;text-transform:uppercase;color:var(--muted)">Gemini 1.5 Flash — streaming extraction</div>
-            <div id="geminiLog" class="log" style="margin-top:7px;min-height:108px">Awaiting image… schema: {is_atmospheric_hazard, classification_type, plume_opacity_index, confidence_score}</div>
-            <div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap"><span class="tag tag-bad" id="resultTag">AGRICULTURAL_STUBBLE • 0.934</span><span id="conf" style="font-size:11px;color:var(--muted);margin-left:auto">Opacity 0.71 • Needs PINN verification</span></div>
-            <div class="progress" style="margin-top:8px"><i id="prog"></i></div>
+      <div class="stack">
+        <div class="card mini" id="citizenCard">
+          <h4>Ground validation — Flash <span class="tag tag-ok" style="margin-left:auto">Ci ≥0.70</span></h4>
+          <div class="upload" id="dropzone" onclick="document.getElementById('fileInput').click()">
+            <div style="font-size:13px;font-weight:700">Drop a hazard photo or tap to upload</div>
+            <p style="margin-top:4px">Stubble, industrial plume, wildfire, urban smog. Firebase + App Check. Auto air-gap per country.</p>
+            <div style="margin-top:8px;display:flex;gap:6px;justify-content:center;flex-wrap:wrap"><span class="tag tag-ok">STT • 5 langs</span><span class="tag tag-ok">Translation API</span></div>
           </div>
-          <div style="margin-top:8px;display:flex;gap:8px">
-            <input id="sensorVal" placeholder="Sensor PM2.5 µg/m³ (optional) e.g. 187" style="flex:1;padding:9px;border-radius:9px;border:1px solid var(--line);font-size:12px">
-            <button class="btn btn-primary" onclick="submitReport()">Submit → PINN + GAUL →</button>
+          <input type="file" id="fileInput" accept="image/*" hidden>
+          <div id="preview" style="display:none;margin-top:10px">
+            <img id="previewImg" style="width:100%;height:148px;object-fit:cover;border-radius:10px;border:1px solid var(--line)">
+            <div style="background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:10px;margin-top:8px">
+              <div style="font-size:10px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:var(--muted)">Gemini 1.5 Flash — streaming</div>
+              <div id="geminiLog" class="log" style="margin-top:7px;min-height:104px">Waiting for image…</div>
+              <div style="margin-top:8px;display:flex;gap:8px;align-items:center;flex-wrap:wrap"><span class="tag tag-bad" id="resultTag">AGRICULTURAL_STUBBLE • 0.934</span><span id="conf" style="font-size:11px;color:var(--muted);margin-left:auto">Opacity 0.71</span></div>
+              <div class="progress" style="margin-top:8px"><i id="prog"></i></div>
+            </div>
+            <div style="margin-top:8px;display:flex;gap:8px">
+              <input id="sensorVal" placeholder="Sensor PM2.5 µg/m³ (optional)" style="flex:1;padding:9px 11px;border-radius:999px;border:1px solid var(--line);font-size:12px">
+              <button class="btn btn-primary" onclick="submitReport()">Submit → PINN</button>
+            </div>
+          </div>
+          <div style="margin-top:12px;border-top:1px solid var(--line2);padding-top:10px">
+            <div style="display:flex;justify-content:space-between;align-items:center"><b style="font-size:11px;letter-spacing:.4px;text-transform:uppercase">Recent validations</b><small style="color:var(--muted)">Today • H3</small></div>
+            <div id="recentReports" style="margin-top:8px"></div>
           </div>
         </div>
-        <div style="margin-top:10px;border-top:1px solid var(--line);padding-top:10px">
-          <div style="display:flex;justify-content:space-between;align-items:center"><b style="font-size:11px;text-transform:uppercase;letter-spacing:.4px">Recent ground validations</b><small style="color:var(--muted)">Pub/Sub → BQ • Today</small></div>
-          <div id="recentReports" style="margin-top:8px"></div>
+        <div class="card mini">
+          <h4>Tiered dispatch — GAUL + Pro dossier <span class="tag tag-ok" style="margin-left:auto">SHA-256</span></h4>
+          <p style="margin-bottom:8px"><span class="mono" style="background:var(--bg);border:1px solid var(--line);padding:3px 7px;border-radius:999px;font-size:11px">ST_INTERSECTS(p.plume_polygon, g.geom)</span> → Tier 1/2/3 → translated brief</p>
+          <div id="alerts"></div>
+          <button class="btn btn-ghost" style="width:100%;margin-top:8px" onclick="simulateAlert()">Simulate transboundary Tier 3</button>
+        </div>
+        <div class="card mini">
+          <h4>Confidential federation — TEE <span class="tag tag-ok">DP ε=2.1</span></h4>
+          <p>Only <span class="mono">ΔW_k</span> leaves the country, encrypted to Confidential Space. FedAvg + homomorphic noise. Compliant with DPDP / LGPD / DSL / POPIA / 152-FZ.</p>
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px;margin-top:8px">
+            <div style="border:1px solid var(--line);border-radius:10px;padding:8px;text-align:center"><b style="font-size:11px">🇮🇳 asia-south1</b><div style="font-size:11px;color:var(--muted)">TPU region</div></div>
+            <div style="border:1px solid var(--line);border-radius:10px;padding:8px;text-align:center"><b style="font-size:11px">🇧🇷 sa-east1</b><div style="font-size:11px;color:var(--muted)">RMSE 11.4</div></div>
+            <div style="border:1px solid var(--line);border-radius:10px;padding:8px;text-align:center"><b style="font-size:11px">◆ Global TEE</b><div style="font-size:11px;color:var(--muted)">5 nodes</div></div>
+          </div>
         </div>
       </div>
+    </div>
+  </div>
 
-      <!-- ALERTS TIERED -->
-      <div class="card mini">
-        <h4>🚨 Tiered Dispatch — GAUL → NIC/Gov.br/MEE/DFFE/Rosprirodnadzor <span class="tag tag-info" style="margin-left:auto">BigQuery GIS + Pro Agent</span></h4>
-        <p style="font-size:11px">SQL: <span style="font-family:'JetBrains Mono',monospace;background:#F1F5F9;padding:2px 6px;border-radius:6px">ST_INTERSECTS(p.plume_polygon, g.geom) WHERE forecast_timestamp >= NOW()</span> → Tier 1/2/3 matrix → Gemini Pro dossier (multilingual) → SHA-256 ledger.</p>
-        <div id="alerts" style="margin-top:9px"></div>
-        <button class="btn btn-ghost" style="width:100%;margin-top:8px" onclick="simulateAlert()">Simulate transboundary plume → trigger Tier 3 diplomatic brief →</button>
-        <div class="log" style="margin-top:8px">→ Dossier includes: TROPOMI image • ERA5 vectors • PINN 72h cone • ground photos • trajectory back-trace • Translated sections (HI/PT/ZH/RU/EN)</div>
-      </div>
-
-      <!-- FEDERATED -->
-      <div class="card mini">
-        <h4>🔐 Federated Learning — Confidential Space TEE <span class="tag tag-ok">DP + SecAgg</span></h4>
-        <p>Sovereign data never leaves bucket. Only <b>ΔW_k</b> encrypted → TEE → FedAvg: <span style="font-family:'JetBrains Mono',monospace">W_{t+1}=W_t+Σ(n_k/N)ΔW_k</span>. Homomorphic + DP noise. Handles IN-DPDP, BR-LGPD, CN-DSL/PIPL, ZA-POPIA, RU-152FZ.</p>
-        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px;margin-top:8px">
-          <div style="border:1px solid var(--line);border-radius:10px;padding:8px;text-align:center"><b style="font-size:11px">🇮🇳 IN asia-south1</b><div style="font-size:11px;color:var(--muted)">TPU v5e • Res 8 tiles<br><b>ΔW encrypted</b></div><span class="tag tag-ok">Attested</span></div>
-          <div style="border:1px solid var(--line);border-radius:10px;padding:8px;text-align:center"><b style="font-size:11px">🇧🇷 SAO southamerica-east1</b><div style="font-size:11px;color:var(--muted)">400 queimada imgs<br><b>RMSE 11.4</b></div><span class="tag tag-info">Reused IN</span></div>
-          <div style="border:1px solid var(--line);border-radius:10px;padding:8px;text-align:center"><b style="font-size:11px">🌐 Global TEE</b><div style="font-size:11px;color:var(--muted)">5 nodes • FedAvg<br><b>≥85% 72h</b></div><span class="tag tag-warn">Nightly</span></div>
+  <!-- MATRICES -->
+  <div class="section">
+    <div class="matrix">
+      <div>
+        <div class="section-head" style="margin-bottom:10px"><div><h3>Sovereign compliance</h3><p>Zero raw egress — architecture, not policy</p></div></div>
+        <div class="table-wrap">
+          <table><thead><tr><th>Country</th><th>Law</th><th>Constraint</th><th>AETHER</th></tr></thead>
+          <tbody>
+            <tr><td><b>🇮🇳 India</b></td><td>DPDP 2023</td><td>Consent + transfer limits</td><td>Hash anon • asia-south1</td></tr>
+            <tr><td><b>🇧🇷 Brazil</b></td><td>LGPD</td><td>Legal basis</td><td>On-device blur • sa-east1</td></tr>
+            <tr><td><b>🇨🇳 China</b></td><td>DSL / PIPL</td><td>Domestic only</td><td>Isolated node</td></tr>
+            <tr><td><b>🇿🇦 South Africa</b></td><td>POPIA</td><td>Transfer restrict</td><td>Homomorphic • af-south1</td></tr>
+            <tr><td><b>🇷🇺 Russia</b></td><td>152-FZ</td><td>Local collection</td><td>Sovereign node</td></tr>
+          </tbody></table>
         </div>
-        <div class="log" style="margin-top:8px">→ Confidential Space: memory encryption • Attestation OK (5/5) • gRPC push ΔW_k → Cloud Run gateway → BQ ledger • Cost ~$4.20/nation/night • Ledger SHA-256immut</div>
       </div>
-    </div>
-  </div>
-
-  <!-- COMPLIANCE + ROUTING MATRICES -->
-  <div class="grid2 section">
-    <div class="card mini">
-      <h4>⚖️ Sovereign Data Compliance Matrix — zero raw egress</h4>
-      <div class="tier" style="margin-top:8px">
-        <table>
-          <thead><tr><th>Country</th><th>Law</th><th>Constraint</th><th>AETHER Solution</th></tr></thead>
+      <div>
+        <div class="section-head" style="margin-bottom:10px"><div><h3>Routing matrix</h3><p>Tier determined by GAUL intersect + severity</p></div></div>
+        <div class="table-wrap">
+          <table><thead><tr><th>Member</th><th>Tier 1 Local</th><th>Tier 2 State</th><th>Tier 3 National</th></tr></thead>
           <tbody>
-            <tr><td><b>🇮🇳 India</b></td><td>DPDP Act 2023</td><td>Consent + cross-border limits</td><td>Hash anon • asia-south1 bucket</td></tr>
-            <tr><td><b>🇧🇷 Brazil</b></td><td>LGPD</td><td>Legal basis + territory</td><td>On-device blur • southamerica-east1</td></tr>
-            <tr><td><b>🇨🇳 China</b></td><td>DSL & PIPL</td><td>Core data domestic</td><td>Isolated worker • zero egress</td></tr>
-            <tr><td><b>🇿🇦 South Africa</b></td><td>POPIA</td><td>Transfer restrict</td><td>Homomorphic ΔW • africa-south1</td></tr>
-            <tr><td><b>🇷🇺 Russia</b></td><td>152-FZ</td><td>Domestic collection first</td><td>Sovereign node • local train</td></tr>
-          </tbody>
-        </table>
+            <tr><td><b>India</b></td><td>District Collector</td><td>SPCB Member Sec.</td><td>CPCB / MoEFCC JS</td></tr>
+            <tr><td><b>Brazil</b></td><td>Defesa Civil / Mayor</td><td>SEMA Director</td><td>IBAMA / MMA</td></tr>
+            <tr><td><b>China</b></td><td>Municipal EEB</td><td>Provincial Dept</td><td>MEE Desk</td></tr>
+            <tr><td><b>South Africa</b></td><td>District AQ Officer</td><td>Provincial Directorate</td><td>DFFE</td></tr>
+            <tr><td><b>Russia</b></td><td>Rosprirodnadzor</td><td>Oblast Directorate</td><td>Minprirody</td></tr>
+          </tbody></table>
+        </div>
       </div>
-      <div style="margin-top:8px;display:flex;gap:6px;flex-wrap:wrap"><span class="tag tag-ok">TEE hardware encryption</span><span class="tag tag-info">DP noise • no reverse-engineer</span><span class="tag tag-warn">Region pinning enforced</span></div>
-    </div>
-    <div class="card mini">
-      <h4>🏛️ Jurisdictional Routing Matrix — Tier 1 / 2 / 3</h4>
-      <div class="tier" style="margin-top:8px">
-        <table>
-          <thead><tr><th>Member</th><th>Tier 1: Local ops</th><th>Tier 2: State/Province</th><th>Tier 3: National/Diplomatic</th></tr></thead>
-          <tbody>
-            <tr><td><b>India</b></td><td>District Collector</td><td>SPCB Member Sec.</td><td>CPCB Chairman / MoEFCC JS</td></tr>
-            <tr><td><b>Brazil</b></td><td>Defesa Civil / Mayor</td><td>SEMA Director</td><td>IBAMA Emergency / MMA</td></tr>
-            <tr><td><b>China</b></td><td>Municipal EEB Chief</td><td>Provincial Dept E&E</td><td>MEE Transboundary Desk</td></tr>
-            <tr><td><b>South Africa</b></td><td>District AQ Officer</td><td>Provincial Env Affairs</td><td>DFFE</td></tr>
-            <tr><td><b>Russia</b></td><td>Rosprirodnadzor Inspector</td><td>Oblast Directorate</td><td>Minprirody</td></tr>
-          </tbody>
-        </table>
-      </div>
-      <div style="margin-top:8px;font-size:11px;color:var(--muted)">Dispatch via: NIC Email / WhatsApp Business • Gov.br API • Government Data Exchange • DFFE Portal/SMS • State GIS / Secure Email. Threshold: PM2.5 >150 µg/m³ or NO₂ critical >6h.</div>
     </div>
   </div>
 
-  <!-- INFRA -->
-  <div class="grid2 section">
-    <div class="card mini">
-      <h4>🧱 Infrastructure — Production, not prototype</h4>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px;font-size:11px">
-        <div style="border:1px solid var(--line);border-radius:10px;padding:9px"><b>Ingress</b><br>Cloud Run + Firebase App Check<br><span style="color:var(--muted)">Autoscales 0→1000 • &lt;50 ms</span></div>
-        <div style="border:1px solid var(--line);border-radius:10px;padding:9px"><b>Streaming</b><br>Pub/Sub<br><span style="color:var(--muted)">&gt;100k msgs/sec IoT</span></div>
-        <div style="border:1px solid var(--line);border-radius:10px;padding:9px"><b>Geospatial</b><br>Earth Engine + BigQuery GIS<br><span style="color:var(--muted)">Multi-TB parallel queries</span></div>
-        <div style="border:1px solid var(--line);border-radius:10px;padding:9px"><b>AI Training</b><br>Vertex Pipelines TPU v5e / A100<br><span style="color:var(--muted)">Multi-node GPU • PINN</span></div>
-        <div style="border:1px solid var(--line);border-radius:10px;padding:9px"><b>Enclave</b><br>Confidential Space (Conf. VMs)<br><span style="color:var(--muted)">Memory encryption for ΔW_k</span></div>
-        <div style="border:1px solid var(--line);border-radius:10px;padding:9px"><b>Agent</b><br>Vertex Agent Builder + Gemini Pro<br><span style="color:var(--muted)">1M token dossier</span></div>
+  <!-- INFRA + DELIVERY -->
+  <div class="section">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+      <div class="card mini">
+        <h4>Infrastructure — production</h4>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px">
+          <div style="border:1px solid var(--line);border-radius:10px;padding:10px"><b style="font-size:12px">Cloud Run + App Check</b><div style="font-size:11px;color:var(--muted)">0→1000 • &lt;50 ms</div></div>
+          <div style="border:1px solid var(--line);border-radius:10px;padding:10px"><b style="font-size:12px">Pub/Sub</b><div style="font-size:11px;color:var(--muted)">&gt;100k msgs/sec</div></div>
+          <div style="border:1px solid var(--line);border-radius:10px;padding:10px"><b style="font-size:12px">Earth Engine + BQ GIS</b><div style="font-size:11px;color:var(--muted)">Multi-TB parallel</div></div>
+          <div style="border:1px solid var(--line);border-radius:10px;padding:10px"><b style="font-size:12px">Vertex TPU v5e / A100</b><div style="font-size:11px;color:var(--muted)">PINN training</div></div>
+          <div style="border:1px solid var(--line);border-radius:10px;padding:10px"><b style="font-size:12px">Confidential Space</b><div style="font-size:11px;color:var(--muted)">Memory encryption</div></div>
+          <div style="border:1px solid var(--line);border-radius:10px;padding:10px"><b style="font-size:12px">Agent Builder + Pro</b><div style="font-size:11px;color:var(--muted)">1M token dossier</div></div>
+        </div>
       </div>
-    </div>
-    <div class="card mini">
-      <h4>📦 Repo & Delivery — hackathon to DPG</h4>
-      <div style="font-family:'JetBrains Mono',monospace;font-size:11px;background:#F8FAFC;border:1px solid var(--line);border-radius:10px;padding:10px;line-height:1.6;margin-top:8px">
-        brics-aether/<br>
-        ├─ ingestion/earth_engine_s5p.py • cds_era5_ingest.py • cams_forecast_ingest.py<br>
-        ├─ models/gemini_triage.py • pinn_model.py • tff_federated_aggregator.py<br>
-        ├─ agentic_routing/spatial_intersection.sql • diplomatic_agent.py<br>
-        ├─ dashboard/src (React + Maps Platform) + firebase.json<br>
-        └─ terraform/main.tf • confidential_space.tf
+      <div class="card mini">
+        <h4>Delivery — repo to DPG</h4>
+        <div class="mono" style="font-size:11px;background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:10px;line-height:1.7;margin-top:8px">
+          brics-aether/<br>
+          ├─ ingestion/earth_engine_s5p.py • cds_era5_ingest.py • cams_ingest.py<br>
+          ├─ models/gemini_triage.py • pinn_model.py • tff_federated_aggregator.py<br>
+          ├─ agentic_routing/spatial_intersection.sql • diplomatic_agent.py<br>
+          ├─ dashboard/src (React + Maps) + firebase.json<br>
+          └─ terraform/main.tf • confidential_space.tf
+        </div>
+        <div style="margin-top:10px;display:flex;gap:6px;flex-wrap:wrap"><span class="tag tag-ok">Apache 2.0 DPG</span><span class="tag tag-ok">Terraform IaC</span><span class="tag tag-ok">SHA-256 ledger</span></div>
       </div>
-      <div style="margin-top:9px;display:flex;gap:6px;flex-wrap:wrap"><span class="tag tag-ok">Apache 2.0 DPG</span><span class="tag tag-info">Terraform IaC</span><span class="tag tag-info">Cloud SQL ledger (SHA-256)</span></div>
-      <div style="margin-top:9px;font-size:11px;color:var(--muted)">Artifacts: GitHub: github.com/Naeha-S/brics • Live: naeha-s.github.io/brics/prototype/ • Demo: 4-min script (§7.3 PRD) • Slide deck 12 slides</div>
     </div>
   </div>
 
-  <footer style="margin-top:16px;padding:14px;border:1px solid var(--line);border-radius:12px;background:#fff;display:flex;gap:12px;flex-wrap:wrap;align-items:center;justify-content:space-between">
-    <div style="font-size:11px;color:var(--muted)">© 2026 BRICS-AETHER • Digital Public Good • Apache 2.0 • Data: Copernicus S5P/ERA5/CAMS (CC BY), FAO GAUL • Stack: Gemini 1.5 Flash/Pro • Vertex PINN • BigQuery GIS • Earth Engine • Cloud Run • Pub/Sub • Confidential Space</div>
-    <div style="display:flex;gap:7px"><span class="tag tag-ok">India 2026 Chairship</span><span class="tag tag-info">Federated • Sovereign • 0.74 km²</span></div>
+  <footer class="footer">
+    <small>© 2026 BRICS-AETHER • DPG • Apache 2.0 • Copernicus S5P/ERA5/CAMS • FAO GAUL • Gemini 1.5 Flash/Pro • Vertex PINN • BigQuery GIS • Earth Engine • Cloud Run • Pub/Sub • Confidential Space</small>
+    <span class="badge-dpg"><i></i> India 2026 Chairship — Federated • 0.74 km² • Sovereign</span>
   </footer>
 </div>
 
-<!-- MODAL -->
-<div id="modal" style="display:none;position:fixed;inset:0;background:rgba(10,16,36,.6);z-index:200;align-items:center;justify-content:center">
-  <div style="background:#fff;border-radius:14px;max-width:760px;width:92%;overflow:hidden;border:1px solid var(--line)">
-    <div style="padding:12px 14px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center"><b style="font-size:12px">Diplomatic Dossier Preview — Gemini 1.5 Pro</b><button onclick="closeModal()" style="border:none;background:#F8FAFC;padding:6px 10px;border-radius:20px;cursor:pointer">✕</button></div>
-    <div style="padding:14px;display:grid;grid-template-columns:1fr 1fr;gap:12px"><img id="modalImg" style="width:100%;height:190px;object-fit:cover;border-radius:10px;border:1px solid var(--line)"><div><div id="modalBody" style="font-size:12px;line-height:1.6"></div><button class="btn btn-dark" style="margin-top:10px;width:100%">Dispatch Tier 1/2/3 + SHA-256 Ledger →</button></div></div>
+<div id="modal" style="display:none;position:fixed;inset:0;background:rgba(15,26,46,.58);z-index:200;align-items:center;justify-content:center;padding:16px">
+  <div style="background:#fff;border-radius:16px;max-width:760px;width:100%;overflow:hidden;border:1px solid var(--line)">
+    <div style="padding:12px 14px;border-bottom:1px solid var(--line2);display:flex;justify-content:space-between;align-items:center"><b style="font-size:13px">Diplomatic dossier — Gemini 1.5 Pro</b><button onclick="closeModal()" style="border:1px solid var(--line);background:#fff;padding:6px 10px;border-radius:999px;cursor:pointer">✕</button></div>
+    <div style="padding:14px;display:grid;grid-template-columns:1fr 1fr;gap:12px"><img id="modalImg" style="width:100%;height:190px;object-fit:cover;border-radius:10px;border:1px solid var(--line)"><div><div id="modalBody" style="font-size:12px;line-height:1.6"></div><button class="btn btn-primary" style="margin-top:10px;width:100%">Dispatch Tier 1/2/3 + ledger</button></div></div>
   </div>
 </div>
 
 <script>
-// MAP
 const map = L.map('map',{zoomControl:false}).setView([22.5,78.8],4.2);
 L.control.zoom({position:'bottomright'}).addTo(map);
 L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',{attribution:'© CARTO'}).addTo(map);
-const poly = {delhi:[[28.61,77.20],[26.91,75.78],[23.02,72.57],[19.07,72.87]],beijing:[[39.90,116.40],[37.8,118.2],[32.06,118.79],[31.23,121.47]],saopaulo:[[-23.55,-46.63],[-23.0,-45.2],[-22.90,-43.17]],moscow:[[55.75,37.61],[58.0,36.5],[59.93,30.33]],joburg:[[-26.20,28.04],[-30.55,22.93],[-33.92,18.42]]};
-let line=L.polyline(poly.delhi,{color:'#DC2626',weight:4,opacity:.85,dashArray:'8 8'}).addTo(map);
+const poly={delhi:[[28.61,77.20],[26.91,75.78],[23.02,72.57],[19.07,72.87]],beijing:[[39.90,116.40],[37.8,118.2],[32.06,118.79],[31.23,121.47]],saopaulo:[[-23.55,-46.63],[-23.0,-45.2],[-22.90,-43.17]],moscow:[[55.75,37.61],[58.0,36.5],[59.93,30.33]],joburg:[[-26.20,28.04],[-30.55,22.93],[-33.92,18.42]]};
+let line=L.polyline(poly.delhi,{color:'#0B1D3A',weight:3,opacity:.9,dashArray:'6 6'}).addTo(map);
 const markers=[];
-function addM(lat,lng,type,title,img){const c=type==='verified'?'#DC2626':type==='sat'?'#1A73E8':'#F59E0B';const icon=L.divIcon({html:`<div style="width:13px;height:13px;background:${c};border:2px solid #fff;border-radius:50%;box-shadow:0 2px 6px rgba(0,0,0,.28)"></div>`,iconSize:[13,13],className:''});const m=L.marker([lat,lng],{icon}).addTo(map).bindTooltip(title);m.on('click',()=>openModal(title,img));markers.push({m,type});}
-addM(30.70,76.70,'verified','Patiala, Punjab — Stubble • Flash 0.934 • H3 8ef4a9','https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=600');
-addM(23.03,72.58,'verified','Ankleshwar, Gujarat — Industrial • Opacity 0.78 • GAUL Tier 1→3','https://images.unsplash.com/photo-1611273426858-450d8e3c9fce?w=600');
-addM(28.61,77.20,'sat','Delhi — S5P NO₂ 4.8e15 • CAMS PM2.5 187 • ERA5 inversion 180m','https://images.unsplash.com/photo-1570129477492-45c003edd2be?w=600');
-addM(-23.55,-46.63,'citizen','São Paulo — Queimada • Flash pending • LGPD blur','https://images.unsplash.com/photo-1480714378408-67cf0d13bc1b?w=600');
-addM(39.90,116.40,'sat','Beijing — ERA5 u: -4.2 v: -1.1 m/s • Trajectory 22h','https://images.unsplash.com/photo-1508804185872-d7badad00f7d?w=600');
-addM(55.75,37.61,'sat','Moscow — S5P QA 0.81 • PINN cone NE','https://images.unsplash.com/photo-1512495033091-860a2f8d9d06?w=600');
-addM(-33.92,18.42,'citizen','Cape Town — Dust • Citizen • POPIA homomorphic','https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=600');
-function flyTo(k){document.querySelectorAll('.chip').forEach(c=>c.classList.remove('active'));event.currentTarget.classList.add('active');map.fitBounds(poly[k],{padding:[26,26]});map.removeLayer(line);line=L.polyline(poly[k],{color:'#1A73E8',weight:4,opacity:.85,dashArray:'8 8'}).addTo(map);}
+function addM(lat,lng,type,title,img){const c=type==='verified'?'#DC2626':type==='sat'?'#2563EB':'#D97706';const icon=L.divIcon({html:`<div style="width:12px;height:12px;background:${c};border:2px solid #fff;border-radius:50%;box-shadow:0 2px 6px rgba(0,0,0,.18)"></div>`,iconSize:[12,12],className:''});const m=L.marker([lat,lng],{icon}).addTo(map).bindTooltip(title);m.on('click',()=>openModal(title,img));markers.push({m,type});}
+addM(30.70,76.70,'verified','Patiala — Stubble • C 0.934 • H3 8ef4a9','https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=600');
+addM(23.03,72.58,'verified','Ankleshwar — Industrial • Opacity 0.78','https://images.unsplash.com/photo-1611273426858-450d8e3c9fce?w=600');
+addM(28.61,77.20,'sat','Delhi — S5P 4.8e15 • PM2.5 187','https://images.unsplash.com/photo-1570129477492-45c003edd2be?w=600');
+addM(-23.55,-46.63,'citizen','São Paulo — Queimada pending','https://images.unsplash.com/photo-1480714378408-67cf0d13bc1b?w=600');
+addM(39.90,116.40,'sat','Beijing — ERA5 u -4.2','https://images.unsplash.com/photo-1508804185872-d7badad00f7d?w=600');
+function flyTo(k){document.querySelectorAll('.corridor').forEach(c=>c.classList.remove('active'));event.currentTarget.classList.add('active');map.fitBounds(poly[k],{padding:[24,24]});map.removeLayer(line);line=L.polyline(poly[k],{color:'#0B1D3A',weight:3,opacity:.9,dashArray:'6 6'}).addTo(map);}
 function setLayer(layer,btn){document.querySelectorAll('.tabs button').forEach(b=>b.classList.remove('active'));btn.classList.add('active');markers.forEach(({m,type})=>{if(layer==='all')m.addTo(map);else if(layer==='citizen')type==='citizen'||type==='verified'?m.addTo(map):map.removeLayer(m);else if(layer==='satellite')type==='sat'?m.addTo(map):map.removeLayer(m);else if(layer==='trajectory')type==='sat'?m.addTo(map):map.removeLayer(m);});}
-// CHART
 const ctx=document.getElementById('forecastChart').getContext('2d');
-const g=ctx.createLinearGradient(0,0,0,140);g.addColorStop(0,'rgba(220,38,38,.22)');g.addColorStop(1,'rgba(220,38,38,0)');
-new Chart(ctx,{type:'line',data:{labels:['Now','+6h','+12h','+18h','+24h','+36h','+48h','+72h'],datasets:[{label:'PINN PM2.5',data:[112,128,142,198,312,278,210,165],borderColor:'#DC2626',backgroundColor:g,fill:true,tension:.4,pointRadius:3},{label:'CAMS baseline',data:[95,98,102,105,108,110,112,115],borderColor:'#64748B',borderDash:[5,5],fill:false,tension:.3,pointRadius:0}]},options:{plugins:{legend:{display:true,labels:{font:{size:11},usePointStyle:true}}},scales:{y:{beginAtZero:false,min:60,max:340,grid:{color:'#E2E8F0'}},x:{grid:{display:false}}},responsive:true,maintainAspectRatio:false}});
-// UPLOAD
+const g=ctx.createLinearGradient(0,0,0,150);g.addColorStop(0,'rgba(11,29,58,.14)');g.addColorStop(1,'rgba(11,29,58,0)');
+new Chart(ctx,{type:'line',data:{labels:['Now','+6h','+12h','+18h','+24h','+36h','+48h','+72h'],datasets:[{label:'PINN',data:[112,128,142,198,312,278,210,165],borderColor:'#0B1D3A',backgroundColor:g,fill:true,tension:.38,pointRadius:2.5,borderWidth:2},{label:'CAMS baseline',data:[95,98,102,105,108,110,112,115],borderColor:'#94A3B8',borderDash:[4,4],fill:false,tension:.3,pointRadius:0,borderWidth:1.5}]},options:{plugins:{legend:{display:true,labels:{font:{size:11,family:'Inter'},usePointStyle:true,boxWidth:8}}},scales:{y:{beginAtZero:false,min:60,max:340,grid:{color:'#EEF2F7'},ticks:{font:{size:10}}},x:{grid:{display:false},ticks:{font:{size:10}}}},responsive:true,maintainAspectRatio:false}});
 const dropzone=document.getElementById('dropzone'), fileInput=document.getElementById('fileInput'), preview=document.getElementById('preview'), previewImg=document.getElementById('previewImg'), geminiLog=document.getElementById('geminiLog'), prog=document.getElementById('prog');
 ['dragenter','dragover'].forEach(e=>dropzone.addEventListener(e,ev=>{ev.preventDefault();dropzone.classList.add('drag')}));['dragleave','drop'].forEach(e=>dropzone.addEventListener(e,ev=>{ev.preventDefault();dropzone.classList.remove('drag')}));dropzone.addEventListener('drop',e=>handleFile(e.dataTransfer.files[0]));fileInput.addEventListener('change',e=>handleFile(e.target.files[0]));
-function handleFile(f){if(!f)return;const url=URL.createObjectURL(f);previewImg.src=url;preview.style.display='block';geminiLog.innerHTML='→ Gemini 1.5 Flash • triage: validating…<br>→ Confidential Space: local bucket attested…';prog.style.width='12%';const steps=['[1/5] EXIF 30.71N 76.78E • H3 8ef4a9c1b2e1d • GAUL L2: Patiala ADM2 • Firebase App Check OK','[2/5] Flash → <b style="color:#065F46">{is_hazard:true, classification:Agricultural_Stubble, opacity:0.71, C:0.934}</b> • is_atmospheric_hazard true ≥0.70 ✓','[3/5] PINN cross-check: S5P NO₂ 3.4e15 (QA 0.81) • ERA5 u -3.2 v 1.4 • CAMS z +2.4 • demand ≥0.74 km² cell anomaly','[4/5] PINN advection-diffusion: trajectory 22h to Delhi NCR • 72h forecast 312 µg/m³ @ Ankleshwar • GAUL intersect ADM1 ×2','[5/5] ✅ <b>VERIFIED</b> • Pro Agent dossier: TROPOMI crop + ERA5 vectors + photos → multilingual brief + SHA-256 ledger → Tier 1/2/3'];let i=0;const it=setInterval(()=>{geminiLog.innerHTML+='<br>'+steps[i];prog.style.width=((i+1)*20)+'%';i++;if(i===steps.length)clearInterval(it)},620);}
-function submitReport(){const v=document.getElementById('sensorVal').value||'165';alert('✅ Report '+Math.floor(Math.random()*90000+10000)+' • Pub/Sub → BQ brics-aether.citizen • Flash C 0.934 • PINN cone 22h • GAUL → SDM Patiala + SPCB + CPCB (Tier 1/2/3) • SHA-256 logged • Citizen +10pts');addReport('You — H3 8ef4a9','Stubble • C 0.93 • PM2.5 '+v,'just now');}
-function addReport(who,what,when){const d=document.createElement('div');d.style.cssText='border:1px solid var(--line);border-radius:10px;padding:9px;margin-bottom:7px;display:flex;gap:10px;align-items:center';d.innerHTML=`<img src="https://picsum.photos/seed/${Math.random()}/80/80" style="width:42px;height:42px;border-radius:8px;object-fit:cover"><div style="flex:1"><b style="font-size:12px">${who}</b><div style="font-size:11px;color:var(--muted)">${what}</div></div><span class="tag tag-ok">${when}</span>`;document.getElementById('recentReports').prepend(d);}
-addReport('Harpreet • H3 8ef4a9','Agricultural_Stubble • C 0.934 • verified','8 min ago');addReport('Anita • H3 8ef1d3','Industrial_Plume • opacity 0.78','22 min');addReport('João • H3 89a5b1','Wildfire • LGPD blur • QA 0.81','41 min');addReport('Li Wei • H3 8c12a4','Urban_Smog • PM2.5 212','1h ago');
-// ALERTS TIERED
-const alerts=[{sev:'c',title:'Ankleshwar — PINN 312 µg/m³ @ 02:00 IST • 0.74 km² cells',to:'Tier 1: Collector Bharuch • Tier 2: GPCB • Tier 3: CPCB/MoEFCC • GAUL ADM2×2',sla:'Auto-dossier (HI/EN) • SHA-256 • <5 min • Tier 3 cross-state'},{sev:'h',title:'Patiala — Agricultural stubble cluster • 12 validations • S5P 3.4e15',to:'Tier 1: SDM Patiala • Tier 2: PPCB Member Sec. • Tier 3: CPCB Chairman',sla:'Flash 0.934 • PINN back-trace to origin • Field dispatch 14 min'},{sev:'m',title:'Beijing–Shanghai — industrial corridor • ERA5 NW 4.2 m/s',to:'Tier 1: Municipal EEB • Tier 2: Provincial Dept • Tier 3: MEE Transboundary Desk',sla:'Shared via Confidential Space → CN + IN hub'}}];
-function renderAlerts(){const el=document.getElementById('alerts');el.innerHTML='';alerts.forEach(a=>{const d=document.createElement('div');d.className='alert';d.innerHTML=`<div class="sev sev-${a.sev}"></div><div style="flex:1"><b style="font-size:12px">${a.title}</b><div style="font-size:11px;color:var(--muted);margin-top:2px">${a.to}</div><small style="color:var(--muted)">${a.sla}</small></div><span class="tag ${a.sev==='c'?'tag-bad':'tag-warn'}">${a.sev==='c'?'TIER 1-3':'TIER 1-2'}</span>`;el.appendChild(d);});}
-renderAlerts();function simulateAlert(){alerts.unshift({sev:'c',title:'Transboundary: Punjab stubble plume → Delhi NCR 22h (PINN u/v) • GAUL Tier 3',to:'Tier 3: MoEFCC Joint Sec (Diplomatic) + CPCB • Notified via NIC Email/WhatsApp API + SHA ledger',sla:'Just now • dossier translating to HI/PT/ZH/RU/EN • Confidential ledger minting'});renderAlerts();}
-function openModal(title,img){document.getElementById('modal').style.display='flex';document.getElementById('modalImg').src=img;document.getElementById('modalBody').innerHTML=`<b>${title}</b><p style="margin-top:6px;color:var(--muted)">Flash schema: {is_hazard:true, classification:Stubble, opacity:0.71, C:0.934} • S5P QA 0.81 • ERA5 PBLH 210m • H3 8 res • PINN ℒ_total • FAO GAUL L2 intersect → <b style="color:#991B1B">Tier 1/2/3</b>. Dossier: TROPOMI + 72h cone + photos, multilingual, SHA-256.</p><div style="margin-top:8px;display:flex;gap:6px;flex-wrap:wrap"><span class="tag tag-ok">Flash ≥0.70</span><span class="tag tag-info">PINN ≥85%</span><span class="tag tag-ok">TEE attested</span></div>`;}
+function handleFile(f){if(!f)return;const url=URL.createObjectURL(f);previewImg.src=url;preview.style.display='block';geminiLog.innerHTML='→ Flash triage: validating…<br>→ TEE: local bucket attested';prog.style.width='10%';const steps=['[1/5] H3 8ef4a9c • GAUL ADM2 Patiala • App Check OK','[2/5] Flash → <b>{is_hazard:true, type:Agricultural_Stubble, opacity:0.71, C:0.934}</b> • Ci ≥0.70 ✓','[3/5] S5P 3.4e15 QA0.81 • CAMS z+2.4 • ERA5 u -3.2 — requires H3 anomaly','[4/5] PINN cone 22h to Delhi • 72h 312 µg/m³ • GAUL ×2 states','[5/5] ✅ Verified → Pro dossier + SHA-256 → Tier 1/2/3'];let i=0;const it=setInterval(()=>{geminiLog.innerHTML+='<br>'+steps[i];prog.style.width=((i+1)*20)+'%';i++;if(i===steps.length)clearInterval(it)},620);}
+function submitReport(){const v=document.getElementById('sensorVal').value||'165';alert('Report '+Math.floor(Math.random()*90000+10000)+' • Flash C0.934 • PINN 22h cone • GAUL → Tier 1/2/3 • SHA ledger • +10 pts');addReport('You — H3 8ef4a9','Stubble C0.93 • '+v+' µg/m³','now');}
+function addReport(who,what,when){const d=document.createElement('div');d.style.cssText='border:1px solid var(--line);border-radius:10px;padding:9px;margin-bottom:7px;display:flex;gap:10px;align-items:center;background:#fff';d.innerHTML=`<img src="https://picsum.photos/seed/${Math.random()}/80/80" style="width:38px;height:38px;border-radius:8px;object-fit:cover;border:1px solid var(--line)"><div style="flex:1"><b style="font-size:12px">${who}</b><div style="font-size:11px;color:var(--muted)">${what}</div></div><span class="tag tag-ok">${when}</span>`;document.getElementById('recentReports').prepend(d);}
+addReport('Harpreet • H3 8ef4a9','Agricultural_Stubble • C0.934','8m');addReport('João • H3 89a5b1','Wildfire • pending','41m');
+const alerts=[{sev:'c',title:'Ankleshwar — PINN 312 µg/m³ @ 02:00 • H3 0.74km²',to:'Tier 1 Collector Bharuch • Tier 2 GPCB • Tier 3 CPCB/MoEFCC',sla:'Dossier HI/EN • SHA • <5 min • Tier 3 cross-state'},{sev:'h',title:'Patiala — stubble cluster • 12 validations • S5P 3.4e15',to:'Tier 1 SDM Patiala • Tier 2 PPCB • Tier 3 CPCB',sla:'Flash 0.934 • PINN back-trace 14 min'}];
+function renderAlerts(){const el=document.getElementById('alerts');el.innerHTML='';alerts.forEach(a=>{const d=document.createElement('div');d.className='alert';d.innerHTML=`<div class="sev sev-${a.sev}"></div><div style="flex:1"><b style="font-size:12px">${a.title}</b><div style="font-size:11px;color:var(--muted);margin-top:2px">${a.to}</div><small style="color:var(--muted)">${a.sla}</small></div><span class="tag ${a.sev==='c'?'tag-bad':'tag-warn'}">${a.sev==='c'?'T1-3':'T1-2'}</span>`;el.appendChild(d);});}
+renderAlerts();function simulateAlert(){alerts.unshift({sev:'c',title:'Transboundary: Punjab → Delhi 22h (PINN u/v) • Tier 3',to:'Tier 3 MoEFCC Joint Sec (Diplomatic) • NIC/WhatsApp • ledger',sla:'Just now • translating HI/PT/ZH/RU/EN'});renderAlerts();}
+function openModal(title,img){document.getElementById('modal').style.display='flex';document.getElementById('modalImg').src=img;document.getElementById('modalBody').innerHTML=`<b>${title}</b><p style="margin-top:6px;color:var(--muted)">Flash {is_hazard:true, C0.934} • S5P QA0.81 • H3 8 • PINN ℒ • GAUL → <b style="color:#991B1B">Tier 1/2/3</b>. Dossier: TROPOMI + 72h cone + photos, multilingual, SHA-256.</p>`;}
 function closeModal(){document.getElementById('modal').style.display='none'}
-document.getElementById('lang').addEventListener('change',e=>{const v=e.target.value;const t=document.createElement('div');t.style.cssText='position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:#0A1024;color:#fff;padding:10px 14px;border-radius:20px;font-size:11px;z-index:300';t.textContent='🌐 Cloud Translation API — UI + dossier → '+v+' • Confidential Space keeps raw locale data local';document.body.appendChild(t);setTimeout(()=>t.remove(),2600);});
-document.querySelectorAll('.nav button').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('.nav button').forEach(x=>x.classList.remove('active'));b.classList.add('active');const v=b.dataset.view;if(v==='ingest')document.getElementById('ingestSection').scrollIntoView({behavior:'smooth'});if(v==='ai')document.querySelector('.eq').scrollIntoView({behavior:'smooth',block:'center'});if(v==='ops')document.getElementById('citizenCard').scrollIntoView({behavior:'smooth'});if(v==='dispatch')document.getElementById('alerts').scrollIntoView({behavior:'smooth'});}));
+document.getElementById('lang').addEventListener('change',e=>{const t=document.createElement('div');t.style.cssText='position:fixed;bottom:16px;left:50%;transform:translateX(-50%);background:#0B1D3A;color:#fff;padding:8px 12px;border-radius:999px;font-size:11px;z-index:300;box-shadow:0 8px 22px rgba(0,0,0,.18)';t.textContent='Translation API → '+e.target.value;document.body.appendChild(t);setTimeout(()=>t.remove(),2200);});
+document.querySelectorAll('.nav button').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('.nav button').forEach(x=>x.classList.remove('active'));b.classList.add('active');const v=b.dataset.view;if(v==='ingest')document.getElementById('ingestSection').scrollIntoView({behavior:'smooth'});if(v==='ai')document.querySelector('.ai-grid').scrollIntoView({behavior:'smooth'});if(v==='ops')document.getElementById('citizenCard').scrollIntoView({behavior:'smooth'});if(v==='dispatch')document.getElementById('alerts').scrollIntoView({behavior:'smooth'});}));
 </script>
 </body>
 </html>
