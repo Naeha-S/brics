@@ -191,10 +191,64 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--fg);overflo
         <button class="btn btn-light" style="width:100%;margin-top:8px" onclick="simulateAlert()">Simulate Tier 3 for current filter</button>
         <div style="font-size:11px;color:var(--muted);margin-top:6px">ST_INTERSECTS → Tier 1 Collector • Tier 2 SPCB • Tier 3 CPCB/MoEFCC • TNPCB</div>
       </div>
+      <div class="card mini" id="disputesCard">
+        <h4 style="display:flex;align-items:center;gap:6px">Dispute ledger — Hierarchical <span class="tag" style="background:var(--fg);color:#fff;border-color:var(--fg)">Lv1→5</span><span id="disputeCount" style="margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted)">0 active</span></h4>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;display:flex;gap:6px;flex-wrap:wrap">
+          <span style="display:inline-flex;align-items:center;gap:4px"><span style="width:8px;height:8px;border-radius:50%;background:var(--accent)"></span> Lv1-2 State</span>
+          <span style="display:inline-flex;align-items:center;gap:4px"><span style="width:8px;height:8px;border-radius:50%;background:#D97706"></span> Lv3-4 National</span>
+          <span style="display:inline-flex;align-items:center;gap:4px"><span style="width:8px;height:8px;border-radius:50%;background:#991B1B"></span> Lv5 BEDC</span>
+        </div>
+        <div id="disputes"></div>
+        <div style="display:flex;gap:6px;margin-top:8px">
+          <button class="btn btn-light" style="flex:1" onclick="seedDispute()">Seed Lv3 dispute (demo)</button>
+          <button class="btn btn-light" style="flex:1" onclick="seedBEDC()">Seed Lv5 BEDC (demo)</button>
+        </div>
+        <div style="font-size:11px;color:var(--muted);margin-top:6px">Primary Owner = max(area×pop) • SHA-256 ledger • PINN back-trace • Clocks auto-escalate</div>
+      </div>
     </div>
   </div>
 
   <div style="text-align:center;padding:6px 0 16px;font-size:11px;color:var(--muted)">Ingestion, PINN & compliance in <b>README.md</b> • Dashboard filters drive all datasets • Tamil Nadu default: IN / Tamil Nadu / Live</div>
+</div>
+
+<div id="disputeModal" style="display:none;position:fixed;inset:0;background:rgba(15,23,42,.62);z-index:210;align-items:center;justify-content:center;padding:14px">
+  <div style="background:#fff;border-radius:14px;max-width:520px;width:100%;overflow:hidden;border:1px solid var(--border);box-shadow:0 20px 40px rgba(0,0,0,.15)">
+    <div style="padding:12px 14px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center"><b style="font-size:13px">File Hierarchical Dispute</b><button onclick="closeDisputeModal()" style="border:1px solid var(--border);background:#fff;padding:5px 9px;border-radius:999px;cursor:pointer">✕</button></div>
+    <div style="padding:14px">
+      <div style="background:var(--muted2);border:1px solid var(--border);border-radius:10px;padding:10px;margin-bottom:10px">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.07em;text-transform:uppercase;color:var(--muted)">Evidence Package (SHA-256 at T0)</div>
+        <div id="disputeEvidence" style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--fg);margin-top:6px;line-height:1.5;word-break:break-all">—</div>
+      </div>
+      <label style="font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase">Reason *</label>
+      <select id="disputeReason" style="width:100%;margin:6px 0 10px;padding:10px 12px;border-radius:999px;border:1px solid var(--border);font-size:13px">
+        <option value="Not our source — wind from neighbor">Not our source — wind from neighbor (Attribution)</option>
+        <option value="Data inaccuracy — S5P/CAMS vs ground">Data inaccuracy — S5P/CAMS vs ground</option>
+        <option value="Cost share unfair">Cost share unfair (Mitigation)</option>
+        <option value="Jurisdiction overlap — same H3 cell">Jurisdiction overlap — same H3 cell (Authority)</option>
+        <option value="SLA breach — dossier late">SLA breach — dossier late</option>
+      </select>
+      <label style="font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase">Counter-evidence (optional)</label>
+      <input id="disputeCounter" placeholder="Paste Flash counter C or note, e.g., C0.41 clear" style="width:100%;margin:6px 0 12px;padding:10px 12px;border-radius:10px;border:1px solid var(--border);font-size:12px">
+      <div style="display:flex;gap:8px">
+        <button class="btn btn-light" style="flex:1" onclick="closeDisputeModal()">Cancel</button>
+        <button class="btn btn-dark" style="flex:2" onclick="confirmDispute()">File Dispute → Start 24h Clock</button>
+      </div>
+      <div style="font-size:11px;color:var(--muted);margin-top:8px">Filing mints <b>dispute_id</b> + hash, notifies Primary Owner + Tier 2/3, starts Cloud Tasks clock. Raw photo never crosses.</div>
+    </div>
+  </div>
+</div>
+
+<div id="bedcModal" style="display:none;position:fixed;inset:0;background:rgba(15,23,42,.68);z-index:220;align-items:center;justify-content:center;padding:14px">
+  <div style="background:#fff;border-radius:14px;max-width:720px;width:100%;overflow:hidden;border:1px solid var(--border);max-height:90vh;overflow:auto">
+    <div style="padding:12px 14px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;background:var(--fg);color:#fff"><b style="font-size:13px">BEDC — BRICS Environmental Dispute Council • TEE Audit</b><button onclick="closeBEDC()" style="border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.1);color:#fff;padding:5px 9px;border-radius:999px;cursor:pointer">✕</button></div>
+    <div style="padding:14px">
+      <div id="bedcBody" style="font-size:12px;line-height:1.6"></div>
+      <div style="display:flex;gap:8px;margin-top:12px">
+        <button class="btn btn-light" style="flex:1" onclick="closeBEDC()">Close</button>
+        <button class="btn btn-dark" style="flex:1" onclick="resolveBEDC()">Publish Binding Finding</button>
+      </div>
+    </div>
+  </div>
 </div>
 
 <div id="modal" style="display:none;position:fixed;inset:0;background:rgba(15,23,42,.55);z-index:200;align-items:center;justify-content:center;padding:14px">
@@ -492,6 +546,29 @@ function generateReports(){
 }
 const REPORTS=generateReports();
 let ALERTS=REPORTS.filter(r=>r.verified && r.pm25>95).slice(0,44).map(r=>({id:'A'+r.id,reportId:r.id,nation:r.nation,state:r.state,district:r.district,pm25:r.pm25,conf:r.conf,type:r.type,ts:r.ts,tier1:JURISDICTIONS.find(j=>j.district===r.district)?.office||r.office,severity:r.pm25>250?'c': r.pm25>150?'h':'m'}));
+let DISPUTES=[];
+let pendingDisputeAlertId=null;
+// Hierarchical dispute helpers
+async function sha256Hex(str){ const buf=await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str)); return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join(''); }
+function electPrimaryOwner(alert){
+  // Primary Owner = max(area*pop) simulation: pick district with highest pm25 in same time window and nearby state
+  const peers = ALERTS.filter(a=> Math.abs(a.ts - alert.ts) < 6*3600*1000 && a.nation===alert.nation);
+  if(peers.length===0) return alert.district;
+  peers.sort((a,b)=> b.pm25 - a.pm25);
+  return peers[0].district;
+}
+function determineLevel(alert){
+  // Lv1 intra-district, Lv2 inter-district same state, Lv3 inter-state, Lv4 transboundary, Lv5 BEDC seed
+  const n=alert.nation, s=alert.state;
+  const sameStatePeers = ALERTS.filter(a=> a.nation===n && a.state===s && Math.abs(a.ts-alert.ts)<12*3600*1000);
+  const sameNationPeers = ALERTS.filter(a=> a.nation===n && Math.abs(a.ts-alert.ts)<12*3600*1000);
+  const crossNation = ALERTS.some(a=> a.nation!==n && Math.abs(a.ts-alert.ts)<24*3600*1000 && a.pm25>120);
+  if(crossNation) return 4;
+  if(sameNationPeers.length>6) return 3;
+  if(sameStatePeers.length>3) return 2;
+  return 1;
+}
+
 
 // FILTERS
 let activeLayer='all';
@@ -746,13 +823,264 @@ function renderAlerts(alerts){
   const el=document.getElementById('alerts'); el.innerHTML='';
   if(alerts.length===0){ el.innerHTML=`<div style="text-align:center;padding:14px;color:var(--muted);font-size:12px;border:1px dashed var(--border);border-radius:10px">No alerts in this filter + time range<br><span style="font-size:11px">Switch to Last 24h or All districts</span></div>`; return; }
   alerts.forEach(a=>{
-    const d=document.createElement('div'); d.className='alert';
     const tier=JURISDICTIONS.find(j=>j.district===a.district);
     const to = tier? `Tier1 ${tier.office} • Tier2 ${tier.tier2} • Tier3 ${tier.tier3}` : a.tier1;
-    d.innerHTML=`<div class="sev sev-${a.severity}"></div><div style="flex:1;min-width:0"><b style="font-size:12px">${a.district} — ${a.pm25}µg/m³ • ${a.type}</b><div style="font-size:11px;color:var(--muted);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${to}</div><small style="color:var(--muted)">${a.ts.toLocaleString()} • SHA • ${tier? tier.sla+' min SLA':''}</small></div><span class="tag ${a.severity==='c'?'tag-bad':''}" style="${a.severity!=='c'?'background:#FFFBEB;color:#92400E;border:1px solid #FDE68A':''}">${a.severity==='c'?'T1-3':'T1-2'}</span>`;
+    const level = a.level || determineLevel(a);
+    a.level = level;
+    const lvlBadge = level===1?'Lv1': level===2?'Lv2': level===3?'Lv3': level===4?'Lv4 Bilateral':'Lv5 BEDC';
+    const lvlColor = level<=2?'#0A7A3E': level<=4?'#D97706':'#991B1B';
+    const primary = a.primaryOwner || electPrimaryOwner(a);
+    a.primaryOwner = primary;
+    const isPrimary = primary===a.district;
+    const hasDispute = DISPUTES.some(d=> d.alertId===a.id);
+    const dispute = DISPUTES.find(d=> d.alertId===a.id);
+    const sha = a.sha || (a.sha = 'sha-' + a.id.toLowerCase());
+    const d=document.createElement('div'); d.className='alert'; d.style.cursor='pointer';
+    d.innerHTML=`<div class="sev sev-${a.severity}"></div>
+      <div style="flex:1;min-width:0">
+        <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">
+          <b style="font-size:12px">${a.district} — ${a.pm25}µg/m³ • ${a.type}</b>
+          <span style="font-size:10px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;padding:3px 7px;border-radius:999px;border:1px solid ${lvlColor};color:${lvlColor};background:${level<=2?'#ECFDF5': level<=4?'#FFFBEB':'#FEF2F2'}">${lvlBadge}</span>
+          ${isPrimary?'<span style="font-size:10px;font-weight:700;padding:3px 6px;border-radius:999px;background:var(--fg);color:#fff">PRIMARY</span>':'<span style="font-size:10px;padding:3px 6px;border-radius:999px;border:1px solid var(--border);background:var(--muted2);color:var(--muted)">CC</span>'}
+          ${hasDispute?`<span style="font-size:10px;font-weight:700;padding:3px 6px;border-radius:999px;background:#FEF2F2;color:#991B1B;border:1px solid #FECACA">DISPUTED</span>`:''}
+        </div>
+        <div style="font-size:11px;color:var(--muted);margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${to}</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:2px;display:flex;gap:6px;flex-wrap:wrap;align-items:center">
+          <span>Primary: <b style="color:var(--fg)">${primary}</b> ${!isPrimary?`• CC: ${a.district}`:''}</span>
+          <span style="font-family:'JetBrains Mono',monospace;font-size:10px;background:var(--muted2);border:1px solid var(--border);padding:2px 6px;border-radius:999px">${sha.slice(0,14)}…</span>
+          <span>${a.ts.toLocaleString()} • H3 0.74km²</span>
+        </div>
+        <div style="display:flex;gap:6px;margin-top:6px">
+          <button onclick="event.stopPropagation(); openEvidence('${a.id}')" style="font-size:11px;font-weight:600;padding:5px 9px;border-radius:999px;border:1px solid var(--border);background:#fff;cursor:pointer">View Evidence</button>
+          ${hasDispute? `<button onclick="event.stopPropagation(); openDisputeView('${dispute.disputeId}')" style="font-size:11px;font-weight:600;padding:5px 9px;border-radius:999px;border:1px solid #FECACA;background:#FEF2F2;color:#991B1B;cursor:pointer">View Dispute ${dispute.level===5?'• BEDC':''}</button>` : `<button onclick="event.stopPropagation(); fileDispute('${a.id}')" style="font-size:11px;font-weight:600;padding:5px 9px;border-radius:999px;border:1px solid var(--border);background:#fff;cursor:pointer">File Dispute</button>`}
+          <button onclick="event.stopPropagation(); simulateWindBackTrace('${a.id}')" style="font-size:11px;font-weight:500;padding:5px 9px;border-radius:999px;border:1px solid var(--border);background:var(--muted2);cursor:pointer">PINN back-trace</button>
+        </div>
+      </div>
+      <span class="tag ${a.severity==='c'?'tag-bad':''}" style="${a.severity!=='c'?'background:#FFFBEB;color:#92400E;border:1px solid #FDE68A':''}">${a.severity==='c'?'T1-3':'T1-2'}</span>`;
+    d.onclick=()=>openModal(`${a.district} — ${a.type} • Lv${level} • Primary ${primary}`, `https://picsum.photos/seed/${a.district}${a.id}/400/250`);
     el.appendChild(d);
   });
+  renderDisputes();
 }
+function renderDisputes(){
+  const el=document.getElementById('disputes');
+  const countEl=document.getElementById('disputeCount');
+  const filtered = DISPUTES.filter(d=>{
+    // respect current filters
+    const a = ALERTS.find(x=> x.id===d.alertId) || {nation:'IN',state:'Tamil Nadu',district:'Chennai', ts:new Date()};
+    const n=document.getElementById('fCountry').value, s=document.getElementById('fState').value, di=document.getElementById('fDistrict').value;
+    const tr = (typeof getTimeRange==='function'? getTimeRange(): {from:new Date(0),to:new Date()});
+    if(n!=='ALL' && a.nation!==n) return false;
+    if(s!=='ALL' && a.state!==s) return false;
+    if(di!=='ALL' && a.district!==di) return false;
+    if(a.ts < tr.from || a.ts > tr.to) return false;
+    return true;
+  });
+  countEl.textContent = `${filtered.length} active` + (filtered.length? ` • ${filtered.filter(d=>d.level>=4).length} transboundary` : '');
+  if(filtered.length===0){
+    el.innerHTML = `<div style="text-align:center;padding:12px;color:var(--muted);font-size:12px;border:1px dashed var(--border);border-radius:10px">No disputes in this filter + time range<br><span style="font-size:11px">File a dispute from an alert above, or seed a demo Lv3/Lv5</span></div>`;
+    return;
+  }
+  el.innerHTML='';
+  filtered.slice(0,8).forEach(d=>{
+    const a = ALERTS.find(x=> x.id===d.alertId);
+    const lvlColor = d.level<=2?'#0A7A3E': d.level<=4?'#D97706':'#991B1B';
+    const lvlBg = d.level<=2?'#ECFDF5': d.level<=4?'#FFFBEB':'#FEF2F2';
+    const now = Date.now();
+    const remain = Math.max(0, d.deadline - now);
+    const hrs = Math.floor(remain/3600000);
+    const mins = Math.floor((remain%3600000)/60000);
+    const over = remain===0;
+    const clock = over? 'OVERDUE → escalating' : `${hrs}h ${mins}m left`;
+    const tierClock = d.level===2?'Tier 2 24h' : d.level===3?'Tier 3 24h' : d.level===4?'Bilateral 72h' : d.level===5?'BEDC 48h':'Tier 1';
+    const el2=document.createElement('div');
+    el2.style.cssText='border:1px solid var(--border);border-radius:12px;padding:10px;background:#fff;margin-bottom:7px';
+    el2.innerHTML=`
+      <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">
+        <b style="font-size:12px">${d.district} • ${d.reason.split(' —')[0]}</b>
+        <span style="font-size:10px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;padding:3px 7px;border-radius:999px;border:1px solid ${lvlColor};color:${lvlColor};background:${lvlBg}">Lv${d.level} ${d.level===5?'BEDC': d.level===4?'Bilateral': d.level===3?'Inter-State': d.level===2?'Inter-District':'Intra'}</span>
+        <span style="font-size:10px;font-weight:600;padding:3px 7px;border-radius:999px;background:var(--muted2);border:1px solid var(--border)">${tierClock}</span>
+        <span style="margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:10px;padding:4px 8px;border-radius:999px;border:1px solid ${over?'#FECACA':'var(--border)'};background:${over?'#FEF2F2':'#fff'};color:${over?'#991B1B':'var(--muted)'}">${clock}</span>
+      </div>
+      <div style="font-size:11px;color:var(--muted);margin-top:4px">
+        Alert <b style="color:var(--fg)">${d.alertId}</b> • Primary: <b style="color:var(--fg)">${d.primaryOwner}</b> • Filed ${new Date(d.filedAt).toLocaleString()} • SHA <span style="font-family:'JetBrains Mono',monospace;font-size:10px;background:var(--muted2);border:1px solid var(--border);padding:2px 6px;border-radius:999px">${d.sha.slice(0,14)}…</span>
+      </div>
+      <div style="font-size:11px;color:var(--muted);margin-top:2px">H3 ${d.h3} • S5P QA≥0.75 • PINN ℒ_total • GAUL L2 — Evidence at T0, immutable</div>
+      <div style="display:flex;gap:6px;margin-top:7px">
+        <button onclick="openDisputeView('${d.disputeId}')" style="font-size:11px;font-weight:600;padding:6px 10px;border-radius:999px;border:1px solid var(--border);background:#fff;cursor:pointer">View Dossier</button>
+        <button onclick="escalateDispute('${d.disputeId}')" style="font-size:11px;font-weight:600;padding:6px 10px;border-radius:999px;border:1px solid ${d.level>=4?'#FECACA':'var(--border)'};background:${d.level>=4?'#FEF2F2':'var(--muted2)'};color:${d.level>=4?'#991B1B':'var(--fg)'};cursor:pointer">${d.level===5?'BEDC Hearing': d.level===4?'Escalate to BEDC':'Escalate'}</button>
+        <button onclick="resolveDispute('${d.disputeId}')" style="font-size:11px;font-weight:600;padding:6px 10px;border-radius:999px;border:none;background:var(--fg);color:#fff;cursor:pointer">Resolve • SHA close</button>
+      </div>
+    `;
+    el.appendChild(el2);
+  });
+}
+async function fileDispute(alertId){
+  const a = ALERTS.find(x=> x.id===alertId);
+  if(!a) return;
+  pendingDisputeAlertId = alertId;
+  // Build evidence preview
+  const tier = JURISDICTIONS.find(j=> j.district===a.district);
+  const h3 = '8'+Math.floor(Math.random()*1e7).toString(16).padStart(7,'0');
+  a.h3 = h3;
+  const evidenceStr = `${a.id}|${h3}|${a.pm25}|${a.conf}|${a.ts.toISOString()}|S5P_QA0.81|CAMS_z2.4|ERA5_PBLH210|PINN_L1.0_0.35|GAUL_${a.district}|${tier? tier.state:''}`;
+  const sha = await sha256Hex(evidenceStr);
+  a.sha = sha;
+  document.getElementById('disputeEvidence').innerHTML = `
+    <div><b>Alert ${a.id}</b> • ${a.district}, ${a.state} (${a.nation}) • Lv${determineLevel(a)} • Primary <b>${electPrimaryOwner(a)}</b></div>
+    <div style="margin-top:4px">H3 <b>${h3}</b> (0.74km²) • S5P NO₂ 3.4e15 QA0.81 • CAMS z+2.4 • ERA5 u-3.2 v1.4 • PINN cone 22h • Flash C${a.conf}</div>
+    <div style="margin-top:4px">GAUL L2 <b>${a.district}</b> → L1 ${a.state} → L0 ${a.nation} • ST_INTERSECTS • Tier1 ${tier? tier.office:''}</div>
+    <div style="margin-top:6px;display:flex;gap:6px;align-items:center;flex-wrap:wrap">
+      <span style="font-size:10px;padding:3px 7px;border-radius:999px;background:#0F172A;color:#fff;font-family:'JetBrains Mono',monospace">${sha.slice(0,16)}…${sha.slice(-8)}</span>
+      <span style="font-size:10px;padding:3px 7px;border-radius:999px;border:1px solid var(--border);background:#fff">SHA-256 at T0 • immutable</span>
+      <span style="font-size:10px;padding:3px 7px;border-radius:999px;border:1px solid #A7F3D0;background:#ECFDF5;color:#065F46">TEE attested</span>
+    </div>
+    <div style="margin-top:6px;font-size:10px;color:var(--muted)">Raw photo + sensor stays in ${a.nation} bucket — only hash + H3 + PM2.5 crosses.</div>
+  `;
+  document.getElementById('disputeEvidence').dataset.sha = sha;
+  document.getElementById('disputeEvidence').dataset.h3 = h3;
+  document.getElementById('disputeModal').style.display='flex';
+}
+function closeDisputeModal(){ document.getElementById('disputeModal').style.display='none'; pendingDisputeAlertId=null; }
+async function confirmDispute(){
+  if(!pendingDisputeAlertId) return;
+  const a = ALERTS.find(x=> x.id===pendingDisputeAlertId);
+  const reason = document.getElementById('disputeReason').value;
+  const counter = document.getElementById('disputeCounter').value;
+  const level = determineLevel(a);
+  const tier = JURISDICTIONS.find(j=> j.district===a.district);
+  const sha = document.getElementById('disputeEvidence').dataset.sha;
+  const h3 = document.getElementById('disputeEvidence').dataset.h3;
+  const primary = electPrimaryOwner(a);
+  const now = Date.now();
+  const slaHours = level===2?24 : level===3?24 : level===4?72 : level===5?48 : 6;
+  const deadline = now + slaHours*3600*1000;
+  const dispute = {
+    disputeId: 'D'+Math.floor(Math.random()*90000+10000),
+    alertId: a.id,
+    district: a.district,
+    state: a.state,
+    nation: a.nation,
+    reason,
+    counter,
+    level,
+    primaryOwner: primary,
+    h3, sha,
+    filedAt: now,
+    deadline,
+    status: 'mediating',
+    tierClock: level===2?'Tier 2 24h': level===3?'Tier 3 24h': level===4?'Bilateral 72h': level===5?'BEDC 48h':'Tier 1'
+  };
+  DISPUTES.unshift(dispute);
+  closeDisputeModal();
+  renderAlerts(filteredAlerts().slice(0,6));
+  renderDisputes();
+  // Auto-toast
+  const t=document.createElement('div'); t.style.cssText='position:fixed;bottom:16px;left:50%;transform:translateX(-50%);background:var(--fg);color:#fff;padding:8px 12px;border-radius:999px;font-size:12px;z-index:300;box-shadow:0 8px 22px rgba(0,0,0,.18)'; t.textContent=`Dispute ${dispute.disputeId} filed • Lv${level} • ${slaHours}h clock started • Primary ${primary}`; document.body.appendChild(t); setTimeout(()=>t.remove(), 3200);
+}
+function openEvidence(alertId){
+  const a=ALERTS.find(x=> x.id===alertId);
+  if(!a) return;
+  const tier=JURISDICTIONS.find(j=> j.district===a.district);
+  fileDispute(alertId);
+}
+function openDisputeView(disputeId){
+  const d=DISPUTES.find(x=> x.disputeId===disputeId);
+  if(!d) return;
+  const a=ALERTS.find(x=> x.id===d.alertId);
+  document.getElementById('bedcBody').innerHTML = `
+    <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px">
+      <span style="font-size:10px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;padding:4px 8px;border-radius:999px;border:1px solid #D97706;color:#D97706;background:#FFFBEB">Lv${d.level} ${d.level===5?'BEDC': d.level===4?'Bilateral': d.level===3?'Inter-State':'Inter-District'}</span>
+      <span style="font-size:10px;padding:4px 8px;border-radius:999px;background:var(--fg);color:#fff">Primary: ${d.primaryOwner}</span>
+      <span style="font-family:'JetBrains Mono',monospace;font-size:10px;padding:4px 8px;border-radius:999px;border:1px solid var(--border);background:var(--muted2)">${d.sha.slice(0,16)}…</span>
+    </div>
+    <div style="background:var(--muted2);border:1px solid var(--border);border-radius:10px;padding:10px">
+      <b>Dispute ${d.disputeId}</b> • Alert ${d.alertId} • ${d.district}, ${d.state} (${d.nation})<br>
+      <span style="font-size:11px;color:var(--muted)">Reason: ${d.reason}</span><br>
+      ${d.counter? `<span style="font-size:11px">Counter: ${d.counter}</span><br>`:''}
+      <span style="font-size:11px">H3 ${d.h3} • Filed ${new Date(d.filedAt).toLocaleString()} • Deadline ${new Date(d.deadline).toLocaleString()}</span><br>
+      <span style="font-size:11px;color:var(--muted)">Evidence at T0 — S5P QA≥0.75 + CAMS z + ERA5 u/v + PINN ℒ_total + Flash Ci≥0.70 — immutable, TEE attested</span>
+    </div>
+    <div style="margin-top:10px;display:grid;grid-template-columns:1fr 1fr;gap:8px">
+      <div style="border:1px solid var(--border);border-radius:10px;padding:10px">
+        <b style="font-size:11px">PINN Back-Trace (simulated)</b>
+        <div style="font-size:11px;color:var(--muted);margin-top:4px">Source H3 cells: <span style="font-family:'JetBrains Mono',monospace">${d.h3}</span> → 68% in ${d.primaryOwner}, 32% in neighbor • Trajectory 22h • ERA5 u-3.2 v1.4</div>
+        <div style="margin-top:6px;height:6px;background:var(--border);border-radius:999px;overflow:hidden"><div style="height:100%;width:68%;background:var(--accent)"></div></div>
+        <div style="font-size:10px;color:var(--muted);margin-top:4px">Attribution fraction — auditable in Vertex AI TEE</div>
+      </div>
+      <div style="border:1px solid var(--border);border-radius:10px;padding:10px">
+        <b style="font-size:11px">RACI — Who decides</b>
+        <div style="font-size:11px;color:var(--muted);margin-top:4px">Tier 1 <b style="color:var(--fg)">${d.district} Collector</b> • Tier 2 ${a? JURISDICTIONS.find(j=> j.district===a.district)?.tier2:''} • Tier 3 ${a? JURISDICTIONS.find(j=> j.district===a.district)?.tier3:''}</div>
+        <div style="font-size:11px;color:var(--muted)">Clock: ${d.tierClock} • SLA auto-escalates via Cloud Tasks</div>
+      </div>
+    </div>
+    <div style="margin-top:10px;font-size:11px;color:var(--muted)">Sovereignty: Raw photo stays in ${d.nation} bucket — BEDC sees only hash + H3 + PM2.5.</div>
+  `;
+  document.getElementById('bedcModal').style.display='flex';
+}
+function simulateWindBackTrace(alertId){
+  const a=ALERTS.find(x=> x.id===alertId);
+  if(!a) return;
+  const primary=electPrimaryOwner(a);
+  alert(`PINN Back-Trace (simulated)\n\nAlert ${a.id} • ${a.district} • Lv${determineLevel(a)}\nPrimary Owner (max area×pop): ${primary}\nAttribution: 68% ${primary} / 32% neighbor\nTrajectory: ERA5 u-3.2 v1.4 • 22h cone • S5P QA0.81 • CAMS z+2.4\n\nThis is what BEDC TEE re-runs for Level 5 — auditable, not opinion.`);
+}
+function seedDispute(){
+  const alerts = filteredAlerts();
+  if(alerts.length===0){ alert('No alerts in current filter — switch to All BRICS + Last 7d'); return; }
+  const a = alerts[Math.floor(Math.random()*Math.min(3, alerts.length))];
+  fileDispute(a.id);
+  setTimeout(()=>{ document.getElementById('disputeReason').value='Jurisdiction overlap — same H3 cell'; }, 80);
+}
+function seedBEDC(){
+  const alerts = filteredAlerts();
+  const pick = alerts.find(a=> determineLevel(a)>=3) || alerts[0];
+  if(!pick){ alert('No alerts'); return; }
+  // Force Lv5
+  const a = pick;
+  const origLevel = a.level;
+  a.level = 5;
+  fileDispute(a.id);
+  setTimeout(()=>{
+    document.getElementById('disputeReason').value='Not our source — wind from neighbor';
+    // after modal, confirm will create Lv5
+  }, 120);
+}
+function escalateDispute(disputeId){
+  const d=DISPUTES.find(x=> x.disputeId===disputeId);
+  if(!d) return;
+  if(d.level<5){
+    d.level +=1;
+    const hrs = d.level===3?24: d.level===4?72:48;
+    d.deadline = Date.now() + hrs*3600*1000;
+    d.tierClock = d.level===3?'Tier 3 24h': d.level===4?'Bilateral 72h':'BEDC 48h';
+    renderDisputes(); renderAlerts(filteredAlerts().slice(0,6));
+    const t=document.createElement('div'); t.style.cssText='position:fixed;bottom:16px;left:50%;transform:translateX(-50%);background:var(--fg);color:#fff;padding:8px 12px;border-radius:999px;font-size:12px;z-index:300'; t.textContent=`Escalated ${d.disputeId} → Lv${d.level} • new deadline ${hrs}h`; document.body.appendChild(t); setTimeout(()=>t.remove(),2800);
+    if(d.level===5) setTimeout(()=> openDisputeView(d.disputeId), 400);
+  } else {
+    openDisputeView(disputeId);
+  }
+}
+function resolveDispute(disputeId){
+  const idx=DISPUTES.findIndex(x=> x.disputeId===disputeId);
+  if(idx>=0){
+    const d=DISPUTES[idx];
+    DISPUTES.splice(idx,1);
+    renderDisputes(); renderAlerts(filteredAlerts().slice(0,6));
+    const t=document.createElement('div'); t.style.cssText='position:fixed;bottom:16px;left:50%;transform:translateX(-50%);background:#065F46;color:#fff;padding:8px 12px;border-radius:999px;font-size:12px;z-index:300'; t.textContent=`Resolved ${disputeId} • SHA closed • FedAvg will learn`; document.body.appendChild(t); setTimeout(()=>t.remove(),2600);
+  }
+}
+function closeBEDC(){ document.getElementById('bedcModal').style.display='none'; }
+function resolveBEDC(){
+  // find latest BEDC dispute
+  const d=[...DISPUTES].reverse().find(x=> x.level===5) || DISPUTES[0];
+  if(d) resolveDispute(d.disputeId);
+  closeBEDC();
+}
+// Auto-tick clocks every 60s
+setInterval(()=>{ if(DISPUTES.length) renderDisputes(); }, 60000);
+// Nav disputes
+document.querySelectorAll('[data-view="disputes"]').forEach(b=> b.addEventListener('click', ()=> document.getElementById('disputesCard').scrollIntoView({behavior:'smooth', block:'center'})));
+function closeDisputeModal(){ document.getElementById('disputeModal').style.display='none'; pendingDisputeAlertId=null; }
 function simulateAlert(){
   const hint = fDistrict.value!=='ALL' ? JURISDICTIONS.find(j=>j.district===fDistrict.value) : fState.value!=='ALL' ? JURISDICTIONS.find(j=>j.state===fState.value) : (fCountry.value!=='ALL'? JURISDICTIONS.find(j=>j.nation===fCountry.value): JURISDICTIONS.find(j=>j.state==='Tamil Nadu'));
   const now=new Date();
