@@ -705,6 +705,19 @@ body {
 .source-fill{height:100%;background:linear-gradient(to right,var(--accent),var(--accent2));border-radius:999px}
 .source-pct{font-size:11px;font-weight:700;min-width:32px;text-align:right}
 
+
+/* Official Mode: hides technical details for 20s clarity */
+body.official-mode .tech-only{display:none !important}
+body.official-mode .mono.tech-only{display:none !important}
+.official-badge{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.06em;text-transform:uppercase;padding:3px 7px;border-radius:999px;border:1px solid #A7F3D0;background:#ECFDF5;color:#065F46}
+.stepper{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;padding:4px 0}
+.stepper::-webkit-scrollbar{display:none}
+.step{flex:0 0 auto;display:flex;align-items:center;gap:6px;padding:6px 8px;border-radius:999px;border:1px solid var(--border);background:var(--muted2);font-size:10px;font-weight:600;white-space:nowrap}
+.step.active{background:var(--fg);color:#fff;border-color:var(--fg)}
+.step .num{width:18px;height:18px;border-radius:50%;background:#fff;color:var(--fg);display:grid;place-items:center;font-size:10px;font-weight:700;flex-shrink:0}
+.step.active .num{background:var(--accent);color:#fff}
+.step-arrow{color:var(--muted);font-size:10px}
+
 </style>
 </head>
 <body>
@@ -726,6 +739,7 @@ body {
       </div>
     </div>
     <div style="display:flex;gap:10px;align-items:center">
+      <button id="officialToggle" onclick="toggleOfficialMode()" style="display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border-radius:999px;border:1px solid #A7F3D0;background:#ECFDF5;color:#065F46;font-size:11px;font-weight:600;cursor:pointer" title="Official Mode hides H3, ℒ, ST_INTERSECTS for 20s clarity">👁️ <span id="officialLabel">Official Mode: ON</span></button>
       <span class="status-pill" id="livePill" aria-live="polite">Live • Tamil Nadu</span>
       <select id="lang" class="select-clean" aria-label="Select Interface Language">
         <option value="EN">EN (English)</option>
@@ -1147,12 +1161,25 @@ body {
     <div>
       <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)">🚨 ACTIVE POLLUTION EVENT — <span id="evtId">AQ-2026-0831</span> <span id="evtStatus" style="margin-left:6px;padding:3px 7px;border-radius:999px;background:#FEF2F2;color:#991B1B;border:1px solid #FECACA;font-size:10px;font-weight:700">⚠️ Active</span></div>
       <div style="font-size:13px;font-weight:700;margin-top:4px"><span id="evtDistrict">Bengaluru Urban</span> • <span id="evtDetected" style="font-weight:500;color:var(--muted);font-size:11px">Detected 08:42 IST</span></div>
-      <div style="font-size:11px;color:var(--muted)" id="evtGaul">GAUL L2 • H3 Res 8 • 0.74km²</div>
+      <div style="font-size:11px;color:var(--muted)" id="evtGaul" class="tech-only">GAUL L2 • H3 Res 8 • 0.74km²</div>
     </div>
     <button onclick="closeEventDrawer()" style="width:32px;height:32px;border-radius:999px;border:1px solid var(--border);background:#fff;cursor:pointer">✕</button>
   </div>
 
   <div style="padding:14px 16px;overflow-y:auto;flex:1;display:flex;flex-direction:column;gap:14px">
+    <!-- 30s Story Stepper -->
+    <div class="stepper" id="evtStepper" aria-label="End-to-end story">
+      <div class="step active"><span class="num">1</span> Citizen</div><span class="step-arrow">→</span>
+      <div class="step"><span class="num">2</span> AI Vision</div><span class="step-arrow">→</span>
+      <div class="step"><span class="num">3</span> Validation</div><span class="step-arrow">→</span>
+      <div class="step"><span class="num">4</span> Satellite</div><span class="step-arrow">→</span>
+      <div class="step"><span class="num">5</span> Meteorology</div><span class="step-arrow">→</span>
+      <div class="step"><span class="num">6</span> AI</div><span class="step-arrow">→</span>
+      <div class="step"><span class="num">7</span> Authority</div><span class="step-arrow">→</span>
+      <div class="step"><span class="num">8</span> Federation</div>
+    </div>
+    <div style="font-size:10px;color:var(--muted);text-align:center">1 Citizen → 8 Federation • 30-second story • Current step highlighted</div>
+
     <!-- PM2.5 hero -->
     <div style="background:var(--muted2);border:1px solid var(--border);border-radius:12px;padding:12px">
       <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;text-align:center">
@@ -1164,7 +1191,7 @@ body {
 
     <!-- Source Attribution -->
     <div>
-      <h4 style="font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;display:flex;align-items:center;gap:6px">Source Attribution <span style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--muted);font-size:11px">(why)</span> <span id="evtSourceConf" style="margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:10px;padding:3px 7px;border-radius:999px;background:#ECFDF5;color:#065F46;border:1px solid #A7F3D0">82% confidence</span></h4>
+      <h4 style="font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;display:flex;align-items:center;gap:6px">Source Attribution <span style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--muted);font-size:11px">(why)</span> <span id="evtSourceConf" class="tech-only" style="margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:10px;padding:3px 7px;border-radius:999px;background:#ECFDF5;color:#065F46;border:1px solid #A7F3D0">82% confidence</span></h4>
       <div id="evtSources" style="margin-top:8px">
         <!-- rows injected by JS -->
       </div>
@@ -1192,6 +1219,9 @@ body {
       <div style="font-size:13px;font-weight:700;margin-top:6px"><span id="evtExposure">1.2M</span> people potentially affected</div>
       <div style="font-size:11px;color:var(--muted)">pop_density × H3 area (0.74km² × cluster) • <span id="evtCorridor">Bengaluru–Chennai industrial belt</span></div>
       <div style="font-size:11px;color:var(--muted);margin-top:4px">Economic corridor • daily freight exposure at risk if >150 for >6h</div>
+      <div id="evtImpact" style="font-size:11px;color:var(--muted);margin-top:6px;background:var(--muted2);border:1px solid var(--border);border-radius:8px;padding:8px">
+        <b style="color:var(--fg)">Corridor Impact:</b> <span id="evtImpactText">Bengaluru–Chennai belt • $4.2M daily freight • School/health advisory if >150 for >6h</span>
+      </div>
     </div>
 
     <!-- Recommended Action -->
@@ -2694,6 +2724,101 @@ async function runFederatedRound(){
   log.textContent+='\n→ Next round in 24h • Ledger: 220 H3 cells • DP ε spent 0.42/2.1';
   btn.disabled=false; btn.textContent='▶ Run Federated Round';
 }
+
+// P1 Polish: Official Mode, Stepper, Impact, Cross-Border Demo
+let officialMode = true;
+function toggleOfficialMode(){
+  officialMode = !officialMode;
+  document.body.classList.toggle('official-mode', officialMode);
+  const label = document.getElementById('officialLabel');
+  const btn = document.getElementById('officialToggle');
+  if(label) label.textContent = officialMode ? 'Official Mode: ON' : 'Official Mode: OFF';
+  if(btn){
+    btn.style.background = officialMode ? '#ECFDF5' : '#fff';
+    btn.style.borderColor = officialMode ? '#A7F3D0' : 'var(--border)';
+    btn.style.color = officialMode ? '#065F46' : 'var(--muted)';
+  }
+  // Update stepper highlight
+  updateStepper( officialMode ? 7 : 1 );
+}
+// Stepper highlight helper
+function updateStepper(step){
+  const el = document.getElementById('evtStepper');
+  if(!el) return;
+  const steps = el.querySelectorAll('.step');
+  steps.forEach((s,i)=>{
+    const isActive = (i+1) <= step;
+    s.classList.toggle('active', isActive);
+  });
+}
+// Hook stepper to provenance scroll (when drawer opens, highlight step 7 Authority)
+const _origOpenEventDrawer = openEventDrawer;
+openEventDrawer = function(alertId){
+  const res = _origOpenEventDrawer(alertId);
+  // After drawer populates, highlight stepper to step 7 (Authority) and set impact
+  setTimeout(()=>{
+    updateStepper(7);
+    // Impact already set via openEventDrawer, but ensure corridor impact is visible
+    const impactEl = document.getElementById('evtImpactText');
+    if(impactEl && !impactEl.textContent.includes('$')){
+      // keep existing
+    }
+  }, 80);
+  return res;
+};
+// Auto-seed one Lv4 transboundary for All BRICS demo if none
+window.addEventListener('load', ()=>{
+  setTimeout(()=>{
+    const hasLv4 = DISPUTES.some(d=> d.level===4);
+    const isAllBRICS = document.getElementById('fCountry')?.value==='ALL';
+    if(!hasLv4 && isAllBRICS){
+      // Seed a Riyadh->Dubai case
+      const sa = JURISDICTIONS.find(j=> j.district==='Riyadh');
+      const ae = JURISDICTIONS.find(j=> j.district==='Dubai');
+      if(sa){
+        const now = Date.now();
+        // Create a transboundary alert first
+        const fakeAlert = {id:'A-CROSS-'+Math.floor(Math.random()*9000), reportId:'R-CROSS', nation:sa.nation, state:sa.state, district:sa.district, pm25: 168, conf:0.88, type:'Industrial_Plume', ts:new Date(now-2*3600*1000), tier1:sa.office, severity:'h'};
+        ALERTS.unshift(fakeAlert);
+        // Then dispute
+        const dispute = {
+          disputeId: 'D-CROSS-'+Math.floor(Math.random()*9000),
+          alertId: fakeAlert.id,
+          district: fakeAlert.district,
+          state: fakeAlert.state,
+          nation: fakeAlert.nation,
+          reason: 'Transboundary dust — wind from neighbor',
+          counter: '',
+          level: 4,
+          primaryOwner: 'Riyadh',
+          h3: '8'+Math.floor(Math.random()*1e7).toString(16).padStart(7,'0'),
+          sha: 'cross'+Math.random().toString(16).slice(2,10),
+          filedAt: now,
+          deadline: now + 72*3600*1000,
+          status: 'mediating',
+          tierClock: 'Bilateral 72h',
+          pm25: fakeAlert.pm25,
+          conf: fakeAlert.conf
+        };
+        DISPUTES.unshift(dispute);
+        // Don't auto-render eagery; let updateDashboard handle, but also update badge
+        if(typeof renderDisputes==='function') renderDisputes();
+        console.log('Auto-seeded Lv4 cross-border Riyadh→Dubai for demo');
+      }
+    }
+  }, 1800);
+});
+// Initialize Official Mode ON by default (for Demo Day)
+document.addEventListener('DOMContentLoaded', ()=>{
+  document.body.classList.add('official-mode');
+  officialMode = true;
+  updateStepper(7);
+});
+// Also ensure body has official-mode on load
+if(document.readyState!=='loading'){
+  document.body.classList.add('official-mode');
+}
+
 </script>
 
 </body>

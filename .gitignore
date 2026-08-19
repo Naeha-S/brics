@@ -33,3 +33,4 @@ out/
 # bundles
 vayu-brics.bundle
 vayu-brics.zip
+.npm/
