@@ -1,7 +1,8 @@
 # BRICS-AETHER — Implementation Backlog (Single Source of Truth)
 **Repo:** `Naeha-S/brics` — Dashboard is `prototype/index.html` (11×20, 220 jurisdictions, OWM live + tiles, hierarchical disputes Lv1→5)
 **PPT:** `VAYU_Pitch_Deck_Brics_Hackathon_2026.pptx` — keep, submission deck
-**Status:** 18 Aug 2026 — Dashboard + filters + map + OWM + disputes are **DONE and live**. Below is **what remains** for pilot → BRICS DPG.
+**Status:** 18 Aug 2026 — Dashboard + filters + map + OWM + disputes are **DONE and live**.
+**Ingestion: DONE** — `ingestion/` (EE + CDS/ADS → GCS → BQ) is ready, see `ingestion/README.md` — you just run `earthengine authenticate` + add CDS/ADS keys. Below is **what remains** for pilot → BRICS DPG.
 
 ---
 
@@ -17,12 +18,12 @@
 
 ## ⏳ TODO — Post-Hackathon Pilot (30 Days, Tamil Nadu + Cairo + São Paulo)
 
-### 1. Ingestion Pipelines (replace mock with live)
-- [ ] `ingestion/earth_engine_s5p.py` — Sentinel-5P TROPOMI `COPERNICUS/S5P/OFFL/L3_NO2` QA≥0.75 → BigQuery `brics-aether.raw.s5p` via Earth Engine Python API
-- [ ] `ingestion/cds_era5_ingest.py` — `reanalysis-era5-single-levels` (cdsapi → GCS → BQ) `u10/v10` + PBLH
-- [ ] `ingestion/cams_forecast_ingest.py` — `cams-global-atmospheric-composition-forecasts` (ADS REST → BQ Storage Write) PM2.5/NO₂ → `brics-aether.raw.cams`
-- [ ] `data/fetch_cams.py` — extend to ERA5, add Cloud Scheduler (daily 02:00 UTC) + GCS bucket per nation (asia-south1 etc.)
-- [ ] BigQuery GIS: `ST_INTERSECTS(plume_polygon, geom)` on `bigquery-public-data.fao_gaul.gaul_2015_level2` + H3 Res 8 materialized view
+### 1. Ingestion Pipelines — DONE (ready to run, you just add keys)
+- [x] `ingestion/earth_engine_s5p.py` — DONE (EE auth + QA≥0.75 + H3 Res8 + BQ/GCS, see ingestion/README.md) — Sentinel-5P TROPOMI `COPERNICUS/S5P/OFFL/L3_NO2` QA≥0.75 → BigQuery `brics-aether.raw.s5p` via Earth Engine Python API
+- [x] `ingestion/cds_era5_ingest.py` — DONE (cdsapi → GCS → BQ, u10/v10+PBLH) — `reanalysis-era5-single-levels` (cdsapi → GCS → BQ) `u10/v10` + PBLH
+- [x] `ingestion/cams_forecast_ingest.py` — DONE (ADS REST → BQ Storage Write, PM2.5/NO₂) — `cams-global-atmospheric-composition-forecasts` (ADS REST → BQ Storage Write) PM2.5/NO₂ → `brics-aether.raw.cams`
+- [x] `data/fetch_cams.py` — DONE (extended to both CAMS+ERA5, --preset brics11, Cloud Scheduler), add Cloud Scheduler (daily 02:00 UTC) + GCS bucket per nation (asia-south1 etc.)
+- [x] BigQuery GIS: `ST_INTERSECTS(plume_polygon, geom)` on `bigquery-public-data.fao_gaul.gaul_2015_level2` + H3 Res 8 materialized view
 
 ### 2. AI/ML — Replace Mocks with Vertex AI
 - [ ] `model-training/gemini_finetune.ipynb` — Fine-tune Gemini 1.5 Flash on 18k citizen photos (18k → Vertex Tuning LoRA, Ci≥0.70, opacity 0→1)
