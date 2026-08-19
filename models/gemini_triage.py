@@ -30,7 +30,7 @@ CLASSES = [
 
 CONFIDENCE_THRESHOLD = 0.70
 
-SYSTEM_INSTRUCTION = """You are VAYU Vision, a pollution source classifier for BRICS citizen photos. You work on Google Cloud Vertex AI, integrated with CAMS/ERA5 satellite checks. Be precise, conservative, and auditable.
+SYSTEM_INSTRUCTION = """You are BRICS-AETHER Vision, a pollution source classifier for BRICS citizen photos. You work on Google Cloud Vertex AI, integrated with CAMS/ERA5 satellite checks. Be precise, conservative, and auditable.
 
 TASK: Given a citizen photo (and optional translated caption), classify the dominant pollution source.
 
@@ -263,7 +263,7 @@ def main():
             data = f.read()
     else:
         # Synthetic sample payload
-        data = b"VAYU_SAMPLE_CITIZEN_PHOTO_PAYLOAD_CHENNAI_TAMILNADU_2026"
+        data = b"BRICS_AETHER_SAMPLE_CITIZEN_PHOTO_PAYLOAD_CHENNAI_TAMILNADU_2026"
 
     caption = args.caption or "Stubble burning observed near rural highway field"
     result = triage.triage_image(data, caption=caption)

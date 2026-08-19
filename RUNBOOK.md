@@ -262,19 +262,19 @@ gcloud scheduler jobs run s5p-daily --location=$REGION
 ## 9. PPT — Keep
 
 ```bash
-ls -lh VAYU_Pitch_Deck_Brics_Hackathon_2026.pptx  # 60KB — submission deck, 12 slides, Minimalist Modern
+ls -lh BRICS_AETHER_Pitch_Deck_Hackathon_2026.pptx  # 60KB — submission deck, 12 slides, Minimalist Modern
 # Also export PDF for portal: open → File → Export → PDF (keep <10MB)
 ```
 
 ---
 
-## 10. Repo Clean — What Was Removed
+## 10. Repo Clean — What Was Kept
 
 ```bash
 git ls-files | sort
-# Kept: .gitignore, IMPLEMENTATION_BACKLOG.md, LICENSE, README.md, VAYU_Pitch_Deck..., bigquery/h3_gaul_views.sql, data/fetch_cams.py+raci.csv, docs/.gitkeep, ingestion/*, prompts/gemini_vision.txt, prototype/index.html
-# Removed: VAYU_PRD.docx, BRICS-AETHER_Hierarchical docx, SUBMISSION_CHECKLIST, build_*.py, model-training/*.ipynb, vayu-brics.bundle/zip
-# Single TODO file now: IMPLEMENTATION_BACKLOG.md (ingestion DONE, rest TODO)
+# Kept: .gitignore, IMPLEMENTATION_BACKLOG.md, LICENSE, README.md, BRICS_AETHER_Pitch_Deck..., bigquery/h3_gaul_views.sql, data/fetch_cams.py+raci.csv, docs/.gitkeep, ingestion/*, prompts/gemini_vision.txt, prototype/index.html
+# Cleaned legacy docs, build scripts, and scratch archives.
+# Single backlog file now: IMPLEMENTATION_BACKLOG.md
 ```
 
 ---
