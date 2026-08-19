@@ -9,21 +9,6 @@
 - [ ] `terraform/main.tf` — Cloud Run (0→1000, <50ms), Pub/Sub, BigQuery GIS, Cloud SQL (SHA ledger), `asia-south1`/`southamerica-east1`/`africa-south1`/isolated CN
 - [ ] `terraform/variables.tf` — 11 countries × region
 - [ ] `terraform/confidential_space.tf` — TEE Confidential VMs, attestation, `e2-medium` → `n2d-standard` for PINN
-- [ ] `.env` — `OWM_KEY` via Secret Manager (rotate `3f04…77ac` after Demo Day), `MAPS_API_KEY`, `GEMINI_API_KEY`
-
-### 6. Docs & Compliance (consolidated here — no separate docs needed)
-- [ ] DPG Checklist (`docs/` removed) — Apache 2.0, H3, GAUL, SHA ledger in this backlog
-- [ ] Sovereign Matrix (DPDP/LGPD/PIPL/POPIA/152-FZ) — already in README, no separate doc
-- [ ] Hierarchical Plan — already implemented in dashboard (Lv1→5), doc removed, logic is in `prototype/index.html` `DISPUTES` + `docs` is now this file only
-- [ ] Sidebar Plan — already implemented (240px sidebar), doc removed
-
----
-
-## How to Use This File
-- **Judges / Demo Day:** Dashboard is live, PPT is deck, this file is the *only* doc for what’s next — no need to read 4 markdowns
-- **Pilot team:** Pick a TODO, create `feature/` branch, move mock to `models/`/`ingestion/`/`terraform/`, update `prototype` → `dashboard/src`
-- **After pilot:** Delete this file or move remaining items to GitHub Issues — repo goes DPG-clean
-
 ---
 
 ## One-Command Pilot (when TODO above is done)
