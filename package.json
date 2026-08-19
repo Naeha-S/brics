@@ -1,0 +1,18 @@
+{
+  "name": "brics-aether-platform",
+  "version": "1.0.0",
+  "description": "BRICS-AETHER: Federated Atmospheric Observation & Sovereign Response Platform",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "build": "cd dashboard && npm install && npm run build"
+  },
+  "dependencies": {
+    "compression": "^1.7.4",
+    "express": "^4.19.2",
+    "helmet": "^7.1.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

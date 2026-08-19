@@ -1,7 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, Filler } from 'chart.js';
-
-ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, Filler);
+import Chart from 'chart.js/auto';
 
 export function ForecastChart({ forecastData, locationLabel }) {
   const canvasRef = useRef(null);
@@ -15,11 +13,16 @@ export function ForecastChart({ forecastData, locationLabel }) {
     gGrad.addColorStop(0, 'rgba(13, 148, 136, 0.20)');
     gGrad.addColorStop(1, 'rgba(13, 148, 136, 0.0)');
 
+    // Ensure any chart attached to this canvas is safely destroyed first
+    const existingChart = Chart.getChart(canvasRef.current);
+    if (existingChart) {
+      existingChart.destroy();
+    }
     if (chartInstanceRef.current) {
       chartInstanceRef.current.destroy();
     }
 
-    chartInstanceRef.current = new ChartJS(ctx, {
+    chartInstanceRef.current = new Chart(ctx, {
       type: 'line',
       data: {
         labels: ['Now', '+6h', '+12h', '+18h', '+24h', '+36h', '+48h', '+72h'],
