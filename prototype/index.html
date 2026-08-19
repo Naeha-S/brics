@@ -13,57 +13,52 @@
 *{box-sizing:border-box;margin:0;padding:0}
 html{overflow-x:hidden}
 body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--fg);overflow-x:hidden;-webkit-font-smoothing:antialiased}
-.wrap{max-width:1240px;margin:0 auto;padding:0 20px}
-@media(max-width:640px){.wrap{padding:0 14px}}
 .header{position:sticky;top:0;z-index:40;background:rgba(250,250,250,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--border)}
-.header-inner{height:54px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.header-inner{height:48px;display:flex;align-items:center;justify-content:space-between;gap:12px;max-width:100%;padding:0 14px}
 .brand{display:flex;align-items:center;gap:10px}
-.mark{width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,var(--accent),var(--accent2));display:grid;place-items:center;color:#fff;font-weight:700;font-size:12px}
-.brand h1{font-size:13px;font-weight:700}
-.brand p{font-size:11px;color:var(--muted)}
-.flags{display:flex;gap:3px;margin-left:6px;flex-wrap:wrap;max-width:220px}
-.flags span{width:16px;height:16px;border-radius:50%;display:grid;place-items:center;font-size:10px;background:#fff;border:1px solid var(--border)}
-.pill{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;padding:5px 9px;border-radius:999px;border:1px solid rgba(0,82,255,.2);background:rgba(0,82,255,.06);color:var(--accent);font-weight:500}
+.mark{width:28px;height:28px;border-radius:7px;background:linear-gradient(135deg,var(--accent),var(--accent2));display:grid;place-items:center;color:#fff;font-weight:700;font-size:11px}
+.brand h1{font-size:12px;font-weight:700}
+.brand p{font-size:10px;color:var(--muted)}
+.flags{display:flex;gap:3px;margin-left:6px;flex-wrap:wrap;max-width:180px}
+.flags span{width:14px;height:14px;border-radius:50%;display:grid;place-items:center;font-size:9px;background:#fff;border:1px solid var(--border)}
+.pill{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;padding:5px 8px;border-radius:999px;border:1px solid rgba(0,82,255,.2);background:rgba(0,82,255,.06);color:var(--accent);font-weight:500}
 .select{border:1px solid var(--border);background:#fff;border-radius:999px;padding:5px 9px;font-size:12px}
-.page{padding:16px 0 0}
-.title-row{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;flex-wrap:wrap}
-.title-row h2{font-family:'Calistoga',serif;font-size:22px;font-weight:400;letter-spacing:-.02em}
-.title-row h2 span{background:linear-gradient(to right,var(--accent),var(--accent2));-webkit-background-clip:text;color:transparent}
-.title-row p{font-size:13px;color:var(--muted);margin-top:4px}
-.filters{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:12px;box-shadow:var(--shadow);margin:14px 0;display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end}
-.fg{display:flex;flex-direction:column;gap:5px;min-width:148px;flex:1}
-.fg label{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:500}
-.fg select,.fg input{padding:8px 11px;border-radius:999px;border:1px solid var(--border);background:#fff;font-size:13px;font-weight:500;color:var(--fg);width:100%}
-.fg select:disabled{opacity:.45;background:var(--muted2)}
+.layout{display:flex;min-height:calc(100vh - 48px)}
+.sidebar{width:240px;flex-shrink:0;background:var(--card);border-right:1px solid var(--border);height:calc(100vh - 48px);position:sticky;top:48px;overflow-y:auto;display:flex;flex-direction:column;gap:12px;padding:14px}
+.sidebar::-webkit-scrollbar{width:6px}
+.sidebar::-webkit-scrollbar-thumb{background:var(--border);border-radius:999px}
+.main{flex:1;min-width:0;padding:14px;background:var(--bg);overflow:auto}
+.nav{display:flex;flex-direction:column;gap:4px}
+.nav button{display:flex;align-items:center;gap:8px;padding:9px 11px;border-radius:10px;border:1px solid var(--border);background:#fff;font-size:12px;font-weight:600;color:var(--muted);cursor:pointer;text-align:left}
+.nav button.active{background:var(--fg);color:#fff;border-color:var(--fg)}
+.nav button small{margin-left:auto;font-size:10px;opacity:.7}
+.fg{display:flex;flex-direction:column;gap:4px}
+.fg label{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);font-weight:500}
+.fg select,.fg input{padding:8px 10px;border-radius:999px;border:1px solid var(--border);background:#fff;font-size:12px;font-weight:500;color:var(--fg);width:100%}
 .date-row{display:flex;gap:6px}
 .date-row input{flex:1;min-width:0}
-.filter-actions{display:flex;gap:6px;align-items:center;margin-left:auto}
-.btn{padding:8px 13px;border-radius:999px;border:none;font-weight:600;font-size:12px;cursor:pointer;display:inline-flex;align-items:center;gap:6px}
+.btn{padding:8px 12px;border-radius:999px;border:none;font-weight:600;font-size:11px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;justify-content:center}
 .btn-dark{background:var(--fg);color:#fff}
 .btn-light{background:#fff;border:1px solid var(--border)}
-.meta-bar{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);background:var(--muted2);border:1px solid var(--border);border-radius:999px;padding:7px 12px;display:inline-flex;gap:6px;align-items:center;margin:0 0 12px;flex-wrap:wrap}
+.meta-bar{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);background:var(--muted2);border:1px solid var(--border);border-radius:10px;padding:8px 10px;display:flex;flex-wrap:wrap;gap:4px;align-items:center}
 .meta-bar b{color:var(--fg)}
-.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:0 0 12px}
-.stat{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px;box-shadow:var(--shadow)}
-.stat small{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
-.stat strong{font-size:18px;display:block;margin:2px 0 1px}
-.stat span{font-size:11px;color:var(--muted)}
-@media(max-width:800px){.stats{grid-template-columns:1fr 1fr}.filters{padding:10px}.fg{min-width:120px}}
-.dash{display:grid;grid-template-columns:1.55fr .9fr;gap:14px;align-items:start;padding-bottom:20px}
-@media(max-width:980px){.dash{grid-template-columns:1fr}}
-.card{background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden;box-shadow:var(--shadow)}
+.kpi-strip{display:flex;flex-direction:column;gap:0;border:1px solid var(--border);border-radius:12px;overflow:hidden;background:var(--card)}
+.kpi-row{display:flex;justify-content:space-between;align-items:center;padding:9px 10px;border-bottom:1px solid var(--border)}
+.kpi-row:last-child{border-bottom:none}
+.kpi-row small{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.07em;text-transform:uppercase;color:var(--muted)}
+.kpi-row strong{font-size:13px}
+.kpi-row span{font-size:11px;color:var(--muted)}
+.card{background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden;box-shadow:0 4px 12px rgba(0,0,0,.06)}
 .card-head{padding:11px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:10px;background:#fff}
 .card-head h3{font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase}
 .tabs{display:flex;gap:4px}
 .tabs button{font-size:11px;font-weight:600;padding:5px 9px;border-radius:999px;border:1px solid var(--border);background:#fff;color:var(--muted);cursor:pointer}
 .tabs button.active{background:var(--fg);color:#fff;border-color:var(--fg)}
 #map{height:520px;width:100%;background:#EEF2F7}
-@media(max-width:980px){#map{height:400px}}
 .map-bar{padding:8px 12px;border-top:1px solid var(--border);display:flex;gap:6px;flex-wrap:wrap;background:#fff;align-items:center}
 .chip{font-size:11px;font-weight:600;padding:5px 9px;border-radius:999px;border:1px solid var(--border);background:#fff;cursor:pointer;display:inline-flex;align-items:center;gap:5px}
 .chip.active{background:var(--fg);color:#fff;border-color:var(--fg)}
-.legend{position:absolute;bottom:10px;left:10px;background:#fff;border:1px solid var(--border);border-radius:10px;padding:8px 10px;font-size:11px;box-shadow:var(--shadow);z-index:500;line-height:1.6}
-.stack{display:flex;flex-direction:column;gap:12px}
+.legend{position:absolute;bottom:10px;left:10px;background:#fff;border:1px solid var(--border);border-radius:10px;padding:8px 10px;font-size:11px;box-shadow:0 4px 12px rgba(0,0,0,.06);z-index:500;line-height:1.6}
 .mini{padding:12px}
 .mini h4{font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;display:flex;align-items:center;gap:6px;margin-bottom:8px}
 .upload{border:1.5px dashed #C7D2FE;background:#F8F9FF;border-radius:12px;padding:14px;text-align:center;cursor:pointer}
@@ -81,61 +76,97 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--fg);overflo
 .sev-c{background:var(--accent)}.sev-h{background:#F59E0B}
 .chart-mini{padding:10px}
 .chart-mini canvas{height:110px!important}
+.dash2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:1100px){.dash2{grid-template-columns:1fr}}
+@media(max-width:980px){
+  .layout{flex-direction:column}
+  .sidebar{width:auto;height:auto;position:static;border-right:none;border-bottom:1px solid var(--border);max-height:none}
+  #map{height:400px}
+}
+.hamburger{display:none;width:32px;height:32px;border-radius:8px;border:1px solid var(--border);background:#fff;display:grid;place-items:center;cursor:pointer}
+@media(max-width:980px){.hamburger{display:grid} .sidebar{display:none} .sidebar.open{display:flex}}
 </style>
 </head>
 <body>
 <header class="header">
-  <div class="wrap header-inner">
-    <div class="brand">
-      <div class="mark">Æ</div>
-      <div><h1>BRICS-AETHER</h1><p>Dashboard • H3 Res 8 • Sovereign</p></div>
-      <div class="flags"><span>🇧🇷</span><span>🇷🇺</span><span>🇮🇳</span><span>🇨🇳</span><span>🇿🇦</span><span>🇪🇬</span><span>🇪🇹</span><span>🇮🇷</span><span>🇸🇦</span><span>🇦🇪</span><span>🇮🇩</span></div>
+  <div class="header-inner">
+    <div style="display:flex;align-items:center;gap:10px">
+      <button class="hamburger" id="hamburger" onclick="document.querySelector('.sidebar').classList.toggle('open')">☰</button>
+      <div class="brand">
+        <div class="mark">Æ</div>
+        <div><h1>BRICS-AETHER</h1><p>Dashboard • Sovereign</p></div>
+        <div class="flags"><span>🇧🇷</span><span>🇷🇺</span><span>🇮🇳</span><span>🇨🇳</span><span>🇿🇦</span><span>🇪🇬</span><span>🇪🇹</span><span>🇮🇷</span><span>🇸🇦</span><span>🇦🇪</span><span>🇮🇩</span></div>
+      </div>
     </div>
     <div style="display:flex;gap:8px;align-items:center">
-      <span class="pill">● LIVE • Confidential Space</span>
+      <span class="pill" id="livePill">● LIVE • India / Tamil Nadu</span>
       <select id="lang" class="select"><option>EN</option><option>हिन्दी</option><option>PT</option><option>RU</option><option>中文</option></select>
     </div>
   </div>
 </header>
 
-<div class="wrap page">
-  <div class="title-row">
-    <div>
-      <h2>Operational <span>dashboard</span></h2>
-      <p>H3 0.74 km² • GAUL L2 • PINN 72h • Tiered dispatch — filters drive all data</p>
+<div class="layout">
+  <aside class="sidebar">
+    <nav class="nav">
+      <button class="active" id="navOps" onclick="switchView('ops')">● Operations <small>Map • Upload</small></button>
+      <button id="navDisputes" onclick="switchView('disputes')">○ Disputes <small id="navDisputeBadge">0 • BEDC</small></button>
+    </nav>
+
+    <div style="display:flex;flex-direction:column;gap:8px">
+      <div class="fg"><label>Country *</label><select id="fCountry"></select></div>
+      <div class="fg"><label>State / Province *</label><select id="fState"></select></div>
+      <div class="fg"><label>District / Municipality</label><select id="fDistrict"></select></div>
+      <div class="fg"><label>Time range</label><select id="fTime"><option value="live">Live — now (last 3h)</option><option value="24h">Last 24 hours</option><option value="7d">Last 7 days</option><option value="30d">Last 30 days</option><option value="custom">Custom range</option></select></div>
+      <div class="fg" id="customDates" style="display:none"><label>Custom dates</label><div class="date-row"><input type="date" id="fFrom"><input type="date" id="fTo"></div></div>
+      <div style="display:flex;gap:6px">
+        <button class="btn btn-light" style="flex:1" onclick="resetFilters()">Reset</button>
+        <button class="btn btn-dark" style="flex:1" onclick="exportFiltered()">Export CSV</button>
+      </div>
     </div>
-    <span class="pill" id="livePill" style="background:var(--fg);color:#fff;border-color:var(--fg)">● LIVE • India / Tamil Nadu</span>
-  </div>
 
-  <div class="filters" id="filters">
-    <div class="fg"><label>Country *</label><select id="fCountry"></select></div>
-    <div class="fg"><label>State / Province *</label><select id="fState"></select></div>
-    <div class="fg"><label>District / Municipality</label><select id="fDistrict"></select></div>
-    <div class="fg" style="min-width:160px"><label>Time range</label><select id="fTime"><option value="live">Live — now (last 3h)</option><option value="24h">Last 24 hours</option><option value="7d">Last 7 days</option><option value="30d">Last 30 days</option><option value="custom">Custom range</option></select></div>
-    <div class="fg" id="customDates" style="display:none;min-width:220px"><label>Custom dates</label><div class="date-row"><input type="date" id="fFrom"><input type="date" id="fTo"></div></div>
-    <div class="filter-actions">
-      <button class="btn btn-light" onclick="resetFilters()">Reset</button>
-      <button class="btn btn-dark" onclick="exportFiltered()">Export CSV</button>
+    <div class="meta-bar" id="metaBar" style="border-radius:10px">Showing <b id="metaCount">0</b> • <b id="metaPlumes">0</b> plumes — <span id="metaLoc">India / Tamil Nadu</span> — <span id="metaTime">Live</span></div>
+
+    <div class="kpi-strip">
+      <div class="kpi-row"><small>Validations</small><div style="text-align:right"><strong id="sValid">0</strong><span id="sValidSub">—</span></div></div>
+      <div class="kpi-row"><small>Plumes • H3 0.74km²</small><div style="text-align:right"><strong id="sPlumes">0</strong><span id="sPlumesSub">—</span></div></div>
+      <div class="kpi-row"><small>72h accuracy</small><div style="text-align:right"><strong id="sAcc">≥85%</strong><span>PINN</span></div></div>
+      <div class="kpi-row"><small>Median dispatch</small><div style="text-align:right"><strong id="sDisp">—</strong><span id="sDispSub">SHA-256</span></div></div>
     </div>
-  </div>
-  <div class="meta-bar" id="metaBar">Showing <b id="metaCount">0</b> validations • <b id="metaPlumes">0</b> plumes • <b id="metaAlerts">0</b> alerts — <span id="metaLoc">India / Tamil Nadu</span> — <span id="metaTime">Live</span> <span id="metaSync" style="margin-left:6px;opacity:.7">• S5P/ERA5/CAMS + citizen</span></div>
 
-  <div class="stats">
-    <div class="stat"><small>Validations (filtered)</small><strong id="sValid">0</strong><span id="sValidSub">—</span></div>
-    <div class="stat"><small>Plumes • H3 Res 8</small><strong id="sPlumes">0</strong><span id="sPlumesSub">—</span></div>
-    <div class="stat"><small>72h accuracy</small><strong id="sAcc">≥85%</strong><span>PINN • PM2.5 / NO₂</span></div>
-    <div class="stat"><small>Median dispatch</small><strong id="sDisp">—</strong><span id="sDispSub">SHA-256 • &lt;5 min SLA</span></div>
-  </div>
+    <div class="card mini" id="owmCard" style="border:1px solid var(--border);box-shadow:none">
+      <h4 style="display:flex;align-items:center;gap:6px;font-size:11px">Live environment — OWM <span class="tag tag-ok" style="margin-left:auto" id="owmAqi">AQI —</span></h4>
+      <div style="display:flex;gap:8px;align-items:center;margin-top:6px;background:var(--muted2);border:1px solid var(--border);border-radius:10px;padding:8px">
+        <div id="owmIcon" style="font-size:20px">—</div>
+        <div><b id="owmTemp" style="font-size:14px">—°C</b><div id="owmDesc" style="font-size:11px;color:var(--muted)">—</div><div id="owmWind" style="font-size:10px;color:var(--muted)">Wind —</div></div>
+        <div style="margin-left:auto;text-align:right"><div style="font-size:10px;color:var(--muted)">Humidity</div><b id="owmHum" style="font-size:12px">—%</b></div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:6px;font-size:11px">
+        <div><b>PM2.5</b> <span id="owmPm25">—</span></div>
+        <div><b>PM10</b> <span id="owmPm10">—</span></div>
+        <div><b>NO₂</b> <span id="owmNo2">—</span></div>
+        <div><b>O₃</b> <span id="owmO3">—</span></div>
+      </div>
+      <div style="font-size:10px;color:var(--muted);margin-top:4px">CO <span id="owmCo">—</span> • SO₂ <span id="owmSo2">—</span> • <span id="owmUpdated"></span> • <span id="owmDistrict">—</span></div>
+    </div>
 
-  <div class="dash">
-    <div style="display:flex;flex-direction:column;gap:12px">
+    <div class="card mini" style="box-shadow:none">
+      <h4 style="font-size:11px">Dispute snapshot <span id="disputeCount" style="margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted)">0 active</span></h4>
+      <div id="disputesSnapshot" style="font-size:11px;color:var(--muted);line-height:1.5">No disputes in filter — file from an alert or seed Lv3/Lv5</div>
+      <button class="btn btn-light" style="width:100%;margin-top:8px" onclick="switchView('disputes')">View Ledger →</button>
+    </div>
+
+    <div style="font-size:10px;color:var(--muted);text-align:center;padding:4px 0">220 jurisdictions • 11 countries • Filters drive all data</div>
+  </aside>
+
+  <main class="main">
+    <div id="mainOps">
       <div class="card" style="position:relative">
         <div class="card-head">
           <h3 id="mapTitle">Live geospatial — Tamil Nadu</h3>
           <div class="tabs"><button class="active" onclick="setLayer('all',this)">All</button><button onclick="setLayer('citizen',this)">Citizen</button><button onclick="setLayer('satellite',this)">S5P</button><button onclick="setLayer('trajectory',this)">Wind</button></div>
         </div>
         <div id="map"></div>
-        <div class="legend"><b>Legend</b> • sync 2 min • OWM tiles top-right<br><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--accent)"></span> Verified &nbsp; <span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#D97706"></span> Queued &nbsp; <span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#0A7A3E"></span> S5P ≥2.5e15<br><span style="font-family:JetBrains Mono,monospace;font-size:10px;color:var(--muted)">OWM: ☁️ clouds • 🌧️ precip • 💨 wind • 🌡️ temp • pressure</span></div>
+        <div class="legend"><b>Legend</b> • sync 2 min • OWM tiles top-right<br><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--accent)"></span> Verified &nbsp; <span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#D97706"></span> Queued &nbsp; <span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#0A7A3E"></span> S5P ≥2.5e15<br><span style="font-family:JetBrains Mono,monospace;font-size:10px;color:var(--muted)">OWM: ☁️ clouds • 🌧️ precip • 💨 wind • 🌡️ temp</span></div>
         <div class="map-bar">
           <div style="display:flex;gap:6px;flex-wrap:wrap;overflow-x:auto;scrollbar-width:none" id="corridorChips">
             <button class="chip active" data-c="tamilnadu" onclick="flyTo('tamilnadu')">🇮🇳 Tamil Nadu</button>
@@ -149,100 +180,69 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--fg);overflo
             <button class="chip" data-c="dubai" onclick="flyTo('dubai')">🇦🇪 Dubai</button>
             <button class="chip" data-c="jakarta" onclick="flyTo('jakarta')">🇮🇩 Jakarta</button>
           </div>
-          <span style="margin-left:auto;font-size:11px;color:var(--muted)">Chennai 13.08°N 80.27°E • H3 0.74km²</span>
         </div>
       </div>
-      <div class="card chart-mini">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px"><h3 style="font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase" id="chartTitle">72h PINN — Tamil Nadu (Chennai–Coimbatore)</h3><span class="tag tag-bad" id="chartBadge">Live</span></div>
+
+      <div class="card chart-mini" style="margin-top:12px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px"><h3 style="font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase" id="chartTitle">72h PINN — Tamil Nadu</h3><span class="tag tag-bad" id="chartBadge">Live</span></div>
         <canvas id="forecastChart"></canvas>
         <div style="font-size:11px;color:var(--muted);margin-top:6px" id="chartNote">—</div>
       </div>
+
+      <div class="dash2" style="margin-top:12px">
+        <div class="card mini" id="citizenCard">
+          <h4>Ground validation <span class="tag tag-ok" style="margin-left:auto">Ci ≥0.70</span></h4>
+          <div class="upload" id="dropzone" onclick="document.getElementById('fileInput').click()">
+            <div style="font-weight:700;font-size:13px">Drop hazard photo</div>
+            <p style="margin-top:4px;font-size:12px;color:var(--muted)">Auto-tagged to Tamil Nadu • Flash triage</p>
+          </div>
+          <input type="file" id="fileInput" accept="image/*" hidden>
+          <div id="preview" style="display:none;margin-top:10px">
+            <img id="previewImg" style="width:100%;height:140px;object-fit:cover;border-radius:10px;border:1px solid var(--border)">
+            <div style="background:var(--muted2);border:1px solid var(--border);border-radius:10px;padding:9px;margin-top:8px">
+              <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)">Gemini 1.5 Flash</div>
+              <div id="geminiLog" class="log" style="margin-top:6px;min-height:90px">Waiting…</div>
+              <div style="margin-top:6px;display:flex;gap:6px;align-items:center;flex-wrap:wrap"><span class="tag tag-bad" id="resultTag">STUBBLE • 0.934</span><span id="conf" style="font-size:11px;color:var(--muted);margin-left:auto">Opacity 0.71</span></div>
+              <div class="progress" style="margin-top:6px"><i id="prog"></i></div>
+            </div>
+            <div style="margin-top:8px;display:flex;gap:6px">
+              <input id="sensorVal" placeholder="PM2.5 µg/m³" style="flex:1;padding:8px 11px;border-radius:999px;border:1px solid var(--border);font-size:12px">
+              <button class="btn btn-dark" onclick="submitReport()">Submit</button>
+            </div>
+          </div>
+          <div style="margin-top:10px;border-top:1px solid var(--border);padding-top:8px">
+            <div style="display:flex;justify-content:space-between;align-items:center"><b style="font-size:11px;letter-spacing:.06em;text-transform:uppercase">Recent validations <span id="recentCount" style="font-weight:400;color:var(--muted)"></span></b><small style="color:var(--muted);font-size:11px" id="recentMeta">Live • Tamil Nadu</small></div>
+            <div id="recentReports" style="margin-top:7px"></div>
+          </div>
+        </div>
+
+        <div class="card mini">
+          <h4>Tiered dispatch <span class="tag tag-ok" style="margin-left:auto">SHA-256</span></h4>
+          <div id="alerts"></div>
+          <button class="btn btn-light" style="width:100%;margin-top:8px" onclick="simulateAlert()">Simulate Tier 3 for current filter</button>
+          <div style="font-size:11px;color:var(--muted);margin-top:6px">ST_INTERSECTS → Tier 1 Collector • Tier 2 SPCB • Tier 3 CPCB/MoEFCC • TNPCB</div>
+        </div>
+      </div>
     </div>
 
-    <div class="stack">
-      <div class="card mini" id="citizenCard">
-        <h4>Ground validation <span class="tag tag-ok" style="margin-left:auto">Ci ≥0.70</span></h4>
-        <div class="upload" id="dropzone" onclick="document.getElementById('fileInput').click()">
-          <div style="font-weight:700;font-size:13px">Drop hazard photo</div>
-          <p style="margin-top:4px;font-size:12px;color:var(--muted)">Auto-tagged to Tamil Nadu • Flash triage</p>
-        </div>
-        <input type="file" id="fileInput" accept="image/*" hidden>
-        <div id="preview" style="display:none;margin-top:10px">
-          <img id="previewImg" style="width:100%;height:140px;object-fit:cover;border-radius:10px;border:1px solid var(--border)">
-          <div style="background:var(--muted2);border:1px solid var(--border);border-radius:10px;padding:9px;margin-top:8px">
-            <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)">Gemini 1.5 Flash</div>
-            <div id="geminiLog" class="log" style="margin-top:6px;min-height:90px">Waiting…</div>
-            <div style="margin-top:6px;display:flex;gap:6px;align-items:center;flex-wrap:wrap"><span class="tag tag-bad" id="resultTag">STUBBLE • 0.934</span><span id="conf" style="font-size:11px;color:var(--muted);margin-left:auto">Opacity 0.71</span></div>
-            <div class="progress" style="margin-top:6px"><i id="prog"></i></div>
-          </div>
-          <div style="margin-top:8px;display:flex;gap:6px">
-            <input id="sensorVal" placeholder="PM2.5 µg/m³" style="flex:1;padding:8px 11px;border-radius:999px;border:1px solid var(--border);font-size:12px">
-            <button class="btn btn-dark" onclick="submitReport()">Submit</button>
-          </div>
-        </div>
-        <div style="margin-top:10px;border-top:1px solid var(--border);padding-top:8px">
-          <div style="display:flex;justify-content:space-between;align-items:center"><b style="font-size:11px;letter-spacing:.06em;text-transform:uppercase">Recent validations <span id="recentCount" style="font-weight:400;color:var(--muted)"></span></b><small style="color:var(--muted);font-size:11px" id="recentMeta">Live • Tamil Nadu</small></div>
-          <div id="recentReports" style="margin-top:7px"></div>
-        </div>
-      </div>
-      <div class="card mini" id="owmCard" style="border:1px solid var(--border)">
-        <h4 style="display:flex;align-items:center;gap:6px">Live environment — OpenWeatherMap <span class="tag tag-ok" style="margin-left:auto" id="owmAqi">AQI —</span><span id="owmUpdated" style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted)"></span></h4>
-        <div id="owmWeather" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:6px">
-          <div style="background:var(--muted2);border:1px solid var(--border);border-radius:10px;padding:10px;display:flex;gap:10px;align-items:center">
-            <div id="owmIcon" style="font-size:22px">—</div>
-            <div>
-              <b id="owmTemp" style="font-size:16px">—°C</b><div id="owmDesc" style="font-size:11px;color:var(--muted)">—</div>
-              <div id="owmWind" style="font-size:11px;color:var(--muted)">Wind — m/s</div>
-            </div>
-          </div>
-          <div style="background:var(--muted2);border:1px solid var(--border);border-radius:10px;padding:10px">
-            <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.07em;text-transform:uppercase;color:var(--muted)">Air Pollution • 0.74km² ↔ OWM</div>
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:6px;font-size:11px">
-              <div><b>PM2.5</b> <span id="owmPm25">—</span> µg/m³</div>
-              <div><b>PM10</b> <span id="owmPm10">—</span></div>
-              <div><b>NO₂</b> <span id="owmNo2">—</span></div>
-              <div><b>O₃</b> <span id="owmO3">—</span></div>
-              <div><b>CO</b> <span id="owmCo">—</span></div>
-              <div><b>SO₂</b> <span id="owmSo2">—</span></div>
-            </div>
-            <div style="font-size:10px;color:var(--muted);margin-top:6px">Source: <span style="font-family:'JetBrains Mono',monospace">api.openweathermap.org/data/2.5</span> • Key 3f04…77ac • updates on filter</div>
-          </div>
-        </div>
-        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:8px;font-size:11px">
-          <div style="border:1px solid var(--border);border-radius:8px;padding:7px;text-align:center"><div style="font-size:10px;color:var(--muted)">Humidity</div><b id="owmHum">—%</b></div>
-          <div style="border:1px solid var(--border);border-radius:8px;padding:7px;text-align:center"><div style="font-size:10px;color:var(--muted)">Pressure</div><b id="owmPress">—</b></div>
-          <div style="border:1px solid var(--border);border-radius:8px;padding:7px;text-align:center"><div style="font-size:10px;color:var(--muted)">Feels like</div><b id="owmFeel">—</b></div>
-          <div style="border:1px solid var(--border);border-radius:8px;padding:7px;text-align:center"><div style="font-size:10px;color:var(--muted)">District</div><b id="owmDistrict" style="font-size:11px">—</b></div>
-        </div>
-        <div style="font-size:11px;color:var(--muted);margin-top:6px">Fused: OWM PM2.5 vs CAMS z vs Flash verified • PINN uses OWM wind as ERA5 cross-check</div>
-      </div>
-
+    <div id="mainDisputes" style="display:none">
       <div class="card mini">
-        <h4>Tiered dispatch <span class="tag tag-ok" style="margin-left:auto">SHA-256</span></h4>
-        <div id="alerts"></div>
-        <button class="btn btn-light" style="width:100%;margin-top:8px" onclick="simulateAlert()">Simulate Tier 3 for current filter</button>
-        <div style="font-size:11px;color:var(--muted);margin-top:6px">ST_INTERSECTS → Tier 1 Collector • Tier 2 SPCB • Tier 3 CPCB/MoEFCC • TNPCB</div>
-      </div>
-      <div class="card mini" id="disputesCard">
-        <h4 style="display:flex;align-items:center;gap:6px">Dispute ledger — Hierarchical <span class="tag" style="background:var(--fg);color:#fff;border-color:var(--fg)">Lv1→5</span><span id="disputeCount" style="margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted)">0 active</span></h4>
-        <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;display:flex;gap:6px;flex-wrap:wrap">
-          <span style="display:inline-flex;align-items:center;gap:4px"><span style="width:8px;height:8px;border-radius:50%;background:var(--accent)"></span> Lv1-2 State</span>
-          <span style="display:inline-flex;align-items:center;gap:4px"><span style="width:8px;height:8px;border-radius:50%;background:#D97706"></span> Lv3-4 National</span>
-          <span style="display:inline-flex;align-items:center;gap:4px"><span style="width:8px;height:8px;border-radius:50%;background:#991B1B"></span> Lv5 BEDC</span>
-        </div>
+        <h4 style="display:flex;align-items:center;gap:6px">Dispute ledger — Hierarchical <span class="tag" style="background:var(--fg);color:#fff;border-color:var(--fg)">Lv1→5</span><span id="disputeCount2" style="margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted)">0 active</span></h4>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:6px">Primary Owner = max(area×pop) • SHA-256 • PINN back-trace • Clocks auto-escalate</div>
         <div id="disputes"></div>
         <div style="display:flex;gap:6px;margin-top:8px">
           <button class="btn btn-light" style="flex:1" onclick="seedDispute()">Seed Lv3 dispute (demo)</button>
           <button class="btn btn-light" style="flex:1" onclick="seedBEDC()">Seed Lv5 BEDC (demo)</button>
         </div>
-        <div style="font-size:11px;color:var(--muted);margin-top:6px">Primary Owner = max(area×pop) • SHA-256 ledger • PINN back-trace • Clocks auto-escalate</div>
       </div>
+      <div class="card mini" id="disputesCard" style="display:none"></div>
     </div>
-  </div>
 
-  <div style="text-align:center;padding:6px 0 16px;font-size:11px;color:var(--muted)">Ingestion, PINN & compliance in <b>README.md</b> • Dashboard filters drive all datasets • Tamil Nadu default: IN / Tamil Nadu / Live</div>
+    <div style="text-align:center;padding:10px 0;font-size:11px;color:var(--muted)">Ingestion, PINN & compliance in README • Tamil Nadu default: IN / Tamil Nadu / Live • Sidebar controls all data</div>
+  </main>
 </div>
 
+<!-- Modals -->
 <div id="disputeModal" style="display:none;position:fixed;inset:0;background:rgba(15,23,42,.62);z-index:210;align-items:center;justify-content:center;padding:14px">
   <div style="background:#fff;border-radius:14px;max-width:520px;width:100%;overflow:hidden;border:1px solid var(--border);box-shadow:0 20px 40px rgba(0,0,0,.15)">
     <div style="padding:12px 14px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center"><b style="font-size:13px">File Hierarchical Dispute</b><button onclick="closeDisputeModal()" style="border:1px solid var(--border);background:#fff;padding:5px 9px;border-radius:999px;cursor:pointer">✕</button></div>
@@ -265,24 +265,15 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--fg);overflo
         <button class="btn btn-light" style="flex:1" onclick="closeDisputeModal()">Cancel</button>
         <button class="btn btn-dark" style="flex:2" onclick="confirmDispute()">File Dispute → Start 24h Clock</button>
       </div>
-      <div style="font-size:11px;color:var(--muted);margin-top:8px">Filing mints <b>dispute_id</b> + hash, notifies Primary Owner + Tier 2/3, starts Cloud Tasks clock. Raw photo never crosses.</div>
     </div>
   </div>
 </div>
-
 <div id="bedcModal" style="display:none;position:fixed;inset:0;background:rgba(15,23,42,.68);z-index:220;align-items:center;justify-content:center;padding:14px">
   <div style="background:#fff;border-radius:14px;max-width:720px;width:100%;overflow:hidden;border:1px solid var(--border);max-height:90vh;overflow:auto">
     <div style="padding:12px 14px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;background:var(--fg);color:#fff"><b style="font-size:13px">BEDC — BRICS Environmental Dispute Council • TEE Audit</b><button onclick="closeBEDC()" style="border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.1);color:#fff;padding:5px 9px;border-radius:999px;cursor:pointer">✕</button></div>
-    <div style="padding:14px">
-      <div id="bedcBody" style="font-size:12px;line-height:1.6"></div>
-      <div style="display:flex;gap:8px;margin-top:12px">
-        <button class="btn btn-light" style="flex:1" onclick="closeBEDC()">Close</button>
-        <button class="btn btn-dark" style="flex:1" onclick="resolveBEDC()">Publish Binding Finding</button>
-      </div>
-    </div>
+    <div style="padding:14px"><div id="bedcBody" style="font-size:12px;line-height:1.6"></div><div style="display:flex;gap:8px;margin-top:12px"><button class="btn btn-light" style="flex:1" onclick="closeBEDC()">Close</button><button class="btn btn-dark" style="flex:1" onclick="resolveBEDC()">Publish Binding Finding</button></div></div>
   </div>
 </div>
-
 <div id="modal" style="display:none;position:fixed;inset:0;background:rgba(15,23,42,.55);z-index:200;align-items:center;justify-content:center;padding:14px">
   <div style="background:#fff;border-radius:14px;max-width:700px;width:100%;overflow:hidden;border:1px solid var(--border)">
     <div style="padding:11px 14px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center"><b style="font-size:13px">Dossier — Gemini Pro</b><button onclick="closeModal()" style="border:1px solid var(--border);background:#fff;padding:5px 9px;border-radius:999px;cursor:pointer">✕</button></div>
@@ -1239,5 +1230,20 @@ if(document.readyState==='complete') setTimeout(()=>{ try{initFilters(); map.inv
 // fallback immediate
 setTimeout(()=>{ if(fCountry.options.length===0) initFilters(); }, 500);
 </script>
+
+<script>
+function switchView(v){
+  document.getElementById('navOps').classList.toggle('active', v==='ops');
+  document.getElementById('navDisputes').classList.toggle('active', v==='disputes');
+  document.getElementById('navOps').innerHTML = v==='ops' ? '● Operations <small>Map • Upload</small>' : '○ Operations <small>Map • Upload</small>';
+  document.getElementById('navDisputes').innerHTML = v==='disputes' ? '● Disputes <small>'+(document.getElementById('disputeCount')?.textContent || '0')+'</small>' : '○ Disputes <small>'+(document.getElementById('disputeCount')?.textContent || '0')+'</small>';
+  document.getElementById('mainOps').style.display = v==='ops' ? 'block' : 'none';
+  document.getElementById('mainDisputes').style.display = v==='disputes' ? 'block' : 'none';
+  if(v==='disputes') setTimeout(()=>{ if(typeof renderDisputes==='function') renderDisputes(); }, 80);
+  if(v==='ops') setTimeout(()=>{ if(typeof map!=='undefined' && map) map.invalidateSize(); }, 120);
+  if(window.innerWidth<=980) document.querySelector('.sidebar').classList.remove('open');
+}
+</script>
+
 </body>
 </html>
