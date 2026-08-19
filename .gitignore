@@ -28,3 +28,7 @@ dist/
 out/
 
 # OpenWeatherMap key is demo-only in prototype/index.html — rotate after hackathon
+
+# bundles
+vayu-brics.bundle
+vayu-brics.zip

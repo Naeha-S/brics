@@ -9,6 +9,8 @@
 
 ---
 
+
+> **Repo Cleaned 18 Aug 2026:** Docs consolidated into [`IMPLEMENTATION_BACKLOG.md`](./IMPLEMENTATION_BACKLOG.md) (single file for all remaining TODO). PPT kept: [`VAYU_Pitch_Deck_Brics_Hackathon_2026.pptx`](./VAYU_Pitch_Deck_Brics_Hackathon_2026.pptx). Dashboard is `prototype/index.html`.
 ## TL;DR — 2-3 Line Summary (for submission form)
 
 VAYU fuses citizen photos + low-cost sensors with Copernicus CAMS & ERA5 satellite reanalysis to detect **hidden pollution hotspots** macro-AQI misses, forecasts 72-hr spikes across BRICS economic corridors with Vertex AI, and auto-routes alerts to the accountable officer in the citizen’s language — as a federated Digital Public Good where nations share models, not raw data.
