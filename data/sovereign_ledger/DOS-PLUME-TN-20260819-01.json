@@ -1,0 +1,92 @@
+{
+  "dossier_id": "DOS-PLUME-TN-20260819-01",
+  "sha256_signature": "883e602196eada09f5a5213c7fa250ea3a5dbfe1d20c125aca96b49d6d4b3290",
+  "escalation_level": 2,
+  "primary_authority": "Chennai Collectorate & TNPCB",
+  "executive_summary_en": "Atmospheric dispersion advisory: Plume PLUME-TN-20260819-01 centered at Uber H3 88618925d3fffff indicates elevated PM2.5 of 146.0 µg/m³ and NO2 column of 3.45e+15 mol/m². Physics-Informed Neural Network (PINN) dispersion modeling predicts peak concentration of 174.0 µg/m³ in 24 hours driven by wind vector (-3.4 m/s, 1.6 m/s). Primary jurisdiction elected: Chennai, Tamil Nadu (IN) under RACI allocation.",
+  "translations": {
+    "HI": "वायुमंडलीय फैलाव परामर्श: प्लम PLUME-TN-20260819-01 (H3 88618925d3fffff) पर PM2.5 स्तर 146.0 µg/m³ और NO2 कॉलम 3.45e+15 पाया गया है। PINN मॉडल के अनुसार 24 घंटों में अधिकतम सांद्रता की संभावना है। प्राथमिक उत्तरदायी क्षेत्राधिकार: Chennai, Tamil Nadu।",
+    "PT": "Parecer de dispersão atmosférica: A pluma PLUME-TN-20260819-01 no índice H3 88618925d3fffff apresenta PM2.5 de 146.0 µg/m³ e coluna de NO2 de 3.45e+15. A modelagem PINN projeta pico de concentração em 24 horas. Autoridade primária designada: Chennai, Tamil Nadu (IN).",
+    "ZH": "大气扩散监测简报：羽流编号 PLUME-TN-20260819-01（H3 单元：88618925d3fffff）检测到 PM2.5 浓度为 146.0 µg/m³，NO2 垂直柱浓度为 3.45e+15。基于物理信息的神经网络（PINN）预测将在 24 小时内达到浓度峰值。主责管辖区：Chennai, Tamil Nadu。",
+    "RU": "Консультативное заключение по атмосферной дисперсии: Шлейф PLUME-TN-20260819-01 (H3 88618925d3fffff) демонстрирует концентрацию PM2.5 146.0 мкг/м³ и колонку NO2 3.45e+15. Модель PINN прогнозирует пиковую концентрацию через 24 ч. Основной уполномоченный орган: Chennai, Tamil Nadu.",
+    "AR": "تقرير رصد الانبعاثات الجوية: يوضح عمود التلوث PLUME-TN-20260819-01 في الخلية 88618925d3fffff تركيز جزيئات PM2.5 بمقدار 146.0 ميكروغرام/م³ وثاني أكسيد النيتروجين 3.45e+15. يتوقع نموذج الشبكة العصبية الفيزيائية PINN ذروة التأثير خلال 24 ساعة. السلطة الأولية المسؤولة: Chennai, Tamil Nadu."
+  },
+  "raci_matrix": {
+    "responsible": [
+      "Tier 1: Chennai Collectorate & TNPCB for ground verification and source containment."
+    ],
+    "accountable": [
+      "Tier 2: Tamil Nadu Pollution Control Board"
+    ],
+    "consulted": [
+      "Adjoining Districts: Kanchipuram, Tiruvallur"
+    ],
+    "informed": [
+      "Tier 3: India MoEFCC & BRICS Secretariat"
+    ]
+  },
+  "remediation_directives": [
+    "Deploy mobile mist-cannons and dust suppression across downwind transport corridor.",
+    "Enforce immediate stoppage of open biomass burning within H3 buffer zone.",
+    "Initiate Tier 1 industrial emission audits for thermal and chemical plants within 15km."
+  ],
+  "confidential_tee_audit_clause": "Evidence cryptographically anchored at T0 with SHA-256 (883e602196eada09f5a5213c7fa250ea3a5dbfe1d20c125aca96b49d6d4b3290). Raw citizen imagery and telemetry remain partitioned within sovereign storage. Disputes are verifiable inside Google Cloud Confidential Space TEE enclaves without exposing raw citizen PII.",
+  "evidence_bundle": {
+    "version": "1.0.0",
+    "protocol": "BRICS-AETHER-RACI",
+    "t0_timestamp": "2026-08-19T16:54:11.656873+00:00",
+    "sla_deadline": "2026-08-20T16:54:11.656955+00:00",
+    "sla_hours": 24,
+    "escalation_level": 2,
+    "raci_tier": "Level 2 (State Environmental Board — 24h SLA)",
+    "plume_id": "PLUME-TN-20260819-01",
+    "h3_res8": "88618925d3fffff",
+    "primary_jurisdiction": {
+      "nation": "IN",
+      "state": "Tamil Nadu",
+      "district": "Chennai",
+      "office": "Chennai Collectorate & TNPCB",
+      "tier2": "Tamil Nadu Pollution Control Board",
+      "tier3": "India MoEFCC"
+    },
+    "affected_jurisdictions": [
+      {
+        "nation": "IN",
+        "state": "Tamil Nadu",
+        "district": "Kanchipuram"
+      },
+      {
+        "nation": "IN",
+        "state": "Tamil Nadu",
+        "district": "Tiruvallur"
+      }
+    ],
+    "telemetry": {
+      "sentinel5p_no2_column": 3450000000000000.0,
+      "sentinel5p_qa": 0.84,
+      "cams_pm25": 146.0,
+      "cams_z_score": 2.6,
+      "era5_wind_u": -3.4,
+      "era5_wind_v": 1.6,
+      "era5_pblh_m": 195.0,
+      "ground_owm_pm25": 142.0
+    },
+    "pinn_forecast": {
+      "model_version": "PINN-AdvDiff-v2.1",
+      "max_pm25_72h": 174.0,
+      "peak_hour": 24,
+      "dispersion_cone_sqkm": 52.4,
+      "pde_loss_residual": 0.019
+    },
+    "ground_evidence": [
+      {
+        "report_id": "R5021",
+        "class": "Industrial_Plume",
+        "confidence": 0.934,
+        "opacity": 0.71,
+        "district": "Chennai"
+      }
+    ],
+    "evidence_sha256_hash": "883e602196eada09f5a5213c7fa250ea3a5dbfe1d20c125aca96b49d6d4b3290"
+  }
+}

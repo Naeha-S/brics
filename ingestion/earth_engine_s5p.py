@@ -80,10 +80,30 @@ BRICS11_BOXES = {
 }
 
 def init_ee(project=None):
-    """Initialize EE with ADC or user credentials."""
-    project = project or os.getenv("EE_PROJECT") or os.getenv("GOOGLE_CLOUD_PROJECT") or "brics-aether"
+    """Initialize EE with Service Account, ADC, or user credentials."""
+    cred_file = os.getenv("GOOGLE_APPLICATION_CREDENTIALS")
+    if not cred_file and os.path.exists("ee-service-account.json"):
+        cred_file = "ee-service-account.json"
+    
+    sa_email = None
+    if cred_file and os.path.exists(cred_file):
+        try:
+            with open(cred_file, "r", encoding="utf-8") as f:
+                key_data = json.load(f)
+            sa_email = key_data.get("client_email")
+            if not project:
+                project = key_data.get("project_id")
+        except Exception:
+            pass
+
+    project = project or os.getenv("EE_PROJECT") or os.getenv("GOOGLE_CLOUD_PROJECT") or "brics-506015"
+    
     try:
-        ee.Initialize(project=project, opt_url="https://earthengine.googleapis.com")
+        if sa_email and cred_file:
+            credentials = ee.ServiceAccountCredentials(sa_email, cred_file)
+            ee.Initialize(credentials, project=project, opt_url="https://earthengine.googleapis.com")
+        else:
+            ee.Initialize(project=project, opt_url="https://earthengine.googleapis.com")
         print(f"✓ Earth Engine initialized (project={project})")
     except Exception as e:
         if "Please authorize" in str(e) or "not initialized" in str(e).lower():

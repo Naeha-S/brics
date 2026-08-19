@@ -1,0 +1,76 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Helper: Check if request is authenticated (Firebase Auth: Anonymous or Phone/OAuth)
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    // Helper: Check if Firebase App Check token is verified
+    function hasValidAppCheck() {
+      return request.app != null;
+    }
+    
+    // Helper: Validate immutable T0 SHA-256 evidence package fields
+    function isValidEvidencePayload(data) {
+      return data.sha256_hash is string &&
+             data.sha256_hash.size() == 64 &&
+             data.h3_res8 is string &&
+             data.plume_id is string &&
+             data.nation in ['IN', 'BR', 'CN', 'RU', 'ZA', 'EG', 'ET', 'IR', 'SA', 'AE', 'ID'];
+    }
+
+    // 1. Citizen Ground Observations & Sensor Ingestion
+    // Allows public read for verified points, authenticated/anonymous write with App Check
+    match /ground_observations/{observationId} {
+      allow read: if true;
+      allow create: if (isAuthenticated() || hasValidAppCheck()) &&
+                       request.resource.data.conf >= 0.0 &&
+                       request.resource.data.conf <= 1.0 &&
+                       request.resource.data.pm25 is number;
+      allow update, delete: if false; // Immutable write-once ground telemetry
+    }
+
+    // 2. High-Throughput Streaming Ingestion Buffer (>100k/s Pub/Sub bridge to BigQuery)
+    match /telemetry_stream/{streamId} {
+      allow read: if isAuthenticated();
+      allow write: if hasValidAppCheck() &&
+                      request.resource.data.timestamp is timestamp &&
+                      request.resource.data.h3_res8 is string;
+    }
+
+    // 3. Sovereign Dossiers (Cryptographically anchored at T0)
+    match /sovereign_dossiers/{dossierId} {
+      allow read: if true;
+      allow create: if isAuthenticated() && isValidEvidencePayload(request.resource.data);
+      allow update, delete: if false; // Immutable sovereign dossier records
+    }
+
+    // 4. Disputes & Mediation Ledger (Hierarchical Levels 1 to 5 BEDC)
+    match /disputes/{disputeId} {
+      allow read: if true;
+      allow create: if isAuthenticated() &&
+                       request.resource.data.escalation_level >= 1 &&
+                       request.resource.data.escalation_level <= 5 &&
+                       request.resource.data.sla_deadline is timestamp;
+      // Allow updates to status, escalation level, or resolution memo by authenticated authority
+      allow update: if isAuthenticated() &&
+                       request.resource.data.dispute_id == resource.data.dispute_id &&
+                       request.resource.data.sha256_evidence_hash == resource.data.sha256_evidence_hash;
+      allow delete: if false; // Audit trail must never be deleted
+    }
+
+    // 5. Dispute Audit Trail Events
+    match /disputes/{disputeId}/audit_events/{eventId} {
+      allow read: if true;
+      allow create: if isAuthenticated();
+      allow update, delete: if false;
+    }
+
+    // Deny all other unmatched paths by default
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
