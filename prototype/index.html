@@ -718,7 +718,7 @@ body {
         <div class="brand-mark" aria-hidden="true">Æ</div>
         <div class="brand-info">
           <h1>BRICS-AETHER <span style="font-weight:400;color:var(--text-dim);font-size:11px">| Sovereign Clean Air</span></h1>
-          <p>Federated Atmospheric Observation & Dispute Platform</p>
+          <p>Federated Atmospheric Observation & Evidence Platform</p>
         </div>
       </div>
       <div class="flags-badge" aria-label="Member States: Brazil, Russia, India, China, South Africa, Egypt, Ethiopia, Iran, Saudi Arabia, UAE, Indonesia" title="BRICS+ 11 Member Nations">
@@ -748,7 +748,7 @@ body {
         <small>Map • Feeds</small>
       </button>
       <button id="navDisputes" onclick="switchView('disputes')" aria-pressed="false">
-        <span>○ Dispute Ledger</span>
+        <span>○ Evidence Ledger</span>
         <small id="navDisputeBadge">0 Active</small>
       </button>
     </nav>
@@ -868,10 +868,10 @@ body {
       </div>
     </div>
 
-    <!-- Quick Dispute Snapshot in Sidebar -->
+    <!-- Quick Evidence Snapshot in Sidebar -->
     <div class="card mini-section" style="box-shadow:none">
       <h4>
-        <span>Dispute Ledger</span>
+        <span>Evidence Ledger</span>
         <span id="disputeCount" class="mono" style="margin-left:auto;font-size:11px;color:var(--text-dim)">0 active</span>
       </h4>
       <div id="disputesSnapshot" style="font-size:11px;color:var(--text-muted);line-height:1.5">
@@ -1011,11 +1011,11 @@ body {
       </div>
     </div>
 
-    <!-- View 2: Disputes Ledger -->
-    <div id="mainDisputes" style="display:none" aria-label="Dispute Ledger View">
+    <!-- View 2: Evidence Ledger — Provenance Trail -->
+    <div id="mainDisputes" style="display:none" aria-label="Evidence Ledger View">
       <section class="card mini-section">
         <h4>
-          <span>BRICS Sovereign Dispute Ledger</span>
+          <span>BRICS Sovereign Evidence Ledger</span>
           <span class="tag tag-neutral">Level 1 → Level 5 BEDC</span>
           <span id="disputeCount2" class="mono" style="margin-left:auto;font-size:11px;color:var(--text-dim)">0 Active</span>
         </h4>
@@ -1024,8 +1024,8 @@ body {
         </div>
         <div id="disputes" aria-live="polite"></div>
         <div style="display:flex;gap:8px;margin-top:10px">
-          <button class="btn btn-light" style="flex:1" onclick="seedDispute()">Seed Level 3 Inter-State Dispute</button>
-          <button class="btn btn-light" style="flex:1" onclick="seedBEDC()">Seed Level 5 BEDC Transboundary Dispute</button>
+          <button class="btn btn-light" style="flex:1" onclick="seedDispute()">Seed Lv3 Evidence Record</button>
+          <button class="btn btn-light" style="flex:1" onclick="seedBEDC()">Seed Lv5 BEDC Audit Record</button>
         </div>
       </section>
       <div class="card mini-section" id="disputesCard" style="display:none"></div>
@@ -1037,7 +1037,7 @@ body {
   </main>
 </div>
 
-<!-- Modal 1: File Hierarchical Dispute -->
+<!-- Modal 1: Challenge Evidence — Provenance Review -->
 
 <div id="eventDrawerBackdrop" onclick="closeEventDrawer()"></div>
 <div id="eventDrawer" role="dialog" aria-label="Active Pollution Event">
@@ -1117,7 +1117,7 @@ body {
 <div id="disputeModal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="disputeModalTitle">
   <div class="modal-dialog">
     <div class="modal-head">
-      <b id="disputeModalTitle" style="font-size:13px">File Formal Atmospheric Dispute</b>
+      <b id="disputeModalTitle" style="font-size:13px">Challenge Evidence — Provenance Review</b>
       <button onclick="closeDisputeModal()" class="btn btn-light" style="padding:2px 8px;border-radius:var(--radius-full)" aria-label="Close modal">✕</button>
     </div>
     <div class="modal-body">
@@ -1126,7 +1126,7 @@ body {
         <div id="disputeEvidence" class="mono" style="font-size:11px;color:var(--text-main);margin-top:6px;line-height:1.5;word-break:break-all">—</div>
       </div>
       
-      <label for="disputeReason" style="font-size:11px;font-weight:700;letter-spacing:0.04em;text-transform:uppercase;color:var(--text-dim)">Dispute Grounds *</label>
+      <label for="disputeReason" style="font-size:11px;font-weight:700;letter-spacing:0.04em;text-transform:uppercase;color:var(--text-dim)">Provenance Challenge Grounds *</label>
       <select id="disputeReason" class="select-clean" style="width:100%;margin:6px 0 12px;padding:8px 10px;border-radius:var(--radius-sm);font-size:12px">
         <option value="Not our source — wind from neighbor">Attribution: Upwind advection from neighboring jurisdiction</option>
         <option value="Data inaccuracy — S5P/CAMS vs ground">Telemetry: Inconsistency between satellite column and calibrated ground sensor</option>
@@ -1140,7 +1140,7 @@ body {
 
       <div style="display:flex;gap:8px">
         <button class="btn btn-light" style="flex:1" onclick="closeDisputeModal()">Cancel</button>
-        <button class="btn btn-dark" style="flex:2" onclick="confirmDispute()">Submit Dispute & Start SLA Timer</button>
+        <button class="btn btn-dark" style="flex:2" onclick="confirmDispute()">Submit Review & Start Provenance Clock</button>
       </div>
     </div>
   </div>
@@ -1964,7 +1964,7 @@ function renderAlerts(alerts){
           <b style="font-size:12px;color:var(--text-main)">${a.district} — ${a.pm25} µg/m³ • ${a.type.replace('_',' ')}</b>
           <span class="tag ${lvlClass}">${lvlBadge}</span>
           ${isPrimary ? '<span class="tag tag-neutral" style="background:var(--slate-dark);color:#fff">Primary</span>' : '<span class="tag tag-neutral">CC Recipient</span>'}
-          ${hasDispute ? '<span class="tag tag-bad">Disputed</span>' : ''}
+          ${hasDispute ? '<span class="tag tag-bad">Under Review</span>' : ''}
         </div>
         <div style="font-size:11px;color:var(--text-muted);margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${to}</div>
         <div style="font-size:11px;color:var(--text-dim);margin-top:2px;display:flex;gap:6px;flex-wrap:wrap;align-items:center">
@@ -1974,7 +1974,7 @@ function renderAlerts(alerts){
         </div>
         <div style="display:flex;gap:6px;margin-top:8px">
           <button class="btn btn-light" style="padding:4px 8px;font-size:11px" onclick="event.stopPropagation(); openEvidence('${a.id}')">View Evidence</button>
-          ${hasDispute ? `<button class="btn btn-light" style="padding:4px 8px;font-size:11px;color:var(--status-crit-text);border-color:var(--status-crit-border)" onclick="event.stopPropagation(); openDisputeView('${dispute.disputeId}')">View Dispute</button>` : `<button class="btn btn-light" style="padding:4px 8px;font-size:11px" onclick="event.stopPropagation(); fileDispute('${a.id}')">File Dispute</button>`}
+          ${hasDispute ? `<button class="btn btn-light" style="padding:4px 8px;font-size:11px;color:var(--status-crit-text);border-color:var(--status-crit-border)" onclick="event.stopPropagation(); openDisputeView('${dispute.disputeId}')">View Evidence</button>` : `<button class="btn btn-light" style="padding:4px 8px;font-size:11px" onclick="event.stopPropagation(); fileDispute('${a.id}')">Challenge Evidence</button>`}
           <button class="btn btn-light" style="padding:4px 8px;font-size:11px;background:var(--bg-subtle)" onclick="event.stopPropagation(); simulateWindBackTrace('${a.id}')">PINN Back-Trace</button>
         </div>
       </div>
@@ -2001,14 +2001,14 @@ function renderDisputes(){
     return true;
   });
 
-  const countText = `${filtered.length} Active` + (filtered.length ? ` • ${filtered.filter(d=> d.level >= 4).length} Transboundary` : '');
+  const countText = `${filtered.length} Records` + (filtered.length ? ` • ${filtered.filter(d=> d.level >= 4).length} Transboundary` : '');
   if(countEl) countEl.textContent = countText;
   if(countEl2) countEl2.textContent = countText;
-  document.getElementById('navDisputeBadge').textContent = `${filtered.length} Active`;
+  document.getElementById('navDisputeBadge').textContent = `${filtered.length} Records`;
 
   if(!el) return;
   if(filtered.length === 0){
-    el.innerHTML = `<div style="text-align:center;padding:16px;color:var(--text-dim);font-size:12px;border:1px dashed var(--border);border-radius:var(--radius-sm)">No disputes in active filter window. File a dispute from an active alert or seed a demo.</div>`;
+    el.innerHTML = `<div style="text-align:center;padding:16px;color:var(--text-dim);font-size:12px;border:1px dashed var(--border);border-radius:var(--radius-sm)">No evidence records in this filter window. Every event gets a provenance trail — click a red plume or seed a demo Lv3/Lv5.</div>`;
     return;
   }
   el.innerHTML = '';
@@ -2036,6 +2036,17 @@ function renderDisputes(){
       </div>
       <div style="font-size:11px;color:var(--text-dim);margin-top:2px">
         Uber H3 Cell: <span class="mono">${d.h3}</span> • Sentinel-5P QA≥0.75 • PINN Back-Trace • Immutable TEE Anchor
+      </div>
+      <div style="margin-top:8px;border:1px solid var(--border);border-radius:8px;background:var(--bg-subtle);padding:8px">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--text-dim)">Provenance — 08:42 → 09:30</div>
+        <div style="font-size:10px;line-height:1.5;margin-top:4px;display:grid;gap:2px">
+          <div>08:42 ● Citizen observation • Flash C${(d.conf||0.93).toFixed(2)}</div>
+          <div>08:51 ● Sensor confirms • PM2.5 ${d.pm25||'—'} • OWM</div>
+          <div>09:03 ● Satellite NO₂ • S5P QA≥0.75 • H3 ${d.h3.slice(0,6)}</div>
+          <div>09:11 ● Wind trajectory • ERA5 • ${d.level>=4?'Transboundary':'Local'}</div>
+          <div>09:24 ● Forecast • PINN 72h • Peak in 11h</div>
+          <div>09:30 ● Alert issued • Tier ${d.level} • SHA ${d.sha.slice(0,8)}…</div>
+        </div>
       </div>
       <div style="display:flex;gap:6px;margin-top:8px">
         <button class="btn btn-light" style="padding:4px 10px;font-size:11px" onclick="openDisputeView('${d.disputeId}')">Inspect Dossier</button>
@@ -2480,7 +2491,7 @@ function switchView(v){
 
   const countBadge = document.getElementById('disputeCount')?.textContent?.split(' ')[0] || '0';
   navOps.innerHTML = `<span>${v === 'ops' ? '●' : '○'} Operations</span><small>Map • Feeds</small>`;
-  navDisputes.innerHTML = `<span>${v === 'disputes' ? '●' : '○'} Dispute Ledger</span><small id="navDisputeBadge">${countBadge} Active</small>`;
+  navDisputes.innerHTML = `<span>${v === 'disputes' ? '●' : '○'} Evidence Ledger</span><small id="navDisputeBadge">${countBadge} Records</small>`;
 
   document.getElementById('mainOps').style.display = v === 'ops' ? 'block' : 'none';
   document.getElementById('mainDisputes').style.display = v === 'disputes' ? 'block' : 'none';

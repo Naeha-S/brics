@@ -11,18 +11,18 @@ export function DisputeLedger({
       <div className="flex justify-between items-center bg-white border border-[#E2E8F0] p-4 rounded-xl shadow-sm">
         <div>
           <h2 className="text-sm font-bold text-[#0F172A] uppercase tracking-wider">
-            Sovereign Dispute & Mediation Ledger (Levels 1–5 BEDC)
+            Sovereign Evidence Ledger — Provenance Trail (Levels 1–5)
           </h2>
           <p className="text-xs text-[#475569] mt-0.5">
-            Immutable T0 evidence packages • Physics-Informed back-trace attribution • Hierarchical SLA clocks
+            Every event gets an immutable provenance record • Citizen → Sensor → Satellite → Forecast → Action • Hierarchical review
           </p>
         </div>
         <div className="flex gap-2">
           <button className="btn btn-light text-xs" onClick={onSeedDemoDispute}>
-            + Seed Demo Dispute
+            + Seed Demo Evidence Record
           </button>
           <button className="btn btn-dark text-xs" onClick={() => onOpenBedcAuditModal()}>
-            BEDC Council Audit Log
+            BEDC Audit Trail
           </button>
         </div>
       </div>
@@ -31,12 +31,12 @@ export function DisputeLedger({
         {disputes.length === 0 ? (
           <div className="col-span-full card p-8 text-center border-dashed border-[#CBD5E1]">
             <div className="text-2xl mb-2">⚖️</div>
-            <h3 className="text-sm font-bold text-[#0F172A]">No Disputes Currently Logged</h3>
+            <h3 className="text-sm font-bold text-[#0F172A]">No Evidence Records in This Filter</h3>
             <p className="text-xs text-[#64748B] mt-1 max-w-md mx-auto">
-              All atmospheric dispersion plumes within the current filter are operating under standard RACI consensus. You can file a dispute directly from any alert in the Operations view or seed a demo case.
+              Every pollution event gets an auditable provenance trail (08:42 citizen → 09:30 alert). Create a record from any alert in Operations or seed a demo. No raw cross-border transfer.
             </p>
             <button className="btn btn-dark text-xs mt-4" onClick={onSeedDemoDispute}>
-              Seed Demo Transboundary Case
+              Seed Demo Evidence Record
             </button>
           </div>
         ) : (
