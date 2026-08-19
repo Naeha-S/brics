@@ -1,6 +1,6 @@
 {
   "dossier_id": "DOS-PLUME-TN-20260819-01",
-  "sha256_signature": "883e602196eada09f5a5213c7fa250ea3a5dbfe1d20c125aca96b49d6d4b3290",
+  "sha256_signature": "1ae44417eb1f2ef0479984dbc3c2d3316858bf5252cd90702d198edda3f10910",
   "escalation_level": 2,
   "primary_authority": "Chennai Collectorate & TNPCB",
   "executive_summary_en": "Atmospheric dispersion advisory: Plume PLUME-TN-20260819-01 centered at Uber H3 88618925d3fffff indicates elevated PM2.5 of 146.0 µg/m³ and NO2 column of 3.45e+15 mol/m². Physics-Informed Neural Network (PINN) dispersion modeling predicts peak concentration of 174.0 µg/m³ in 24 hours driven by wind vector (-3.4 m/s, 1.6 m/s). Primary jurisdiction elected: Chennai, Tamil Nadu (IN) under RACI allocation.",
@@ -30,12 +30,12 @@
     "Enforce immediate stoppage of open biomass burning within H3 buffer zone.",
     "Initiate Tier 1 industrial emission audits for thermal and chemical plants within 15km."
   ],
-  "confidential_tee_audit_clause": "Evidence cryptographically anchored at T0 with SHA-256 (883e602196eada09f5a5213c7fa250ea3a5dbfe1d20c125aca96b49d6d4b3290). Raw citizen imagery and telemetry remain partitioned within sovereign storage. Disputes are verifiable inside Google Cloud Confidential Space TEE enclaves without exposing raw citizen PII.",
+  "confidential_tee_audit_clause": "Evidence cryptographically anchored at T0 with SHA-256 (1ae44417eb1f2ef0479984dbc3c2d3316858bf5252cd90702d198edda3f10910). Raw citizen imagery and telemetry remain partitioned within sovereign storage. Disputes are verifiable inside Google Cloud Confidential Space TEE enclaves without exposing raw citizen PII.",
   "evidence_bundle": {
     "version": "1.0.0",
     "protocol": "BRICS-AETHER-RACI",
-    "t0_timestamp": "2026-08-19T16:54:11.656873+00:00",
-    "sla_deadline": "2026-08-20T16:54:11.656955+00:00",
+    "t0_timestamp": "2026-08-19T17:32:03.649721+00:00",
+    "sla_deadline": "2026-08-20T17:32:03.649738+00:00",
     "sla_hours": 24,
     "escalation_level": 2,
     "raci_tier": "Level 2 (State Environmental Board — 24h SLA)",
@@ -87,6 +87,6 @@
         "district": "Chennai"
       }
     ],
-    "evidence_sha256_hash": "883e602196eada09f5a5213c7fa250ea3a5dbfe1d20c125aca96b49d6d4b3290"
+    "evidence_sha256_hash": "1ae44417eb1f2ef0479984dbc3c2d3316858bf5252cd90702d198edda3f10910"
   }
 }

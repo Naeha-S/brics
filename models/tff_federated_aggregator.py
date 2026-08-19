@@ -14,12 +14,20 @@ Implements:
 """
 
 import math
+import sys
 import json
 import random
 import hashlib
 import argparse
 from typing import Dict, Any, List, Tuple, Optional
 from dataclasses import dataclass, asdict
+
+# Ensure UTF-8 console output across Windows and Linux
+if hasattr(sys.stdout, 'reconfigure'):
+    try:
+        sys.stdout.reconfigure(encoding='utf-8')
+    except Exception:
+        pass
 
 # Sovereign Nation Nodes
 SOVEREIGN_NODES = {
