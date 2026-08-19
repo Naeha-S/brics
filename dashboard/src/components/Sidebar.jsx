@@ -60,7 +60,7 @@ export function Sidebar({
           }`}
           onClick={() => onSwitchView('disputes')}
         >
-          <span>○ Dispute Ledger</span>
+          <span>○ Evidence Ledger</span>
           <small className="opacity-80">{disputesCount} Active</small>
         </button>
       </nav>
@@ -236,10 +236,10 @@ export function Sidebar({
         </div>
       </div>
 
-      {/* Dispute Snapshot */}
+      {/* Evidence Snapshot */}
       <div className="card p-3 shadow-none">
         <h4 className="text-[11px] font-bold tracking-wider uppercase text-[#0F172A] flex items-center justify-between mb-1">
-          <span>Dispute Ledger</span>
+          <span>Evidence Ledger</span>
           <span className="font-mono text-[11px] text-[#64748B]">{disputesCount} active</span>
         </h4>
         <p className="text-[11px] text-[#475569] leading-snug">
